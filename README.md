@@ -71,12 +71,16 @@ Basversionen är låst i git som taggen `v0-bas`.
 
 ### Vad v1 ändrar
 
-- **Min sida:** "Mina kurser" överst i full bredd; "Mina uppgifter" och
-  "Byt lösenord" sida vid sida under; "Ta bort användarkontot" längst ner.
+- **Större rubriker** på artikel- och kapitelsidor. Brödtexten är oförändrad.
+- **Min sida:** "Mina kurser" överst; den ljusblå ytan är en ruta med luft
+  ovanför. "Mina uppgifter" och "Byt lösenord" sida vid sida under;
+  "Ta bort användarkontot" längst ner.
 - **Logga ut** flyttad till svarta listen, längst upp till höger.
-- **Kurskort** visar procent i stor siffra med kapitelantalet nedtonat under.
-  Lågprioriterat test – `?kurskort=bas` visar basversionens kort inne i v1,
-  `?kurskort=pct` växlar tillbaka.
+- **Kurskort:** ett vitt kort per kurs på den blå ytan med kursnamn, procent i
+  stor siffra, kapitelantal, kort progressstreck och knapp. Pågående kurs
+  först, genomförd sist. Två kort i bredd, tre eller fler staplas.
+- **Kapitelnumrering** i innehållsmenyn, från 1 (basen börjar på 0).
+  Underkapitlen ärver förälderns nummer: 5.1, 5.2, 5.3.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
   Svarta listen är sticky med kursnamnet till vänster och MIN SIDA till höger.
 - **Blå sticky navrad** under svarta listen: bakåtpil till Min sida till

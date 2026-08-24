@@ -14,10 +14,26 @@
 
 
 /* ==========================================================================
-   KRAV 1 – Min sida: kurserna överst i full bredd
-   Kurspanelen spänner över hela rastret och bleeder ut i kanterna (som i
-   basen). Panelerna under blir egna rutor i rastret via display:contents,
-   så vi slipper flytta noder i DOM:en.
+   KRAV A – typografi på artikel- och kapitelsidor
+   Rubrikerna upplevdes för små. Brödtexten är rätt och lämnas orörd –
+   inga regler här rör p, li eller body.
+
+   Basens storlekar (styles.css) för jämförelse:
+     .coursepage h1  clamp(2rem,   3.6vw, 3rem)
+     h2              clamp(1.6rem, 2.6vw, 2.3rem)
+     h3              1.4rem
+   ========================================================================== */
+.rk-v1 .coursepage h1 { font-size: clamp(2.7rem, 5vw,   4.2rem); }
+.rk-v1 .coursepage h2 { font-size: clamp(2rem,   3.4vw, 3rem); }
+.rk-v1 .coursepage h3 { font-size: 1.75rem; }
+
+
+/* ==========================================================================
+   KRAV 1 + KRAV B – Min sida: kurserna överst
+   Den ljusblå ytan går inte längre upp i svarta listen utan har luft ovanför
+   och rundade hörn, så att den läses som en ruta som ligger på sidan.
+   Panelerna under blir egna rutor i rastret via display:contents, så vi
+   slipper flytta noder i DOM:en.
    ========================================================================== */
 .rk-v1 .dash {
   grid-template-columns: 1fr 1fr;
@@ -27,11 +43,12 @@
 }
 .rk-v1 .dash__courses {
   grid-column: 1 / -1;
-  margin: 0 calc(-1 * var(--edge));        /* full bredd, kant till kant */
-  padding: 40px var(--edge) 48px;
+  margin-top: 40px;             /* krav B: white space ovanför rutan */
+  padding: 36px 40px 40px;
+  border-radius: 12px;
 }
 .rk-v1 .dash__side {
-  display: contents;                       /* panelerna blir barn till rastret */
+  display: contents;            /* panelerna blir barn till rastret */
 }
 .rk-v1 .dash__side > section { margin: 0; }
 
@@ -61,27 +78,79 @@
 
 
 /* ==========================================================================
-   KRAV 3 – kurskort med procent i stor siffra (lågprioriterat test)
-   Stäng av med ?kurskort=bas i adressen, tillbaka med ?kurskort=pct.
+   KRAV C – vita kurskort på den blå ytan
+   Kortbredden är hållen kort (max 400px) så progressstrecket blir ett kort
+   streck i stället för det långa orange band som blev problemet.
+   Två kort ligger i bredd; tre eller fler staplas under varandra.
    ========================================================================== */
-.rk-v1 .v1-hidden { display: none; }
-.rk-v1 .v1-pct { margin: -2px 0 20px; }
-.rk-v1 .v1-pct__big {
+.rk-v1 .v1-cards {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: minmax(0, 400px);          /* ett kort, eller staplade */
+  margin-top: 28px;
+}
+.rk-v1 .v1-cards[data-count="2"] {
+  grid-template-columns: repeat(2, minmax(0, 400px));
+}
+
+.rk-v1 .v1-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 26px 28px 28px;
+  box-shadow: 0 2px 12px rgba(27,29,45,.08);
+  display: flex;
+  flex-direction: column;
+}
+.rk-v1 .v1-card__title {
   font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 1.4rem;
-  line-height: 1.05;
-  color: var(--navy);
-}
-.rk-v1 .v1-pct__big strong {
-  font-size: 2.5rem;
   font-weight: 800;
-  letter-spacing: -.01em;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  margin: 0 0 20px;
 }
-.rk-v1 .v1-pct__sub {
+.rk-v1 .v1-card__lead {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(27,29,45,.7);
+}
+.rk-v1 .v1-card__pct {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 4rem;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--navy);
+  margin: 2px 0 8px;
+}
+.rk-v1 .v1-card__pct span {           /* procenttecknet mindre än siffran */
+  font-size: 1.9rem;
+  margin-left: 6px;
+}
+.rk-v1 .v1-card__sub {
+  margin: 0 0 16px;
   font-size: .95rem;
   color: rgba(27,29,45,.6);
-  margin-top: 4px;
+}
+.rk-v1 .v1-card__track {
+  height: 10px;
+  background: rgba(27,29,45,.12);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 0 24px;
+}
+.rk-v1 .v1-card__fill {
+  height: 100%;
+  background: var(--navy);
+  border-radius: 6px;
+}
+.rk-v1 .v1-card--done .v1-card__fill { background: var(--orange); }
+
+/* knapparna längst ner – margin-top:auto håller dem i linje mellan korten */
+.rk-v1 .v1-card__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: auto;
 }
 
 
@@ -158,6 +227,15 @@
   overflow-y: auto;
 }
 
+/* KRAV D – kapitelnumret i innehållsmenyn. Egen bredd så att rubrikerna
+   linjerar trots att numren är olika långa (1, 10, 5.1). */
+.rk-v1 .toc .v1-tocnum {
+  display: inline-block;
+  min-width: 1.9em;
+  font-variant-numeric: tabular-nums;
+}
+.rk-v1 .toc .toc__item--sub .v1-tocnum { min-width: 2.7em; }
+
 
 /* ==========================================================================
    KRAV 6 – progressindikatorn i botten borttagen
@@ -174,6 +252,12 @@
   /* en kolumn – panelerna staplas */
   .rk-v1 .dash { grid-template-columns: 1fr; }
   .rk-v1 .dash__side > section.v1-panel--col { grid-column: 1 / -1; }
+
+  /* korten i full bredd */
+  .rk-v1 .v1-cards,
+  .rk-v1 .v1-cards[data-count="2"] { grid-template-columns: minmax(0, 1fr); }
+
+  .rk-v1 .dash__courses { padding: 28px 24px 30px; }
 
   /* svarta listen får plats för både kursnamn och MIN SIDA */
   .rk-v1 .v1-coursehead .coursebar__title { font-size: 1.15rem; }
