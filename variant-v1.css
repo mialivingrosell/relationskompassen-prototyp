@@ -1,0 +1,184 @@
+/* ==========================================================================
+   VARIANT v1 – egen stil
+   Laddas BARA när v1 är aktiv (?nav=v1). Basversionen v0 kör enbart
+   styles.css och påverkas alltså inte av något här.
+
+   Alla regler hänger på .rk-v1 (klassen som variants.js sätter på <html>),
+   så inget kan läcka in i basen.
+
+   Grafisk profil (Reko 2026):
+     Barlow (brödtext) · Barlow Condensed (endast rubriker)
+     ljusblå #D7F1F4 · rosa #F5D8CF · mint #DBF3E1
+     marinblå #1B1D2D · orange #F1551F
+   ========================================================================== */
+
+
+/* ==========================================================================
+   KRAV 1 – Min sida: kurserna överst i full bredd
+   Kurspanelen spänner över hela rastret och bleeder ut i kanterna (som i
+   basen). Panelerna under blir egna rutor i rastret via display:contents,
+   så vi slipper flytta noder i DOM:en.
+   ========================================================================== */
+.rk-v1 .dash {
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding: 0 var(--edge) 70px;
+  align-items: stretch;         /* de två panelerna sida vid sida blir lika höga */
+}
+.rk-v1 .dash__courses {
+  grid-column: 1 / -1;
+  margin: 0 calc(-1 * var(--edge));        /* full bredd, kant till kant */
+  padding: 40px var(--edge) 48px;
+}
+.rk-v1 .dash__side {
+  display: contents;                       /* panelerna blir barn till rastret */
+}
+.rk-v1 .dash__side > section { margin: 0; }
+
+/* "Mina uppgifter" + "Byt lösenord" sida vid sida ... */
+.rk-v1 .dash__side > section.v1-panel--col { grid-column: span 1; }
+/* ... och "Ta bort användarkontot" i full bredd längst ner */
+.rk-v1 .dash__side > section.v1-panel--full { grid-column: 1 / -1; }
+
+
+/* ==========================================================================
+   KRAV 2 – "Logga ut" i svarta listen, längst upp till höger
+   ========================================================================== */
+.rk-v1 .titlebar__inner { flex-wrap: wrap; }
+.rk-v1 .v1-logout {
+  margin-left: auto;                        /* skjuts ut till höger */
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,.5);
+  padding: 9px 16px;
+  font-size: .95rem;
+}
+.rk-v1 .v1-logout:hover {
+  background: rgba(255,255,255,.1);
+  border-color: #fff;
+}
+.rk-v1 .v1-logout .arrow { color: var(--orange); }
+
+
+/* ==========================================================================
+   KRAV 3 – kurskort med procent i stor siffra (lågprioriterat test)
+   Stäng av med ?kurskort=bas i adressen, tillbaka med ?kurskort=pct.
+   ========================================================================== */
+.rk-v1 .v1-hidden { display: none; }
+.rk-v1 .v1-pct { margin: -2px 0 20px; }
+.rk-v1 .v1-pct__big {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.05;
+  color: var(--navy);
+}
+.rk-v1 .v1-pct__big strong {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+.rk-v1 .v1-pct__sub {
+  font-size: .95rem;
+  color: rgba(27,29,45,.6);
+  margin-top: 4px;
+}
+
+
+/* ==========================================================================
+   KRAV 4 – kursvyn som egen sidkontext
+   Topheadern (logga, språk/lättläst, sök, Min sida, Meny) och brödsmulorna
+   göms. Elementet finns kvar i DOM:en eftersom app.js hänger kurshuvudet
+   efter det – men det syns inte.
+   ========================================================================== */
+.rk-v1 body[data-subbar="course"] .site-header,
+.rk-v1 body[data-subbar="course"] .breadcrumb { display: none; }
+
+/* Svarta listen + blå navraden i en gemensam sticky-behållare. Då följer
+   båda med vid scroll utan uträknade pixelhöjder. */
+.rk-v1 .v1-coursehead {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+}
+.rk-v1 .v1-coursehead .coursebar__inner { gap: 20px; }
+.rk-v1 .v1-coursehead .coursebar__title { margin-right: auto; }
+
+/* MIN SIDA höger i svarta listen – samma form som i headern, men vänt till
+   ljus text eftersom bakgrunden här är marinblå i stället för creme. */
+.rk-v1 .v1-account { color: #fff; }
+.rk-v1 .v1-account .avatar { color: var(--orange); }
+.rk-v1 .v1-account:hover { text-decoration: underline; }
+
+
+/* ==========================================================================
+   KRAV 5 – blå navrad under svarta listen
+   Bakåtpil vänster (alltid till Min sida), "Innehåll" + hamburgare höger.
+   ========================================================================== */
+.rk-v1 .v1-subnav {
+  background: var(--skyblue);
+  border-bottom: 1px solid rgba(27,29,45,.14);   /* skiljer raden från sidan,
+                                                    som också är ljusblå */
+  position: relative;                            /* håller innehållsmenyn */
+}
+.rk-v1 .v1-subnav__inner {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 8px var(--edge);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.rk-v1 .v1-back {
+  display: inline-flex;
+  align-items: center;
+  color: var(--navy);
+  text-decoration: none;
+  padding: 5px;
+  border-radius: 5px;
+}
+.rk-v1 .v1-back:hover { background: rgba(27,29,45,.09); }
+
+/* "Innehåll" hamnar under MIN SIDA-ikonen i svarta listen – båda har
+   var(--edge) som högermarginal. Gemen text enligt krav (basen är versal). */
+.rk-v1 .v1-toc-toggle {
+  margin-left: auto;
+  color: var(--navy);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1.25rem;
+}
+
+/* Innehållsmenyn: samma utseende som i basen, men högerställd under raden.
+   Höjdtak så att alla 22 kapitel går att nå på låga skärmar. */
+.rk-v1 .v1-subnav .toc {
+  left: auto;
+  right: var(--edge);
+  max-height: calc(100vh - 170px);
+  overflow-y: auto;
+}
+
+
+/* ==========================================================================
+   KRAV 6 – progressindikatorn i botten borttagen
+   Markup:en byggs inte längre (se buildProgress i variant-v1.js). Här tar vi
+   bara igen luften den lämnade efter sig.
+   ========================================================================== */
+.rk-v1 .pagenav { padding-bottom: 48px; }
+
+
+/* ==========================================================================
+   RESPONSIVT
+   ========================================================================== */
+@media (max-width: 900px) {
+  /* en kolumn – panelerna staplas */
+  .rk-v1 .dash { grid-template-columns: 1fr; }
+  .rk-v1 .dash__side > section.v1-panel--col { grid-column: 1 / -1; }
+
+  /* svarta listen får plats för både kursnamn och MIN SIDA */
+  .rk-v1 .v1-coursehead .coursebar__title { font-size: 1.15rem; }
+  .rk-v1 .v1-account { font-size: .8rem; }
+
+  /* innehållsmenyn får nästan full bredd, fortfarande högerställd */
+  .rk-v1 .v1-subnav .toc { right: var(--edge); width: calc(100vw - 2 * var(--edge)); }
+}

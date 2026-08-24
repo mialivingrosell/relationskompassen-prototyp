@@ -53,6 +53,48 @@ Prototypen minns vilka kapitel testpersonen besökt (sparas i `sessionStorage`):
 - En vanlig omladdning **behåller** progressen (så oavsiktliga omladdningar mitt
   i ett test inte nollställer). Använd nollställ-knappen inför nästa person.
 
+## Versioner (v0 / v1)
+
+Prototypen innehåller flera designversioner i samma kod. Valet sparas per
+flik, så det följer med när man klickar sig vidare i kursen.
+
+| Adress | Version |
+|---|---|
+| `index.html` | **v0 – basversionen.** Kopian av befintliga Relationskompassen, oförändrad. |
+| `index.html?nav=v1` | **v1 – ny meny & navigation.** |
+
+Nere till höger sitter en stämpel där man klickar mellan versionerna och
+nollställer sessionen. Dölj den inför skarpa användartest med `?stamp=off`.
+Öppna v0 i en flik och v1 i en annan för att jämföra sida vid sida.
+
+Basversionen är låst i git som taggen `v0-bas`.
+
+### Vad v1 ändrar
+
+- **Min sida:** "Mina kurser" överst i full bredd; "Mina uppgifter" och
+  "Byt lösenord" sida vid sida under; "Ta bort användarkontot" längst ner.
+- **Logga ut** flyttad till svarta listen, längst upp till höger.
+- **Kurskort** visar procent i stor siffra med kapitelantalet nedtonat under.
+  Lågprioriterat test – `?kurskort=bas` visar basversionens kort inne i v1,
+  `?kurskort=pct` växlar tillbaka.
+- **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
+  Svarta listen är sticky med kursnamnet till vänster och MIN SIDA till höger.
+- **Blå sticky navrad** under svarta listen: bakåtpil till Min sida till
+  vänster, "Innehåll" + hamburgare till höger. Innehållsmenyn är densamma
+  som förut, bara högerställd under raden.
+- **Progressindikatorn** i botten av kapitelsidan borttagen (prev/next kvar).
+
+### Filerna
+
+- `variants.js` – växlaren. Toppen av filen beskriver hur en v2 läggs till.
+- `variant-v1.js` – v1:s avvikelser. Allt som inte står här ärvs från
+  `app.js` (basen), så v1 skiljer sig bara där vi aktivt byggt något.
+- `variant-v1.css` – v1:s stil, laddas bara när v1 är aktiv.
+
+`app.js` och `styles.css` är basversionen och rörs inte när nya versioner
+byggs – varje byggfunktion i `app.js` lämnar bara över till variantens egen
+version om den finns.
+
 ## Att göra härnäst
 
 1. (Valfritt) Lägg in riktiga seriestrippar i `assets/`.

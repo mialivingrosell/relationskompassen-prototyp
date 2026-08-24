@@ -3,6 +3,11 @@
    Bygger header, footer, kursmeny (INNEHÅLL), breadcrumb, prev/next, progress.
    Kurssidorna beskrivs i CHAPTERS-listan nedan (datadrivet -> menyn blir
    identisk och komplett på alla sidor, alla 22 kapitel visas).
+
+   VARIANTER: koden här är BASVERSIONEN (v0). Varje byggfunktion börjar med
+   en rad som lämnar över till den aktiva variantens egen version om den
+   finns (se variants.js + variant-v1.js). Ändra alltså inte här när du
+   bygger en ny designversion – lägg den i variant-filen.
    ========================================================================== */
 
 /* Linjär ordning för meny, progress och prev/next.
@@ -55,6 +60,7 @@ const ICON = {
 
 /* ------------------------------------------------------------------ header */
 function buildHeader(loggedIn) {
+  const o = V.override('buildHeader'); if (o) return o(loggedIn);
   return `
   <header class="site-header">
     <div class="site-header__inner">
@@ -81,6 +87,7 @@ function buildHeader(loggedIn) {
 
 /* ------------------------------------------------------------------ footer */
 function buildFooter() {
+  const o = V.override('buildFooter'); if (o) return o();
   return `
   <footer class="site-footer">
     <div class="footer__grid">
@@ -128,6 +135,7 @@ function resetVisited() {
 const CHEVRON = `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>`;
 
 function tocRow(ch, currentIndex, visited, elsaCollapsed) {
+  const o = V.override('tocRow'); if (o) return o(ch, currentIndex, visited, elsaCollapsed);
   const isCurrent = ch.i === currentIndex;
   const isDone    = !isCurrent && visited.has(ch.i);   // avklarat = tidigare besökt
   // (ej besökt = låst/utgråat)
@@ -152,6 +160,7 @@ function tocRow(ch, currentIndex, visited, elsaCollapsed) {
 }
 
 function buildToc(currentIndex) {
+  const o = V.override('buildToc'); if (o) return o(currentIndex);
   const visited = getVisited();
   // Default infälld – men fäll ut automatiskt om man är inne på ett underkapitel (del 2–4)
   const elsaCollapsed = ![5, 6, 7].includes(currentIndex);
@@ -170,6 +179,7 @@ function buildToc(currentIndex) {
 
 /* ---------------------------------------------------------- course subnav */
 function buildCourseBar(ch) {
+  const o = V.override('buildCourseBar'); if (o) return o(ch);
   return `
   <div class="breadcrumb">
     <div class="breadcrumb__inner">
@@ -192,6 +202,7 @@ function buildCourseBar(ch) {
 
 /* ---------------------------------------------------------- prev/next + progress */
 function buildPageNav(ch) {
+  const o = V.override('buildPageNav'); if (o) return o(ch);
   const prev = CHAPTERS[ch.i - 1];
   const next = CHAPTERS[ch.i + 1];
   const prevBtn = prev
@@ -204,6 +215,7 @@ function buildPageNav(ch) {
   return `<div class="pagenav">${prevBtn}${nextBtn}</div>`;
 }
 function buildProgress(ch) {
+  const o = V.override('buildProgress'); if (o) return o(ch);
   const pct = Math.round((ch.i / TOTAL) * 100);
   return `
   <div class="progress">
@@ -226,6 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Sub-bar beroende på sidtyp
   const header = document.querySelector('.site-header');
   const type = body.dataset.subbar; // 'title' | 'hero' | 'course' | 'none'
+  let currentCh = null;
 
   if (type === 'title') {
     header.insertAdjacentElement('afterend',
@@ -235,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (type === 'course') {
     const idx = parseInt(body.dataset.chapter, 10);
     const ch = CHAPTERS[idx];
+    currentCh = ch;
     markVisited(idx);   // spara detta kapitel som besökt innan menyn byggs
     header.insertAdjacentHTML('afterend', buildCourseBar(ch));
     // injicera prev/next + progress i slutet av .course-main om markör finns
@@ -269,6 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // (Nollställ session finns diskret i footern)
 
+  // Variantens egna tillägg (sticky paneler, extra knappar m.m.) – körs sist
+  // när all bas-DOM finns på plats. Gör inget i basversionen.
+  V.override('initExtra')?.({ ch: currentCh, type, loggedIn });
+
   // Stäng menyer med Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeAllMenus();
@@ -285,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ------------------------------------------------ MENY-panel (webbplatsmeny) */
 function buildMenuLayer() {
+  const o = V.override('buildMenuLayer'); if (o) return o();
   if (document.getElementById('siteMenu')) return;
   const header = document.querySelector('.site-header');
   const top = (header ? header.offsetHeight : 110) + 'px';
