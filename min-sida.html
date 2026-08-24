@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Min sida | Relationskompassen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Barlow+Condensed:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-subbar="title" data-title="Min sida" data-logged="true">
+
+  <div class="dash">
+    <!-- Mina kurser (vänster, ljusblå panel) -->
+    <section class="dash__courses">
+      <h2>Mina kurser</h2>
+      <p>Härifrån påbörjar du eller fortsätter din kurs.</p>
+
+      <!-- Exempel: avklarad kurs -->
+      <div class="course-item">
+        <div class="row"><span>Att leda träffar i skolan</span><span>4 av 4</span></div>
+        <div class="mini-track"><div class="mini-fill mini-fill--done" style="width:100%"></div></div>
+        <div class="course-actions">
+          <a class="btn btn--outline" href="#">Se igen <span class="arrow">→</span></a>
+          <a class="btn btn--navy" href="#"><span class="pdf-ico">PDF</span> Ladda ner intyg <span class="arrow">→</span></a>
+        </div>
+      </div>
+
+      <!-- Grundkursen: speglar sessionens framsteg -->
+      <div class="course-item" id="courseGrundkurs" data-total="20">
+        <div class="row"><span>Relationskompassens grundkurs</span><span class="course-count">0 av 20</span></div>
+        <div class="mini-track"><div class="mini-fill" style="width:0%"></div></div>
+        <a class="btn btn--navy course-cta" href="grundkurs.html">Starta <span class="arrow">→</span></a>
+      </div>
+    </section>
+
+    <!-- Höger kolumn (creme-paneler) -->
+    <div class="dash__side">
+      <section>
+        <h3>Mina uppgifter</h3>
+        <p>Du har registrerat följande namn och e-postadress på Relationskompassen.</p>
+        <p style="margin:0"><strong>Namn:</strong> Mia Living Rosell</p>
+        <p style="margin:0"><strong>E-post:</strong> mia.living@digitalist.com</p>
+        <p><strong>Kontot skapat:</strong> 2026-08-20</p>
+        <a class="btn btn--outline" href="logga-in.html">Logga ut <span class="arrow">←</span></a>
+      </section>
+
+      <section>
+        <h3>Byt lösenord</h3>
+        <p>Ange ditt nuvarande lösenord och ett nytt lösenord.</p>
+        <div class="field" style="max-width:none"><input type="password" placeholder="Nuvarande lösenord"></div>
+        <div class="field" style="max-width:none"><input type="password" placeholder="Nytt lösenord"></div>
+        <button class="btn btn--outline">Ändra lösenord <span class="arrow">→</span></button>
+      </section>
+
+      <section>
+        <h3>Ta bort användarkontot</h3>
+        <p>Du kan själv radera ditt konto, och därmed försvinner dina personuppgifter från vår lagring. Du kan sedan när som helst skapa ett nytt konto.</p>
+        <button class="btn btn--outline">Ta bort mitt konto <span class="arrow" style="color:var(--orange)">✕</span></button>
+      </section>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

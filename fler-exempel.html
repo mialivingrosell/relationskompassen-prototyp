@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fler exempel på viktiga relationer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Barlow+Condensed:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-subbar="course" data-chapter="2" data-logged="true">
+  <div class="coursepage">
+    <div class="container course-main">
+      <h1>Fler exempel på viktiga relationer</h1>
+      <h2>Vad tror du?</h2>
+      <p style="max-width:900px">Det finns en vanlig plats som barn vistas på, som är den huvudsakliga platsen där brott mot barn sker. Vilka personer möter barn där?</p>
+
+      <div class="quiz-options">
+        <div class="quiz-option is-correct">
+          <div class="ph ph--photo" data-img="fe-skolpersonal.png" data-alt="Skolpersonal"><span class="ph__label">Foto<small>(platshållare)</small></span></div>
+          <div class="quiz-option__label">Skolpersonal</div>
+          <div class="quiz-option__feedback">Den vanligaste platsen där brott mot barn sker är i skolan.</div>
+        </div>
+        <div class="quiz-option">
+          <div class="ph ph--photo" data-img="fe-karleksrelationer.png" data-alt="Kärleksrelationer"><span class="ph__label">Foto<small>(platshållare)</small></span></div>
+          <div class="quiz-option__label">Kärleksrelationer</div>
+        </div>
+        <div class="quiz-option">
+          <div class="ph ph--photo" data-img="fe-fritidspersonal.png" data-alt="Fritidspersonal"><span class="ph__label">Foto<small>(platshållare)</small></span></div>
+          <div class="quiz-option__label">Fritidspersonal</div>
+        </div>
+      </div>
+      <div class="center">
+        <button class="btn-ratta" onclick="rattaBild(this,'.quiz-option.is-correct')">Rätta <span style="color:var(--navy)">⌄</span></button>
+      </div>
+
+      <div class="three-col">
+        <div>
+          <h3>Skolpersonal</h3>
+          <p>Skolpersonal och skolan har stora möjligheter att förebygga och upptäcka våld. En skolgång som fungerar är ett viktigt skydd mot våld och det påverkar resten av livet. Vuxna i skolan kan se och följa barn över tid och fånga upp saker som sker i barns liv, även våld.</p>
+        </div>
+        <div>
+          <h3>Kärleksrelationer</h3>
+          <p>Förutom allt härligt och pirriga känslor som kan komma med att vara ihop med någon, kan det vara ett bra sätt att lära sig att sätta ord på sina behov och att öva sig på samtycke. Att bli ihop innebär att få träna på att uttrycka intresse för någon, och att göra slut är att hantera känslor och situationer som ofta är svåra.</p>
+        </div>
+        <div>
+          <h3>Fritidspersonal</h3>
+          <p>Många barn tillbringar mycket tid i fritidshem och öppen fritidsverksamhet och personalen är viktiga i arbetet med att förebygga våld och skapa jämställdhet. Förebilder som tar barns känslor och upplevelser på allvar, tror på barns egna kapacitet och ger positiv förstärkning i goda relationsmönster har stor betydelse för att skydda mot våld.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:34px">Brott mot barn sker oftast i skolan</h3>
+      <p style="max-width:900px">En av de vanligaste platserna där brott mot barn sker är i skolan. I åldern 10-12 är det vanligaste brotten mot flickor sexualbrott, medan pojkar är mer utsatta för misshandel.</p>
+      <p style="max-width:900px">Brottssituationer där barn utsätts för sexuellt våld handlar exempelvis om att fotografera eller filma barn i omklädningsrum och sedan sprida bilder och filmer i sociala medier. Det handlar även om sexuella trakasserier och även våldtäkter i skolmiljö. Gärningspersonen är framförallt andra jämnåriga barn men det förekommer även sexuellt våld där gärningspersonen är personal på skolan.</p>
+
+      <div data-pagenav></div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

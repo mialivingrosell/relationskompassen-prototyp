@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skapa konto | Relationskompassen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Barlow+Condensed:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-subbar="title" data-title="Kom igång med Relationskompassen" data-logged="false">
+
+  <div class="container">
+    <div class="home-cards" style="align-items:start">
+      <section>
+        <h1>Skapa konto</h1>
+        <p>För att gå en webbkurs behöver du ett användarkonto. Då kan du ta paus när du vill och fortsätta där du slutade. Du kan också ladda ner ett intyg när du är klar. Fyll i uppgifterna nedan för att skapa ditt konto. På ”Min sida” kan du när som helst ändra lösenord eller radera ditt konto.</p>
+
+        <form onsubmit="window.location='konto-skapat.html';return false" style="margin-top:24px">
+          <div class="field"><label>Förnamn*</label><input type="text"></div>
+          <div class="field"><label>Efternamn*</label><input type="text"></div>
+          <div class="field"><label>E-postadress*</label><input type="email"></div>
+          <div class="field"><label>Kön*</label>
+            <select><option>Välj kön</option><option>Kvinna</option><option>Man</option><option>Annat</option><option>Vill ej uppge</option></select>
+          </div>
+          <div class="field"><label>Verksamhet eller roll*</label>
+            <select><option>Välj verksamhet eller roll</option><option>Skola</option><option>Socialtjänst</option><option>Fritidshem</option><option>Annat</option></select>
+          </div>
+          <div class="field"><label>Sektor*</label>
+            <select><option>Välj sektor</option><option>Offentlig</option><option>Privat</option><option>Idéburen</option></select>
+          </div>
+          <button class="btn btn--peach" type="submit">Skapa konto <span class="arrow">→</span></button>
+        </form>
+
+        <p style="margin-top:18px">Har du redan ett användarkonto. <a class="muted-link" href="logga-in.html">Logga in här</a>.</p>
+      </section>
+
+      <div class="ph ph--photo" style="aspect-ratio:3/4" data-img="skapa-konto.png" data-alt="Barn och förälder"><span class="ph__label">Foto: barn och förälder<small>(platshållare)</small></span></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

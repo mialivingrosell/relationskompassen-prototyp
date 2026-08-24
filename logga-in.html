@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Min sida – Logga in | Relationskompassen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Barlow+Condensed:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-subbar="title" data-title="Min sida" data-logged="false">
+
+  <div class="container">
+    <div class="home-cards" style="align-items:start">
+      <section>
+        <h1>Logga in</h1>
+        <p>När du är inloggad sparas dina utbildningar och du kan ta paus när som helst. Även om du fortsätter från en annan dator eller telefon så tar du vid där du slutade. Om du inte har några inloggningsuppgifter så kan du enkelt skapa ett konto.</p>
+
+        <form onsubmit="window.location='min-sida.html';return false" style="margin-top:26px">
+          <div class="field">
+            <label for="epost">E-postadress*</label>
+            <input id="epost" class="prefilled" type="email" value="mia.living@digitalist.com">
+          </div>
+          <div class="field">
+            <label for="pw">Lösenord*</label>
+            <input id="pw" type="password" value="********">
+          </div>
+          <button class="btn btn--peach" type="submit">Logga in <span class="arrow">→</span></button>
+        </form>
+
+        <p style="margin-top:18px">Har du glömt ditt lösenord? <a class="muted-link" href="#">Klicka här för att återställa lösenordet</a>.</p>
+
+        <h3 style="margin-top:34px">Kom igång med Relationskompassen</h3>
+        <p>Skapa ett konto för att komma igång med Relationskompassen. Du kan när som helst ändra dina inställningar på ”Min sida”.</p>
+        <p style="margin-top:16px"><a class="btn btn--navy" href="skapa-konto.html">Skapa användarkonto <span class="arrow">→</span></a></p>
+      </section>
+
+      <div class="ph ph--photo" style="aspect-ratio:1/1" data-img="login.png" data-alt="Elev och lärare"><span class="ph__label">Foto: elev och lärare<small>(platshållare)</small></span></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

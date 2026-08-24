@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barns olika relationer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Barlow+Condensed:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-subbar="course" data-chapter="1" data-logged="true">
+  <div class="coursepage">
+    <div class="container course-main">
+      <h1>Barns olika relationer</h1>
+      <p style="max-width:900px">Barns olika relationer har en stor påverkan i våldsförebyggande arbete. Stabila och trygga relationer med vänner, familj, och andra viktiga vuxna skyddar mot våld. I Relationskompassen får flera olika personer som finns i barns liv till sig samma kunskap. På så vis möts barnet av samma budskap från flera olika håll. Nu ska vi titta på några exempel på viktiga relationer i ett barns liv.</p>
+
+      <h2 style="margin-top:26px">Vad tror du?</h2>
+      <p style="max-width:900px">Barn som är utsatta för våld svarar oftast nej om de får frågor om det. Vi vet att det är livsviktigt att vuxna frågar barn flera gånger, även då vi fått ett nej. Vi vet även att i de fall där ett barn berättar att det blivit utsatt för våld så berättar de främst för en viss grupp av människor omkring dem. Vad tror du? Vilka är det som barnet oftast vänder sig till först?</p>
+
+      <div class="quiz-options">
+        <div class="quiz-option is-correct">
+          <div class="ph ph--photo" data-img="bor-vanner.png" data-alt="Vänner"><span class="ph__label">Foto<small>(platshållare)</small></span></div>
+          <div class="quiz-option__label">Vänner</div>
+          <div class="quiz-option__feedback">Det vanligaste är att barn väljer att prata med en jämnårig vän.</div>
+        </div>
+        <div class="quiz-option">
+          <div class="ph ph--photo" data-img="bor-vardnadshavare.png" data-alt="Vårdnadshavare"><span class="ph__label">Foto<small>(platshållare)</small></span></div>
+          <div class="quiz-option__label">Vårdnadshavare</div>
+        </div>
+        <div class="quiz-option">
+          <div class="ph ph--photo" data-img="bor-unga-forebilder.png" data-alt="Unga förebilder"><span class="ph__label">Foto<small>(platshållare)</small></span></div>
+          <div class="quiz-option__label">Unga förebilder</div>
+        </div>
+      </div>
+      <div class="center">
+        <button class="btn-ratta" onclick="rattaBild(this,'.quiz-option.is-correct')">Rätta <span style="color:var(--navy)">⌄</span></button>
+      </div>
+
+      <div class="three-col">
+        <div>
+          <h3>Vänner</h3>
+          <p>Med vänner lär sig barn att visa att de bryr sig om varandra och att respektera varandra, och det behöver de kunna i sina första kärleksrelationer också. Inställningen till olika beteenden i kompisgruppen spelar roll. Om vännerna inte tycker det är okej med kontrollerande beteenden eller att tjata för att någon ska göra något den inte vill så ökar chansen att man själv inte kommer att tolerera kränkningar och våld i en kärleksrelation.</p>
+        </div>
+        <div>
+          <h3>Vårdnadshavare</h3>
+          <p>Att barn under sin uppväxt får se kärleksrelationer som är kommunikativa, respektfulla och jämställda har en positiv effekt på barns bild av hur en kärleksrelation kan se ut.</p>
+          <p>När föräldrar pratar med sina barn om rätten till att sätta gränser, vikten av samtycke och värdet av att kommunicera känslor och behov, även när man tycker olika, så ger det viktiga kunskaper och referensramar i framtida kärleksrelationer.</p>
+        </div>
+        <div>
+          <h3>Unga förebilder</h3>
+          <p>Barn har ofta förebilder i äldre syskon eller andra unga som de kan lära sig av. Unga förebilder som visar på goda exempel på hur en kärleksrelation kan vara jämställd och respektfull påverkar barn positivt. Dessa förebilder kan även vara ett stöd för yngre barn att vända sig till. Barn och särskilt tonåringar berättar sällan om våld. Men då de gör det berättar de främst för andra barn och unga.</p>
+        </div>
+      </div>
+
+      <div data-pagenav></div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
