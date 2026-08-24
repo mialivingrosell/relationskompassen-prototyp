@@ -89,6 +89,29 @@
   padding-top: 32px;
 }
 
+/* ==========================================================================
+   KRAV K – lösenordsfält: halverad bredd + ögonikon i fältet
+   ========================================================================== */
+.rk-v1 .v1-pwfield {
+  position: relative;
+  max-width: 440px;             /* ca hälften av föregående bredd */
+}
+.rk-v1 .v1-pwfield input { padding-right: 54px; }
+.rk-v1 .v1-eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: 0;
+  padding: 5px;
+  cursor: pointer;
+  color: var(--orange);
+}
+.rk-v1 .v1-eye.is-on { color: var(--navy); }   /* lösenordet syns */
+
 
 /* ==========================================================================
    KRAV 2 – "Logga ut" i svarta listen, längst upp till höger
@@ -141,6 +164,19 @@
   line-height: 1.1;
   margin: 0 0 20px;
 }
+/* krav I: introtext + rad med beräknad tid */
+.rk-v1 .v1-card__intro {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.rk-v1 .v1-card__time {
+  margin: 0 0 22px;
+  font-size: .95rem;
+  font-weight: 700;
+  color: rgba(27,29,45,.72);
+}
+
 .rk-v1 .v1-card__lead {
   margin: 0;
   font-size: 1rem;
@@ -174,12 +210,12 @@
   overflow: hidden;
   margin: 0 0 24px;
 }
+/* krav H: orange linje för alla kurser, även pågående */
 .rk-v1 .v1-card__fill {
   height: 100%;
-  background: var(--navy);
+  background: var(--orange);
   border-radius: 6px;
 }
-.rk-v1 .v1-card--done .v1-card__fill { background: var(--orange); }
 
 /* knapparna längst ner – margin-top:auto håller dem i linje mellan korten */
 .rk-v1 .v1-card__actions {
@@ -188,6 +224,15 @@
   flex-wrap: wrap;
   margin-top: auto;
 }
+
+/* krav J: "Ladda ner intyg" vit med svart text, så att den inte konkurrerar
+   med "Fortsätt" på den pågående kursen. PDF-märket förblir orange. */
+.rk-v1 .v1-card--done .btn--navy {
+  background: #fff;
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+}
+.rk-v1 .v1-card--done .btn--navy:hover { background: #f4f4f6; }
 
 
 /* ==========================================================================
@@ -199,78 +244,68 @@
 .rk-v1 body[data-subbar="course"] .site-header,
 .rk-v1 body[data-subbar="course"] .breadcrumb { display: none; }
 
-/* Svarta listen + blå navraden i en gemensam sticky-behållare. Då följer
-   båda med vid scroll utan uträknade pixelhöjder. */
+/* Svarta listen, progressraden och innehållsmenyn i en gemensam
+   sticky-behållare. Då följer allt med vid scroll utan uträknade pixelhöjder.
+   position: relative i botten gör att innehållsmenyn hänger under hela
+   huvudet, alltså nedanför progressraden. */
 .rk-v1 .v1-coursehead {
   position: sticky;
   top: 0;
   z-index: 60;
 }
-.rk-v1 .v1-coursehead .coursebar__inner { gap: 20px; }
+.rk-v1 .v1-coursehead .coursebar__inner { gap: 18px; }
 .rk-v1 .v1-coursehead .coursebar__title { margin-right: auto; }
-
-/* MIN SIDA höger i svarta listen – samma form som i headern, men vänt till
-   ljus text eftersom bakgrunden här är marinblå i stället för creme. */
-.rk-v1 .v1-account { color: #fff; }
-.rk-v1 .v1-account .avatar { color: var(--orange); }
-.rk-v1 .v1-account:hover { text-decoration: underline; }
 
 
 /* ==========================================================================
-   KRAV 5 – blå navrad under svarta listen
-   Bakåtpil vänster (alltid till Min sida), "Innehåll" + hamburgare höger.
+   KRAV M – svarta listen enligt skiss
+   Vit bakåtpil före kursnamnet, INNEHÅLL + hamburgare längst till höger.
+   Pilen är samma tecken som i prev/next-knapparna längst ner på sidan,
+   men vit i stället för orange.
    ========================================================================== */
-.rk-v1 .v1-subnav {
-  background: var(--skyblue);
-  border-bottom: 1px solid rgba(27,29,45,.14);   /* skiljer raden från sidan,
-                                                    som också är ljusblå */
-  position: relative;                            /* håller innehållsmenyn */
-}
-.rk-v1 .v1-subnav__inner {
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 8px var(--edge);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
 .rk-v1 .v1-back {
   display: inline-flex;
   align-items: center;
-  color: var(--navy);
   text-decoration: none;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 0 2px;
+  flex: 0 0 auto;
 }
-.rk-v1 .v1-back:hover { background: rgba(27,29,45,.09); }
-
-/* "Innehåll" hamnar under MIN SIDA-ikonen i svarta listen – båda har
-   var(--edge) som högermarginal. Gemen text enligt krav (basen är versal). */
-.rk-v1 .v1-toc-toggle {
-  margin-left: auto;
-  color: var(--navy);
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 1.25rem;
+.rk-v1 .v1-back .arrow {
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.8rem;
+  line-height: 1;
 }
+.rk-v1 .v1-back:hover .arrow { color: var(--orange); }
 
-/* Innehållsmenyn: samma utseende som i basen, men högerställd under raden.
-   Höjdtak så att alla 22 kapitel går att nå på låga skärmar. */
-.rk-v1 .v1-subnav .toc {
+/* INNEHÅLL till höger. Basens .coursebar__toggle är redan vit, versal och
+   condensed – här behövs bara placeringen. */
+.rk-v1 .v1-toc-toggle { margin-left: auto; }
+
+/* Innehållsmenyn: samma utseende som i basen, men högerställd och hängande
+   under hela kurshuvudet. Höjdtak så alla 22 kapitel går att nå på låga
+   skärmar. */
+.rk-v1 .v1-coursehead .toc {
   left: auto;
   right: var(--edge);
-  max-height: calc(100vh - 170px);
+  max-height: calc(100vh - 140px);
   overflow-y: auto;
 }
 
-/* KRAV D – kapitelnumret i innehållsmenyn. Egen bredd så att rubrikerna
-   linjerar trots att numren är olika långa (1, 10, 5.1). */
-.rk-v1 .toc .v1-tocnum {
-  display: inline-block;
-  min-width: 1.9em;
-  font-variant-numeric: tabular-nums;
+
+/* ==========================================================================
+   KRAV N – tunn progressindikator direkt under svarta listen
+   Visar samma tal som Min sida (se v1ProgressPct i variant-v1.js).
+   ========================================================================== */
+.rk-v1 .v1-progress {
+  height: 8px;
+  background: var(--grey-track);
 }
-.rk-v1 .toc .toc__item--sub .v1-tocnum { min-width: 2.7em; }
+.rk-v1 .v1-progress__fill {
+  height: 100%;
+  background: var(--orange);
+  transition: width .3s ease;
+}
 
 
 /* ==========================================================================
@@ -292,10 +327,11 @@
   .rk-v1 .dash__courses,
   .rk-v1 .dash__side { padding: 28px 24px 30px; }
 
-  /* svarta listen får plats för både kursnamn och MIN SIDA */
+  /* svarta listen får plats för pil, kursnamn och INNEHÅLL */
   .rk-v1 .v1-coursehead .coursebar__title { font-size: 1.15rem; }
-  .rk-v1 .v1-account { font-size: .8rem; }
+  .rk-v1 .v1-toc-toggle { font-size: .95rem; }
+  .rk-v1 .v1-coursehead .hamburger { width: 26px; }
 
   /* innehållsmenyn får nästan full bredd, fortfarande högerställd */
-  .rk-v1 .v1-subnav .toc { right: var(--edge); width: calc(100vw - 2 * var(--edge)); }
+  .rk-v1 .v1-coursehead .toc { right: var(--edge); width: calc(100vw - 2 * var(--edge)); }
 }

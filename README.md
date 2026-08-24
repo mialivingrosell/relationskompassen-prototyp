@@ -79,16 +79,21 @@ Basversionen är låst i git som taggen `v0-bas`.
   med "Mina uppgifter" som sektionsrubrik och "Byt lösenord" +
   "Ta bort användarkontot" som undersektioner.
 - **Logga ut** flyttad till svarta listen, längst upp till höger.
-- **Kurskort:** ett vitt kort per kurs på den blå ytan med kursnamn, procent i
-  stor siffra, kapitelantal, kort progressstreck och knapp. Pågående kurs
-  först, genomförd sist. Två kort i bredd, tre eller fler staplas.
-- **Kapitelnumrering** i innehållsmenyn, från 1 (basen börjar på 0).
-  Underkapitlen ärver förälderns nummer: 5.1, 5.2, 5.3.
+- **Kurskort:** ett vitt kort per kurs på den blå ytan med kursnamn, introtext,
+  beräknad tid, procent i stor siffra, kapitelantal, kort orange
+  progressstreck och knapp. Pågående kurs först, genomförd sist. Två kort i
+  bredd, tre eller fler staplas. "Ladda ner intyg" är vit så den inte
+  konkurrerar med "Fortsätt".
+- **Byt lösenord:** halverad fältbredd med ögonikon i fältet.
+- **Kapitelnumrering** i innehållsmenyn, från 1 (basen börjar på 0), direkt
+  bredvid kapitelnamnet: "1. Relationskompassens grundkurs". Underkapitlen
+  ärver förälderns nummer: 5.1, 5.2, 5.3.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
-  Svarta listen är sticky med kursnamnet till vänster och MIN SIDA till höger.
-- **Blå sticky navrad** under svarta listen: bakåtpil till Min sida till
-  vänster, "Innehåll" + hamburgare till höger. Innehållsmenyn är densamma
-  som förut, bara högerställd under raden.
+  Svarta listen är sticky och innehåller vit bakåtpil till Min sida,
+  kursnamnet, och INNEHÅLL + hamburgare längst till höger. Innehållsmenyn
+  fälls ut högerställd under hela huvudet.
+- **Tunn progressindikator** direkt under svarta listen, med samma värde som
+  progressen på Min sida.
 - **Progressindikatorn** i botten av kapitelsidan borttagen (prev/next kvar).
 
 ### Filerna

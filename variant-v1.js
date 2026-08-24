@@ -1,47 +1,70 @@
 /* ==========================================================================
    VARIANT v1 – ny meny & navigation
-   Bygger kravspec v1 (2026-08-24) + återkoppling omgång 2 (2026-08-24).
+   Bygger kravspec v1 (2026-08-24) + återkoppling omgång 2–4.
    Allt som INTE står här ärvs från basversionen i app.js, så v0 är orörd.
 
    KRAV SOM ÄR BYGGDA
      Omgång 1
-     1  Min sida: "Mina kurser" överst i full bredd, uppgifter + lösenord
-        sida vid sida under, "Ta bort kontot" längst ner.        -> initExtra + CSS
+     1  Min sida: "Mina kurser" överst, kontouppgifterna under.  -> initExtra + CSS
      2  "Logga ut" flyttad till svarta listen, längst upp till höger.  -> initExtra
-     4  Kursvy: topheader + brödsmulor bort, svarta listen sticky med
-        kursnamn vänster och MIN SIDA höger.               -> buildCourseBar + CSS
-     5  Blå sticky navrad under: bakåtpil vänster, "Innehåll" +
-        hamburgare höger, innehållsmenyn högerställd.      -> buildCourseBar + CSS
+     4  Kursvy: topheader + brödsmulor bort, svarta listen sticky.
+                                                          -> buildCourseBar + CSS
      6  Progressindikatorn i botten av kapitelsidan borttagen.   -> buildProgress
 
      Omgång 2
      A  Större rubriker på artikel-/kapitelsidor (brödtexten orörd).    -> CSS
      B  Blå rutan på Min sida läses som en ruta med luft ovanför.       -> CSS
-     C  Vita kurskort på den blå ytan: kursnamn, procent i stor siffra,
-        kapitelantal, kortare progressstreck, knapp. Pågående kurs
-        först, genomförd sist. Två i bredd, tre eller fler staplas.
-                                                            -> initExtra + CSS
+     C  Vita kurskort på den blå ytan. Pågående kurs först, genomförd
+        sist. Två i bredd, tre eller fler staplas.          -> initExtra + CSS
      D  Kapitelnumrering från 1 i innehållsmenyn, undernivåer 5.1–5.3.
                                                               -> tocRow + CSS
 
      Omgång 3
      E  "Mina uppgifter" är en helbred platta som även rymmer "Byt lösenord"
         och "Ta bort användarkontot" som undersektioner.       -> initExtra + CSS
-     F  Större videoruta på kapitelsidor, smalare radbredd för rubriker
-        och brödtext.                                                   -> CSS
-     G  Skarpa hörn på kursplattan och kurskorten; korten breddade så de
-        linjerar med plattans högerkant.                                -> CSS
+     F  Större videoruta på kapitelsidor, smalare radbredd.             -> CSS
+     G  Skarpa hörn på kursplattan och kurskorten; korten breddade.     -> CSS
+
+     Omgång 4
+     H  Orange progresslinje även för pågående kurs.                    -> CSS
+     I  Introtext + rad med beräknad tid på varje kurskort. -> initExtra + CSS
+     J  "Ladda ner intyg" vit med svart text så den inte konkurrerar
+        med "Fortsätt".                                                 -> CSS
+     K  Byt lösenord: halverad fältbredd + ögonikon i fältet.
+                                                            -> initExtra + CSS
+     L  Numret direkt bredvid kapitelnamnet: "1. Relationskompassens
+        grundkurs".                                               -> tocRow + CSS
+     M  Kapitelsidans svarta list enligt skiss: vit bakåtpil före
+        kursnamnet, INNEHÅLL + hamburgare uppflyttad till höger,
+        MIN SIDA borttagen.                               -> buildCourseBar + CSS
+     N  Tunn progressindikator direkt under svarta listen, synkad med
+        Min sidas progress.                               -> buildCourseBar + CSS
 
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
 
-/* Liten vänsterpil till bakåtknappen (krav 5). currentColor = navy via CSS. */
-const V1_BACK = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>`;
+
+/* ---------------------------------------------------------------- krav I
+   Kursinformation som inte finns i min-sida.html. Nyckeln är kursnamnet så
+   som det står i rubrikraden på kortet.
+
+   Obs: tiden står bara på den egna raden, inte också i introtexten – annars
+   hade "2 timmar" stått två gånger i samma kort. */
+const V1_COURSE_INFO = {
+  'Relationskompassens grundkurs': {
+    time:  'Beräknad tid: ca 2 timmar',
+    intro: 'Detta är en webbkurs för alla vuxna som ska arbeta med Relationskompassen.',
+  },
+  'Att leda träffar i skolan': {
+    time:  'Beräknad tid: ca 45 minuter',
+    intro: 'Här får du som ska leda Relationskompassens träffar i skolan stöd för att planera och genomföra dem.',
+  },
+};
 
 
 /* ==========================================================================
-   KRAV D – kapitelnumrering
+   KRAV D + L – kapitelnumrering
    Huvudkapitel numreras 1, 2, 3 ... och underkapitel ärver förälderns
    nummer: 5.1, 5.2, 5.3. Numreringen räknas fram ur CHAPTERS, så den följer
    med automatiskt om kapitelordningen ändras.
@@ -64,7 +87,20 @@ function v1Nums() {
 
 
 /* ==========================================================================
-   KRAV 1, 2, C – Min sida
+   KRAV N – progressindikator i kurshuvudet
+   Visar samma tal som Min sida: hur långt man nått av TOTAL, inte vilket
+   kapitel man just nu råkar läsa. Klickar man sig bakåt står siffran alltså
+   kvar, precis som på Min sida.
+   ========================================================================== */
+function v1ProgressPct() {
+  const visited = getVisited();
+  const done = visited.size ? Math.min(TOTAL, Math.max.apply(null, [...visited])) : 0;
+  return Math.round(done / TOTAL * 100);
+}
+
+
+/* ==========================================================================
+   KRAV 1, 2, C, E, I, K – Min sida
    Byggs om i DOM:en i stället för i min-sida.html, så att samma HTML-fil kan
    visa både v0 och v1.
    ========================================================================== */
@@ -93,9 +129,10 @@ function v1BuildMinSida() {
   }
 
   v1BuildCourseCards();
+  v1PasswordFields();
 }
 
-/* krav C: ett vitt kort per kurs på den blå ytan.
+/* krav C + I: ett vitt kort per kurs på den blå ytan.
    Knapparna ("Fortsätt", "Se igen", "Ladda ner intyg") är godkända som de är
    och flyttas därför över oförändrade i stället för att byggas om. */
 function v1BuildCourseCards() {
@@ -131,10 +168,13 @@ function v1BuildCourseCards() {
   grid.dataset.count = courses.length;   // 2 -> två i bredd, annars staplade
 
   courses.forEach(c => {
+    const info = V1_COURSE_INFO[c.title] || {};
     const box = document.createElement('div');
     box.className = 'v1-card' + (c.pct >= 100 ? ' v1-card--done' : '');
     box.innerHTML = `
       <h3 class="v1-card__title">${c.title}</h3>
+      ${info.intro ? `<p class="v1-card__intro">${info.intro}</p>` : ''}
+      ${info.time  ? `<p class="v1-card__time">${info.time}</p>` : ''}
       <p class="v1-card__lead">Du har genomfört</p>
       <div class="v1-card__pct">${c.pct}<span>%</span></div>
       <p class="v1-card__sub">${c.done} av ${c.total} kapitel genomförda</p>
@@ -160,15 +200,45 @@ function v1BuildCourseCards() {
   wrap.appendChild(grid);
 }
 
+/* krav K: lösenordsfälten halveras och får en ögonikon längst till höger,
+   som i originalet. Ikonen är samma öga som LÄTTLÄST i headern (ICON.eye),
+   alltså profilens handritade manér. */
+function v1PasswordFields() {
+  document.querySelectorAll('.dash__side input[type="password"]').forEach(input => {
+    const field = input.closest('.field');
+    if (field) {
+      field.style.maxWidth = '';        // släpper min-sida.html:s inline-bredd
+      field.classList.add('v1-pwfield');
+    }
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'v1-eye';
+    btn.setAttribute('aria-label', 'Visa lösenord');
+    btn.innerHTML = ICON.eye;
+    btn.addEventListener('click', () => {
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.classList.toggle('is-on', show);
+      btn.setAttribute('aria-label', show ? 'Dölj lösenord' : 'Visa lösenord');
+    });
+    input.insertAdjacentElement('afterend', btn);
+  });
+}
+
 
 /* ========================================================================== */
 
 window.RK_V1 = {
 
-  /* --------------------------------------------------------- krav 4 + krav 5
-     Kursvyns eget sidhuvud. Svarta listen och den blå navraden ligger i en
-     gemensam sticky-behållare – då följer båda med vid scroll utan att vi
-     behöver räkna ut någon pixelhöjd.
+  /* ------------------------------------------------------------ krav M + N
+     Kapitelsidans sidhuvud enligt skiss: vit bakåtpil till Min sida, kursnamn,
+     och INNEHÅLL + hamburgare längst till höger – allt i den svarta listen.
+     MIN SIDA är borttagen (bakåtpilen fyller den funktionen).
+
+     Under listen en tunn progressindikator. Svarta listen, progressraden och
+     innehållsmenyn ligger i en gemensam sticky-behållare, så allt följer med
+     vid scroll utan att vi behöver räkna ut någon pixelhöjd.
      Ingen breadcrumb byggs (krav 4); topheadern göms med CSS.               */
   buildCourseBar(ch) {
     return `
@@ -176,29 +246,27 @@ window.RK_V1 = {
 
       <div class="coursebar">
         <div class="coursebar__inner">
-          <span class="coursebar__title">Relationskompassens grundkurs</span>
-          <a class="header__account v1-account" href="min-sida.html">
-            MIN SIDA <span class="avatar">${ICON.person}</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="v1-subnav">
-        <div class="v1-subnav__inner">
           <a class="v1-back" href="min-sida.html" aria-label="Tillbaka till Min sida"
-             title="Tillbaka till Min sida">${V1_BACK}</a>
+             title="Tillbaka till Min sida"><span class="arrow">←</span></a>
+          <span class="coursebar__title">Relationskompassens grundkurs</span>
           <button class="coursebar__toggle v1-toc-toggle" onclick="toggleToc(this)">
-            Innehåll <span class="hamburger"><span></span><span></span><span></span></span>
+            INNEHÅLL <span class="hamburger"><span></span><span></span><span></span></span>
           </button>
         </div>
-        ${buildToc(ch.i)}
       </div>
 
+      <div class="v1-progress" role="progressbar" aria-label="Kursens framsteg"
+           aria-valuenow="${v1ProgressPct()}" aria-valuemin="0" aria-valuemax="100">
+        <div class="v1-progress__fill" style="width:${v1ProgressPct()}%"></div>
+      </div>
+
+      ${buildToc(ch.i)}
     </div>`;
   },
 
-  /* krav D: kapitelnummer i innehållsmenyn. Samma logik som basen, men numret
-     läggs till i texten – den lilla cirkeln med bock/prick behålls som den är. */
+  /* krav D + L: kapitelnummer i innehållsmenyn, direkt bredvid kapitelnamnet
+     med punkt och ett blanksteg. Samma logik som basen i övrigt – den lilla
+     cirkeln med bock/prick behålls som den är. */
   tocRow(ch, currentIndex, visited, elsaCollapsed) {
     const isCurrent = ch.i === currentIndex;
     const isDone    = !isCurrent && visited.has(ch.i);
@@ -210,7 +278,7 @@ window.RK_V1 = {
 
     const sub   = ch.level === 1 ? ' toc__item--sub' : '';
     const label = `<span class="${radioClass}">${radioInner}</span>` +
-                  `<span><span class="v1-tocnum">${v1Nums()[ch.i]}</span>${ch.title}</span>`;
+                  `<span>${v1Nums()[ch.i]}. ${ch.title}</span>`;
     const chev  = ch.i === 4
       ? `<span class="toc__chev${elsaCollapsed ? ' collapsed' : ''}" onclick="toggleElsa(event)" role="button" aria-label="Visa/dölj underkapitel">${CHEVRON}</span>`
       : '';
@@ -221,13 +289,14 @@ window.RK_V1 = {
     return `<span class="toc__item${sub}${stateClass}">${label}${chev}</span>`;
   },
 
-  /* krav 6: progressindikatorn i botten av kapitelsidan tas bort.
+  /* krav 6: progressindikatorn i botten av kapitelsidan tas bort. Den nya
+     ligger i stället i kurshuvudet (krav N).
      Prev/next behålls oförändrad (ingen override av buildPageNav). */
   buildProgress(ch) {
     return '';
   },
 
-  /* krav 1, 2, C – körs sist i uppstarten, när all bas-DOM finns */
+  /* Min sida – körs sist i uppstarten, när all bas-DOM finns */
   initExtra({ type }) {
     if (type === 'title') v1BuildMinSida();
   },
