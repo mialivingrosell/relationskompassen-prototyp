@@ -40,9 +40,71 @@
      N  Tunn progressindikator direkt under svarta listen, synkad med
         Min sidas progress.                               -> buildCourseBar + CSS
 
+     Omgång 5
+     O  Innehållsmenyn ligger ovanpå progressraden, och har en knapp
+        "Till Min sida" klistrad i underkanten.  -> buildCourseBar/buildToc + CSS
+     P  Handritad pil i styleguidens manér, i knappar och svarta listen.
+                                                            -> initExtra + CSS
+     Q  Samma innehållsbredd på alla kapitelsidor: film och bildrader i
+        --v1-media, rubriker och brödtext i --v1-text. Spalten centrerad
+        som i betan. Prev/next linjerar med innehållet.      -> initExtra + CSS
+     R  Prev/next med transparent bakgrund och svart ram, som originalet.
+                                                                     -> CSS
+
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
+
+
+/* ---------------------------------------------------------------- krav P
+   Handritad pil, i styleguidens ikonmanér.
+
+   Styleguidens ikonsida (s. 10) innehåller INGEN pil – de tolv ikonerna är
+   öga, läppar, hjärta, hashtag, "!!!", två smileys, pratbubbla, sicksack,
+   blixt och stjärnsmäll. Men manéret är entydigt: handritat, en enkel
+   obruten linje, rundade ändar, lätt ojämn form. Pilarna nedan är ritade
+   efter det: bågad skaftlinje och ett något asymmetriskt huvud.
+
+   currentColor gör att samma pil blir vit i svarta listen och orange i
+   knapparna, utan egna varianter.                                          */
+const V1_ARROW_SVG =
+  '<svg class="v1-arr" viewBox="0 0 40 24" width="30" height="18" fill="none"' +
+  ' stroke="currentColor" stroke-width="3.4" stroke-linecap="round"' +
+  ' stroke-linejoin="round" aria-hidden="true" focusable="false">';
+
+const V1_ARROW_LEFT = V1_ARROW_SVG +
+  '<path d="M37 12.2c-10.4.6-21 .8-32.6.6"/>' +
+  '<path d="M13.6 3.6C10.1 6.9 7.1 9.7 3.9 12.6c3.3 2.4 6.4 5 9.3 7.8"/></svg>';
+
+const V1_ARROW_RIGHT = V1_ARROW_SVG +
+  '<path d="M3 12.2c10.4.6 21 .8 32.6.6"/>' +
+  '<path d="M26.4 3.6C29.9 6.9 32.9 9.7 36.1 12.6c-3.3 2.4-6.4 5-9.3 7.8"/></svg>';
+
+/* Byter ut basens teckenpilar (← →) mot den handritade ikonen överallt där
+   de förekommer: svarta listen, prev/next på kapitelsidor och knapparna på
+   Min sida. Tecken som inte är pilar (t.ex. ✕) lämnas orörda. */
+function v1SwapArrows(root) {
+  (root || document).querySelectorAll('.arrow').forEach(span => {
+    const t = span.textContent.trim();
+    if (t === '←')      span.innerHTML = V1_ARROW_LEFT;
+    else if (t === '→') span.innerHTML = V1_ARROW_RIGHT;
+  });
+}
+
+
+/* ---------------------------------------------------------------- krav Q
+   Kapitelsidorna i basen sätter inline-bredder på enstaka stycken
+   (style="max-width:900px" på 9 ställen, medan grundkurs.html saknar dem).
+   Det var därför innehållet låg olika brett från kapitel till kapitel.
+   Här nollas bara max-width – övriga inline-stilar (t.ex. margin-top) står
+   kvar – så att CSS-måtten --v1-text / --v1-media gäller överallt.       */
+function v1NormalizeWidths() {
+  const main = document.querySelector('.coursepage .course-main');
+  if (!main) return;
+  main.querySelectorAll('[style*="max-width"]').forEach(el => {
+    el.style.maxWidth = '';
+  });
+}
 
 
 /* ---------------------------------------------------------------- krav I
@@ -253,6 +315,7 @@ window.RK_V1 = {
             INNEHÅLL <span class="hamburger"><span></span><span></span><span></span></span>
           </button>
         </div>
+        ${buildToc(ch.i)}
       </div>
 
       <div class="v1-progress" role="progressbar" aria-label="Kursens framsteg"
@@ -260,8 +323,29 @@ window.RK_V1 = {
         <div class="v1-progress__fill" style="width:${v1ProgressPct()}%"></div>
       </div>
 
-      ${buildToc(ch.i)}
     </div>`;
+  },
+
+  /* krav O: samma kapitellista som basen, men med en utgång längst ner.
+     Menyn hänger från svarta listens underkant (se buildCourseBar) och lägger
+     sig därmed ovanpå progressraden i stället för under den. */
+  buildToc(currentIndex) {
+    const visited = getVisited();
+    // Default infälld – men fäll ut automatiskt om man är inne på ett underkapitel
+    const elsaCollapsed = ![5, 6, 7].includes(currentIndex);
+    let html = '';
+    CHAPTERS.forEach(ch => {
+      if (ch.level === 1) return;               // underkapitel hanteras med sin grupp
+      html += tocRow(ch, currentIndex, visited, elsaCollapsed);
+      if (ch.i === 4) {                          // efter "Elsa och Omar": fällbar grupp
+        const subs = CHAPTERS.filter(c => c.level === 1)
+          .map(c => tocRow(c, currentIndex, visited, elsaCollapsed)).join('');
+        html += `<div class="toc__subgroup${elsaCollapsed ? ' collapsed' : ''}" id="tocSub">${subs}</div>`;
+      }
+    });
+    // extra väg ut ur kursen, klistrad i menyns underkant
+    html += `<a class="v1-toc-exit" href="min-sida.html">Till Min sida</a>`;
+    return `<div class="toc" id="toc">${html}</div>`;
   },
 
   /* krav D + L: kapitelnummer i innehållsmenyn, direkt bredvid kapitelnamnet
@@ -296,9 +380,11 @@ window.RK_V1 = {
     return '';
   },
 
-  /* Min sida – körs sist i uppstarten, när all bas-DOM finns */
+  /* Körs sist i uppstarten, när all bas-DOM finns */
   initExtra({ type }) {
-    if (type === 'title') v1BuildMinSida();
+    if (type === 'title')  v1BuildMinSida();
+    if (type === 'course') v1NormalizeWidths();   // krav Q: samma bredd överallt
+    v1SwapArrows();          // krav P: handritad pil överallt, alla sidtyper
   },
 
 };

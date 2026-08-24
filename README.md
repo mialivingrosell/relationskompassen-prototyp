@@ -88,10 +88,19 @@ Basversionen är låst i git som taggen `v0-bas`.
 - **Kapitelnumrering** i innehållsmenyn, från 1 (basen börjar på 0), direkt
   bredvid kapitelnamnet: "1. Relationskompassens grundkurs". Underkapitlen
   ärver förälderns nummer: 5.1, 5.2, 5.3.
+- **Handritad pil** i styleguidens ikonmanér ersätter teckenpilarna (← →) i
+  knappar och svarta listen. Styleguidens ikonsida innehåller ingen pil, så
+  den är ritad efter manéret: en enkel bågad linje med rundade ändar.
+- **En enda innehållsbredd** på kapitelsidorna: film och bildrader i
+  `--v1-media` (1064px), rubriker och brödtext i `--v1-text` (800px).
+  Spalten är centrerad som i betan i stället för basens vänsterindrag, och
+  prev/next linjerar med innehållet. Basens inline-bredder nollas.
+- **Prev/next** har transparent bakgrund och svart ram, som originalet.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
   Svarta listen är sticky och innehåller vit bakåtpil till Min sida,
   kursnamnet, och INNEHÅLL + hamburgare längst till höger. Innehållsmenyn
-  fälls ut högerställd under hela huvudet.
+  fälls ut högerställd, ovanpå progressraden, med en knapp
+  "Till Min sida" klistrad i underkanten.
 - **Tunn progressindikator** direkt under svarta listen, med samma värde som
   progressen på Min sida.
 - **Progressindikatorn** i botten av kapitelsidan borttagen (prev/next kvar).

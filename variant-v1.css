@@ -29,25 +29,48 @@
 
 
 /* ==========================================================================
-   KRAV F – bredare video, smalare textspalt
-   Ytan för kapitelinnehåll vidgas (1040px -> 1320px) så att filmen blir
-   större, medan rubriker och brödtext hålls i en smalare spalt.
+   KRAV F + Q – en enda innehållsbredd på kapitelsidorna
+   Problemet i basen: varje block hade sin egen bredd (.videoblock 820px,
+   .checkquiz 900px, bildrader och prev/next hela spalten), så innehållet låg
+   olika brett på olika kapitel och knapparna hamnade på olika ställen.
 
-   Radbredden är satt så att originalets första brödtextrad ryms:
+   Här finns i stället två mått för hela kursvyn:
+     --v1-media  bredaste innehåll: film, bildrader, seriestrippar, prev/next
+     --v1-text   rubriker och brödtext
+
+   Spalten är centrerad, som i betan, i stället för basens vänsterindrag
+   (--content-indent) som sköt innehållet åt höger.
+
+   Textbredden är satt så att originalets första brödtextrad ryms:
    "Relationskompassen är ett universellt våldsförebyggande program med en
-   genusförändrande ansats. Att" – ca 99 tecken. Justera de 800px om raden
+   genusförändrande ansats. Att" – ca 99 tecken. Justera --v1-text om raden
    bryter en bit fel; typsnittsrenderingen gör måttet ungefärligt.
    ========================================================================== */
-.rk-v1 .coursepage .course-main {
-  max-width: calc(var(--edge) + var(--content-indent) + 1320px);
+.rk-v1 .coursepage {
+  --v1-media: 1064px;
+  --v1-text:  800px;
 }
+.rk-v1 .coursepage .course-main {
+  max-width: calc(var(--v1-media) + 2 * var(--edge));
+  margin: 0 auto;                       /* centrerad, som betan */
+  padding: 34px var(--edge) 10px;       /* inget vänsterindrag */
+}
+
+/* rubriker och brödtext i den smalare spalten */
 .rk-v1 .coursepage .course-main > h1,
 .rk-v1 .coursepage .course-main > h2,
 .rk-v1 .coursepage .course-main > h3,
 .rk-v1 .coursepage .course-main > p,
 .rk-v1 .coursepage .course-main > ul,
 .rk-v1 .coursepage .course-main > ol,
-.rk-v1 .coursepage .transcribe__body { max-width: 800px; }
+.rk-v1 .coursepage .transcribe__body,
+.rk-v1 .coursepage .checkquiz { max-width: var(--v1-text); }
+
+/* filmen fyller hela mediabredden – basen kapade den till 820px */
+.rk-v1 .coursepage .videoblock { max-width: var(--v1-media); }
+
+/* seriestrippar (Elsa och Omar) hålls smalare än bildraderna */
+.rk-v1 .coursepage .ph--comic { max-width: 880px; }
 
 
 /* ==========================================================================
@@ -271,26 +294,48 @@
   flex: 0 0 auto;
 }
 .rk-v1 .v1-back .arrow {
-  color: #fff;
-  font-weight: 900;
-  font-size: 1.8rem;
+  display: inline-flex;
+  align-items: center;
+  color: #fff;                  /* currentColor -> den handritade pilen blir vit */
   line-height: 1;
 }
+.rk-v1 .v1-back .v1-arr { width: 34px; height: 21px; }
 .rk-v1 .v1-back:hover .arrow { color: var(--orange); }
 
 /* INNEHÅLL till höger. Basens .coursebar__toggle är redan vit, versal och
    condensed – här behövs bara placeringen. */
 .rk-v1 .v1-toc-toggle { margin-left: auto; }
 
-/* Innehållsmenyn: samma utseende som i basen, men högerställd och hängande
-   under hela kurshuvudet. Höjdtak så alla 22 kapitel går att nå på låga
-   skärmar. */
+/* Innehållsmenyn: samma utseende som i basen, men högerställd. Den hänger från
+   svarta listens underkant (menyn ligger inuti .coursebar) och lägger sig
+   därför OVANPÅ progressraden i stället för under den.
+   Höjdtak så alla 22 kapitel går att nå på låga skärmar. */
 .rk-v1 .v1-coursehead .toc {
   left: auto;
   right: var(--edge);
-  max-height: calc(100vh - 140px);
+  max-height: calc(100vh - 90px);
   overflow-y: auto;
+  z-index: 70;                  /* över progressraden */
 }
+
+/* krav O: extra väg ut ur kursen, klistrad i menyns underkant så den är nåbar
+   utan att man behöver skrolla igenom alla 22 kapitel. */
+.rk-v1 .toc .v1-toc-exit {
+  position: sticky;
+  bottom: -16px;                /* äter upp .toc:s nedre padding */
+  display: block;
+  margin: 14px 12px -16px;
+  padding: 13px 18px;
+  background: var(--navy);
+  border: 1.5px solid #fff;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1rem;
+}
+.rk-v1 .toc .v1-toc-exit:hover { background: var(--orange); border-color: var(--orange); }
 
 
 /* ==========================================================================
@@ -309,11 +354,33 @@
 
 
 /* ==========================================================================
-   KRAV 6 – progressindikatorn i botten borttagen
-   Markup:en byggs inte längre (se buildProgress i variant-v1.js). Här tar vi
-   bara igen luften den lämnade efter sig.
+   KRAV 6 + R – prev/next längst ner på kapitelsidan
+   Progressindikatorn byggs inte längre (se buildProgress i variant-v1.js);
+   här tas luften den lämnade igen.
+
+   Knapparna linjerar med mediabredden, alltså samma kanter som bildrader och
+   film – de låg tidigare olika på olika kapitel. Bakgrunden är transparent
+   med svart ram, som i originalet, i stället för basens vita platta.
    ========================================================================== */
-.rk-v1 .pagenav { padding-bottom: 48px; }
+.rk-v1 .coursepage .pagenav {
+  max-width: var(--v1-media);
+  padding-bottom: 48px;
+}
+.rk-v1 .coursepage .pagenav .btn--outline {
+  background: transparent;
+  border: 1.5px solid var(--navy);
+}
+.rk-v1 .coursepage .pagenav .btn--outline:hover { background: rgba(255,255,255,.45); }
+
+/* samma sak för de andra knappytorna på kapitelsidorna: originalet låter den
+   ljusblå bakgrunden lysa igenom i stället för att lägga en vit platta */
+.rk-v1 .coursepage .quiz-option__label,
+.rk-v1 .coursepage .btn-ratta { background: transparent; }
+.rk-v1 .coursepage .btn-ratta:hover { background: rgba(255,255,255,.45); }
+
+/* den handritade pilen sitter i linje med knapptexten */
+.rk-v1 .v1-arr { display: block; }
+.rk-v1 .btn .arrow { display: inline-flex; align-items: center; }
 
 
 /* ==========================================================================
