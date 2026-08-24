@@ -24,6 +24,14 @@
      D  Kapitelnumrering från 1 i innehållsmenyn, undernivåer 5.1–5.3.
                                                               -> tocRow + CSS
 
+     Omgång 3
+     E  "Mina uppgifter" är en helbred platta som även rymmer "Byt lösenord"
+        och "Ta bort användarkontot" som undersektioner.       -> initExtra + CSS
+     F  Större videoruta på kapitelsidor, smalare radbredd för rubriker
+        och brödtext.                                                   -> CSS
+     G  Skarpa hörn på kursplattan och kurskorten; korten breddade så de
+        linjerar med plattans högerkant.                                -> CSS
+
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
@@ -72,12 +80,17 @@ function v1BuildMinSida() {
     titlebar.appendChild(logout);
   }
 
-  /* krav 1: märk sidopanelerna så CSS kan lägga de två första sida vid sida
-     och den sista (ta bort kontot) i full bredd längst ner */
-  const panels = dash.querySelectorAll('.dash__side > section');
-  panels.forEach((s, i) => {
-    s.classList.add(i === panels.length - 1 ? 'v1-panel--full' : 'v1-panel--col');
-  });
+  /* krav E: "Mina uppgifter" är sektionsrubrik för hela den creme plattan och
+     får därför samma nivå som "Mina kurser" (h2). "Byt lösenord" och "Ta bort
+     användarkontot" ligger kvar som h3 och blir undersektioner.
+     Styleguiden anger bara typsnitt och vikter, ingen rubrikskala – nivåerna
+     är alltså prototypens egna (h2 clamp(1.6–2.3rem), h3 1.4rem). */
+  const firstHeading = dash.querySelector('.dash__side > section h3');
+  if (firstHeading) {
+    const h2 = document.createElement('h2');
+    h2.textContent = firstHeading.textContent;
+    firstHeading.replaceWith(h2);
+  }
 
   v1BuildCourseCards();
 }

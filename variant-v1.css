@@ -29,33 +29,65 @@
 
 
 /* ==========================================================================
-   KRAV 1 + KRAV B – Min sida: kurserna överst
-   Den ljusblå ytan går inte längre upp i svarta listen utan har luft ovanför
-   och rundade hörn, så att den läses som en ruta som ligger på sidan.
-   Panelerna under blir egna rutor i rastret via display:contents, så vi
-   slipper flytta noder i DOM:en.
+   KRAV F – bredare video, smalare textspalt
+   Ytan för kapitelinnehåll vidgas (1040px -> 1320px) så att filmen blir
+   större, medan rubriker och brödtext hålls i en smalare spalt.
+
+   Radbredden är satt så att originalets första brödtextrad ryms:
+   "Relationskompassen är ett universellt våldsförebyggande program med en
+   genusförändrande ansats. Att" – ca 99 tecken. Justera de 800px om raden
+   bryter en bit fel; typsnittsrenderingen gör måttet ungefärligt.
+   ========================================================================== */
+.rk-v1 .coursepage .course-main {
+  max-width: calc(var(--edge) + var(--content-indent) + 1320px);
+}
+.rk-v1 .coursepage .course-main > h1,
+.rk-v1 .coursepage .course-main > h2,
+.rk-v1 .coursepage .course-main > h3,
+.rk-v1 .coursepage .course-main > p,
+.rk-v1 .coursepage .course-main > ul,
+.rk-v1 .coursepage .course-main > ol,
+.rk-v1 .coursepage .transcribe__body { max-width: 800px; }
+
+
+/* ==========================================================================
+   KRAV 1 + KRAV B – Min sida: två plattor i full bredd
+   Den ljusblå ytan går inte upp i svarta listen utan har luft ovanför, så att
+   den läses som en ruta som ligger på sidan. Skarpa hörn (krav G).
    ========================================================================== */
 .rk-v1 .dash {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;   /* en spalt – båda plattorna är helbreda */
   gap: 40px;
   padding: 0 var(--edge) 70px;
-  align-items: stretch;         /* de två panelerna sida vid sida blir lika höga */
 }
 .rk-v1 .dash__courses {
-  grid-column: 1 / -1;
   margin-top: 40px;             /* krav B: white space ovanför rutan */
   padding: 36px 40px 40px;
-  border-radius: 12px;
+  border-radius: 0;             /* krav G: skarpa hörn */
 }
-.rk-v1 .dash__side {
-  display: contents;            /* panelerna blir barn till rastret */
-}
-.rk-v1 .dash__side > section { margin: 0; }
 
-/* "Mina uppgifter" + "Byt lösenord" sida vid sida ... */
-.rk-v1 .dash__side > section.v1-panel--col { grid-column: span 1; }
-/* ... och "Ta bort användarkontot" i full bredd längst ner */
-.rk-v1 .dash__side > section.v1-panel--full { grid-column: 1 / -1; }
+/* ==========================================================================
+   KRAV E – "Mina uppgifter" som en helbred platta med undersektioner
+   Plattan är lika bred som den blå kursplattan ovanför. Undersektionerna
+   ("Byt lösenord", "Ta bort användarkontot") ligger inuti den, avdelade med
+   en tunn linje i stället för egna bakgrundsplattor.
+   ========================================================================== */
+.rk-v1 .dash__side {
+  background: var(--cream-2);
+  padding: 36px 40px 40px;      /* skriver över basens padding-right */
+  gap: 34px;
+  border-radius: 0;             /* krav G: skarpa hörn */
+}
+.rk-v1 .dash__side > section {
+  background: none;             /* inte längre egna plattor */
+  padding: 0;
+  margin: 0;
+  max-width: 900px;             /* håller formulär och text på läsbar radbredd */
+}
+.rk-v1 .dash__side > section + section {
+  border-top: 1px solid rgba(27,29,45,.16);
+  padding-top: 32px;
+}
 
 
 /* ==========================================================================
@@ -86,16 +118,17 @@
 .rk-v1 .v1-cards {
   display: grid;
   gap: 26px;
-  grid-template-columns: minmax(0, 400px);          /* ett kort, eller staplade */
+  grid-template-columns: minmax(0, 1fr);            /* ett kort, eller staplade */
   margin-top: 28px;
 }
 .rk-v1 .v1-cards[data-count="2"] {
-  grid-template-columns: repeat(2, minmax(0, 400px));
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* två i bredd, linjerar med
+                                                       plattans högerkant */
 }
 
 .rk-v1 .v1-card {
   background: #fff;
-  border-radius: 14px;
+  border-radius: 0;             /* krav G: skarpa hörn */
   padding: 26px 28px 28px;
   box-shadow: 0 2px 12px rgba(27,29,45,.08);
   display: flex;
@@ -131,8 +164,11 @@
   font-size: .95rem;
   color: rgba(27,29,45,.6);
 }
+/* Strecket har eget breddtak även när kortet är brett – annars kommer det
+   långa orange bandet tillbaka. */
 .rk-v1 .v1-card__track {
   height: 10px;
+  max-width: 340px;
   background: rgba(27,29,45,.12);
   border-radius: 6px;
   overflow: hidden;
@@ -249,15 +285,12 @@
    RESPONSIVT
    ========================================================================== */
 @media (max-width: 900px) {
-  /* en kolumn – panelerna staplas */
-  .rk-v1 .dash { grid-template-columns: 1fr; }
-  .rk-v1 .dash__side > section.v1-panel--col { grid-column: 1 / -1; }
-
-  /* korten i full bredd */
+  /* korten staplas */
   .rk-v1 .v1-cards,
   .rk-v1 .v1-cards[data-count="2"] { grid-template-columns: minmax(0, 1fr); }
 
-  .rk-v1 .dash__courses { padding: 28px 24px 30px; }
+  .rk-v1 .dash__courses,
+  .rk-v1 .dash__side { padding: 28px 24px 30px; }
 
   /* svarta listen får plats för både kursnamn och MIN SIDA */
   .rk-v1 .v1-coursehead .coursebar__title { font-size: 1.15rem; }

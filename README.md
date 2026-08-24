@@ -72,9 +72,12 @@ Basversionen är låst i git som taggen `v0-bas`.
 ### Vad v1 ändrar
 
 - **Större rubriker** på artikel- och kapitelsidor. Brödtexten är oförändrad.
-- **Min sida:** "Mina kurser" överst; den ljusblå ytan är en ruta med luft
-  ovanför. "Mina uppgifter" och "Byt lösenord" sida vid sida under;
-  "Ta bort användarkontot" längst ner.
+- **Bredare videoruta** på kapitelsidor, medan rubriker och brödtext hålls i
+  en smalare spalt (ca 800px) för läsbar radlängd.
+- **Min sida:** två helbreda plattor med skarpa hörn. Den blå kursplattan har
+  luft ovanför så den läses som en ruta på sidan. Under den en creme platta
+  med "Mina uppgifter" som sektionsrubrik och "Byt lösenord" +
+  "Ta bort användarkontot" som undersektioner.
 - **Logga ut** flyttad till svarta listen, längst upp till höger.
 - **Kurskort:** ett vitt kort per kurs på den blå ytan med kursnamn, procent i
   stor siffra, kapitelantal, kort progressstreck och knapp. Pågående kurs
