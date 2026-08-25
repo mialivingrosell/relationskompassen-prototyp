@@ -105,16 +105,17 @@ Basversionen är låst i git som taggen `v0-bas`.
   ett litet lodrätt streck, kursnamnet, och INNEHÅLL + hamburgare längst till
   höger. Innehållsmenyn fälls ut högerställd, ovanpå progressraden, med en
   knapp "Till Min sida" efter sista kapitlet.
-- **Tunn progressindikator** direkt under svarta listen. Visar kapitlet man
-  står på, inte hur långt man nått totalt.
-- **Stegräkning:** 20 kapitel totalt. Elsa och Omar del 2–4 är inte egna steg
-  utan räknas som kapitel 5, så man står kvar på 5 genom hela berättelsen.
-  Kapitellistan har 18 huvudkapitel, så högsta nåbara steg är 18 av 20 –
-  `CHAPTERS` är kortare än den riktiga kursen.
+- **Stegräkning:** 18 kapitel totalt, räknat ur `CHAPTERS` (antalet
+  huvudkapitel) i stället för inskrivet. Elsa och Omar del 2–4 är inte egna
+  steg utan räknas som kapitel 5, så man står kvar på 5 genom hela berättelsen.
+- **Två olika progressmått, med avsikt:**
+  - *Tunn indikator under svarta listen på kapitelsidor* – vilket kapitel man
+    **står på**. Går bakåt om man klickar sig bakåt.
+  - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
+    distinkta kapitel bland de besökta, så den bara kan växa.
 - **"Fortsätt"** på Min sida går till det senaste kapitlet man stod på, inte
   till kursens början. Värdet sparas per flik och valideras mot besökta-listan,
   så en nollställd session inte kan lämna kvar ett gammalt kapitel.
-  Progressraden, kurskortet och Fortsätt-knappen läser alla samma källa.
 - **Progressindikatorn** i botten av kapitelsidan borttagen (prev/next kvar).
 
 ### Filerna

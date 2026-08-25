@@ -72,10 +72,11 @@
         ovanför sin rubrik i trespalten.                  -> initExtra + CSS
 
      Omgång 9
-     AA Totalen tillbaka till 20 kapitel. Elsa och Omar del 2–4 är inte egna
-        steg utan räknas som kapitel 5.                        -> v1Steps()
-     BB Progressraden visar kapitlet man står på, inte hur långt man nått.
-                                                     -> buildCourseBar
+     AA Totalen är 18 (antalet huvudkapitel, räknat ur CHAPTERS). Elsa och
+        Omar del 2–4 är inte egna steg utan räknas som kapitel 5. -> v1Steps()
+     BB Progressraden i kurshuvudet visar kapitlet man STÅR PÅ, medan
+        kurskortet på Min sida visar hur många kapitel man GÅTT IGENOM.
+                                       -> v1CurrentStep() / v1ChaptersDone()
      CC "Fortsätt" på Min sida går till senaste kapitlet man stod på.
                                                             -> initExtra
 
@@ -243,17 +244,18 @@ const V1_COURSE_INFO = {
 
 
 /* ==========================================================================
-   KRAV AA – stegräkning: 20 kapitel, Elsa och Omar räknas som ett
-   Totalen är 20, som i basen. Elsa och Omar del 2–4 är inte egna steg utan
-   ärver förälderns nummer, så man står kvar på kapitel 5 genom hela
-   berättelsen.
+   KRAV AA – stegräkning: Elsa och Omar räknas som ett kapitel
+   Elsa och Omar del 2–4 är inte egna steg utan ärver förälderns nummer, så
+   man står kvar på kapitel 5 genom hela berättelsen.
 
-   OBS: kapitellistan innehåller 18 huvudkapitel, så högsta nåbara steg är 18
-   av 20. Skillnaden ligger i att CHAPTERS är kortare än den riktiga kursen.
+   Totalen räknas fram ur CHAPTERS (= antalet huvudkapitel, 18) i stället för
+   att skrivas in, så den följer kapitellistan om den byggs ut.
+
+   TVÅ OLIKA MÅTT, med avsikt:
+     v1CurrentStep()   vilket kapitel man STÅR PÅ  -> progressraden i kurshuvudet
+     v1ChaptersDone()  hur många kapitel man GÅTT IGENOM -> kurskortet på Min sida
+   Det första kan gå bakåt när man klickar sig bakåt; det andra kan bara växa.
    ========================================================================== */
-const V1_TOTAL = 20;
-
-function v1Total() { return V1_TOTAL; }
 
 /* index -> stegnummer. Underkapitel ärver förälderns steg. */
 let _v1Steps = null;
@@ -267,6 +269,17 @@ function v1Steps() {
   });
   _v1Steps = map;
   return map;
+}
+
+/* antalet huvudkapitel = högsta stegnummer i listan */
+function v1Total() {
+  const steps = v1Steps();
+  return Object.keys(steps).reduce((max, k) => Math.max(max, steps[k]), 0);
+}
+
+/* kapitlet man står på just nu */
+function v1CurrentStep(ch) {
+  return ch ? (v1Steps()[ch.i] || 0) : 0;
 }
 
 
@@ -296,10 +309,17 @@ function v1Last() {
   return Math.max.apply(null, [...visited]);   // reserv om värdet saknas
 }
 
-/* steget för kapitlet man senast stod på – Min sidas kurskort */
+/* Antal kapitel man gått igenom – Min sidas kurskort.
+   Räknar distinkta steg bland de besökta kapitlen, så Elsa och Omar del 2–4
+   inte ger fyra kapitel utan ett, och så att siffran inte sjunker när man
+   klickar sig bakåt. */
 function v1ChaptersDone() {
-  const last = v1Last();
-  return last === null ? 0 : (v1Steps()[last] || 0);
+  const visited = getVisited();
+  if (!visited.size) return 0;
+  const steps = v1Steps();
+  const done = new Set();
+  visited.forEach(i => { if (steps[i]) done.add(steps[i]); });
+  return done.size;
 }
 
 
@@ -332,9 +352,9 @@ function v1Nums() {
    kapitel man just nu råkar läsa. Klickar man sig bakåt står siffran alltså
    kvar, precis som på Min sida.
    ========================================================================== */
+/* Progressraden i kurshuvudet: kapitlet man STÅR PÅ (krav BB). */
 function v1ProgressPct(ch) {
-  const step = ch ? (v1Steps()[ch.i] || 0) : v1ChaptersDone();
-  return Math.round(step / v1Total() * 100);
+  return Math.round(v1CurrentStep(ch) / v1Total() * 100);
 }
 
 
