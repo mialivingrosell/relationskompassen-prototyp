@@ -98,9 +98,9 @@ Basversionen är låst i git som taggen `v0-bas`.
 - **Prev/next** har transparent bakgrund och svart ram, som originalet.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
   Svarta listen är sticky och innehåller vit bakåtpil till Min sida,
-  kursnamnet, och INNEHÅLL + hamburgare längst till höger. Innehållsmenyn
-  fälls ut högerställd, ovanpå progressraden, med en knapp
-  "Till Min sida" klistrad i underkanten.
+  ett litet lodrätt streck, kursnamnet, och INNEHÅLL + hamburgare längst till
+  höger. Innehållsmenyn fälls ut högerställd, ovanpå progressraden, med en
+  knapp "Till Min sida" efter sista kapitlet.
 - **Tunn progressindikator** direkt under svarta listen, med samma värde som
   progressen på Min sida.
 - **Progressindikatorn** i botten av kapitelsidan borttagen (prev/next kvar).

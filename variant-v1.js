@@ -51,6 +51,15 @@
      R  Prev/next med transparent bakgrund och svart ram, som originalet.
                                                                      -> CSS
 
+     Omgång 6
+     S  Lättare kursnamn på Min sida (vikt 700, mindre grad).          -> CSS
+     T  Lägre vita kurskort.                                           -> CSS
+     U  "Till Min sida" ligger fast efter sista kapitlet, med .btn:s mått
+        och bara textens bredd.                            -> buildToc + CSS
+     V  Litet lodrätt streck mellan bakåtpilen och kursrubriken i svarta
+        listen, så pilen läses som "tillbaka", inte som del av rubriken.
+                                                      -> buildCourseBar + CSS
+
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
@@ -310,6 +319,7 @@ window.RK_V1 = {
         <div class="coursebar__inner">
           <a class="v1-back" href="min-sida.html" aria-label="Tillbaka till Min sida"
              title="Tillbaka till Min sida"><span class="arrow">←</span></a>
+          <span class="v1-headsep" aria-hidden="true"></span>
           <span class="coursebar__title">Relationskompassens grundkurs</span>
           <button class="coursebar__toggle v1-toc-toggle" onclick="toggleToc(this)">
             INNEHÅLL <span class="hamburger"><span></span><span></span><span></span></span>
@@ -343,8 +353,9 @@ window.RK_V1 = {
         html += `<div class="toc__subgroup${elsaCollapsed ? ' collapsed' : ''}" id="tocSub">${subs}</div>`;
       }
     });
-    // extra väg ut ur kursen, klistrad i menyns underkant
-    html += `<a class="v1-toc-exit" href="min-sida.html">Till Min sida</a>`;
+    // extra väg ut ur kursen, fast placerad efter sista kapitlet.
+    // .btn ger samma storlek som övriga knappar på sajten.
+    html += `<a class="btn v1-toc-exit" href="min-sida.html">Till Min sida</a>`;
     return `<div class="toc" id="toc">${html}</div>`;
   },
 

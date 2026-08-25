@@ -175,26 +175,28 @@
 .rk-v1 .v1-card {
   background: #fff;
   border-radius: 0;             /* krav G: skarpa hörn */
-  padding: 26px 28px 28px;
+  padding: 22px 26px 24px;      /* krav T: lägre kort */
   box-shadow: 0 2px 12px rgba(27,29,45,.08);
   display: flex;
   flex-direction: column;
 }
+/* krav S: lättare kursnamn – som i originalet, där kursnamnet inte tar över
+   rubriken "Mina kurser". Vikt 700 i stället för 800, mindre grad. */
 .rk-v1 .v1-card__title {
   font-family: var(--font-head);
-  font-weight: 800;
-  font-size: 1.6rem;
-  line-height: 1.1;
-  margin: 0 0 20px;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.15;
+  margin: 0 0 12px;
 }
 /* krav I: introtext + rad med beräknad tid */
 .rk-v1 .v1-card__intro {
-  margin: 0 0 10px;
+  margin: 0 0 6px;
   font-size: 1rem;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 .rk-v1 .v1-card__time {
-  margin: 0 0 22px;
+  margin: 0 0 16px;
   font-size: .95rem;
   font-weight: 700;
   color: rgba(27,29,45,.72);
@@ -208,18 +210,18 @@
 .rk-v1 .v1-card__pct {
   font-family: var(--font-head);
   font-weight: 800;
-  font-size: 4rem;
+  font-size: 3.3rem;            /* krav T: lägre kort */
   line-height: 1;
   letter-spacing: -.02em;
   color: var(--navy);
-  margin: 2px 0 8px;
+  margin: 0 0 6px;
 }
 .rk-v1 .v1-card__pct span {           /* procenttecknet mindre än siffran */
-  font-size: 1.9rem;
-  margin-left: 6px;
+  font-size: 1.6rem;
+  margin-left: 5px;
 }
 .rk-v1 .v1-card__sub {
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   font-size: .95rem;
   color: rgba(27,29,45,.6);
 }
@@ -231,7 +233,7 @@
   background: rgba(27,29,45,.12);
   border-radius: 6px;
   overflow: hidden;
-  margin: 0 0 24px;
+  margin: 0 0 18px;
 }
 /* krav H: orange linje för alla kurser, även pågående */
 .rk-v1 .v1-card__fill {
@@ -302,6 +304,15 @@
 .rk-v1 .v1-back .v1-arr { width: 34px; height: 21px; }
 .rk-v1 .v1-back:hover .arrow { color: var(--orange); }
 
+/* Litet lodrätt streck mellan pilen och kursrubriken, så att pilen läses som
+   "tillbaka till sidan innan kursen" och inte som en del av rubriken. */
+.rk-v1 .v1-headsep {
+  flex: 0 0 auto;
+  width: 2px;
+  height: 30px;
+  background: rgba(255,255,255,.45);
+}
+
 /* INNEHÅLL till höger. Basens .coursebar__toggle är redan vit, versal och
    condensed – här behövs bara placeringen. */
 .rk-v1 .v1-toc-toggle { margin-left: auto; }
@@ -318,22 +329,16 @@
   z-index: 70;                  /* över progressraden */
 }
 
-/* krav O: extra väg ut ur kursen, klistrad i menyns underkant så den är nåbar
-   utan att man behöver skrolla igenom alla 22 kapitel. */
+/* krav O: extra väg ut ur kursen. Ligger fast efter sista kapitlet i listan
+   (inte klistrad i underkanten) och har .btn:s mått, alltså samma storlek som
+   övriga knappar på sajten – men bara så bred som texten kräver. */
 .rk-v1 .toc .v1-toc-exit {
-  position: sticky;
-  bottom: -16px;                /* äter upp .toc:s nedre padding */
-  display: block;
-  margin: 14px 12px -16px;
-  padding: 13px 18px;
-  background: var(--navy);
+  display: inline-flex;
+  margin: 20px 20px 8px;
+  background: transparent;
   border: 1.5px solid #fff;
   color: #fff;
-  text-align: center;
   text-decoration: none;
-  font-family: var(--font-body);
-  font-weight: 800;
-  font-size: 1rem;
 }
 .rk-v1 .toc .v1-toc-exit:hover { background: var(--orange); border-color: var(--orange); }
 
