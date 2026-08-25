@@ -103,6 +103,9 @@ Basversionen är låst i git som taggen `v0-bas`.
   knapp "Till Min sida" efter sista kapitlet.
 - **Tunn progressindikator** direkt under svarta listen, med samma värde som
   progressen på Min sida.
+- **Grundkursen räknar 21 kapitel** (18 huvudkapitel + Elsa och Omar del 2–4),
+  räknat ur `CHAPTERS`. Basen räknar 20. Både kurskortet och progressraden
+  läser samma tal, så de kan inte säga olika saker.
 - **Progressindikatorn** i botten av kapitelsidan borttagen (prev/next kvar).
 
 ### Filerna

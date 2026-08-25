@@ -60,6 +60,12 @@
         listen, så pilen läses som "tillbaka", inte som del av rubriken.
                                                       -> buildCourseBar + CSS
 
+     Omgång 7
+     W  Grundkursen räknar 21 kapitel (ur CHAPTERS) i stället för basens 20.
+        Gäller både kurskortet och progressraden.        -> initExtra + buildCourseBar
+     X  Elsa och Omar-underkapitlen är utfällda i menyn så snart man är inne
+        i något av dem, även förälderkapitlet.                    -> buildToc
+
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
@@ -135,6 +141,30 @@ const V1_COURSE_INFO = {
 
 
 /* ==========================================================================
+   KRAV W – grundkursens total är 21 kapitel
+   Basen räknar 20 (TOTAL i app.js, data-total i min-sida.html). Det faktiska
+   antalet kapitelposter i CHAPTERS är 21: 18 huvudkapitel + Elsa och Omar
+   del 2–4. Här räknas totalen fram ur CHAPTERS så den följer kapitellistan.
+
+   "Genomförda" räknas som hur långt man nått, inte hur många man klickat på –
+   samma princip som basen använder på Min sida, så siffran inte sjunker när
+   man klickar sig bakåt. +1 eftersom kapitelindex börjar på 0 men numreringen
+   på 1: är man inne på första kapitlet har man genomfört 1 av 21.
+
+   Både Min sidas kurskort och progressraden i kurshuvudet läser härifrån, så
+   de kan inte säga olika saker.
+   ========================================================================== */
+function v1Total() {
+  return CHAPTERS.length;
+}
+function v1ChaptersDone() {
+  const visited = getVisited();
+  if (!visited.size) return 0;
+  return Math.min(v1Total(), Math.max.apply(null, [...visited]) + 1);
+}
+
+
+/* ==========================================================================
    KRAV D + L – kapitelnumrering
    Huvudkapitel numreras 1, 2, 3 ... och underkapitel ärver förälderns
    nummer: 5.1, 5.2, 5.3. Numreringen räknas fram ur CHAPTERS, så den följer
@@ -164,9 +194,7 @@ function v1Nums() {
    kvar, precis som på Min sida.
    ========================================================================== */
 function v1ProgressPct() {
-  const visited = getVisited();
-  const done = visited.size ? Math.min(TOTAL, Math.max.apply(null, [...visited])) : 0;
-  return Math.round(done / TOTAL * 100);
+  return Math.round(v1ChaptersDone() / v1Total() * 100);
 }
 
 
@@ -214,14 +242,22 @@ function v1BuildCourseCards() {
   if (!items.length) return;
 
   const courses = items.map(item => {
-    // "5 av 20" står i .course-count (grundkursen, sätts av app.js) eller som
-    // sista span i kortets rubrikrad (de statiska korten).
-    const countEl = item.querySelector('.course-count') ||
-                    item.querySelector('.row span:last-child');
     const titleEl = item.querySelector('.row span');
-    const m = (countEl ? countEl.textContent : '').match(/(\d+)\s*av\s*(\d+)/);
-    const done  = m ? parseInt(m[1], 10) : 0;
-    const total = m ? parseInt(m[2], 10) : 0;
+    let done, total;
+
+    if (item.id === 'courseGrundkurs') {
+      // krav W: grundkursen räknas ur CHAPTERS (21), inte ur basens "av 20"
+      total = v1Total();
+      done  = v1ChaptersDone();
+    } else {
+      // statiska kort: läs "4 av 4" ur rubrikraden
+      const countEl = item.querySelector('.course-count') ||
+                      item.querySelector('.row span:last-child');
+      const m = (countEl ? countEl.textContent : '').match(/(\d+)\s*av\s*(\d+)/);
+      done  = m ? parseInt(m[1], 10) : 0;
+      total = m ? parseInt(m[2], 10) : 0;
+    }
+
     return {
       title: titleEl ? titleEl.textContent.trim() : '',
       done, total,
@@ -341,8 +377,9 @@ window.RK_V1 = {
      sig därmed ovanpå progressraden i stället för under den. */
   buildToc(currentIndex) {
     const visited = getVisited();
-    // Default infälld – men fäll ut automatiskt om man är inne på ett underkapitel
-    const elsaCollapsed = ![5, 6, 7].includes(currentIndex);
+    /* krav X: utfälld så snart man är inne i Elsa och Omar – även på
+       förälderkapitlet (index 4), inte bara på del 2–4 som i basen. */
+    const elsaCollapsed = ![4, 5, 6, 7].includes(currentIndex);
     let html = '';
     CHAPTERS.forEach(ch => {
       if (ch.level === 1) return;               // underkapitel hanteras med sin grupp
