@@ -61,8 +61,6 @@
                                                       -> buildCourseBar + CSS
 
      Omgång 7
-     W  Grundkursen räknar 21 kapitel (ur CHAPTERS) i stället för basens 20.
-        Gäller både kurskortet och progressraden.        -> initExtra + buildCourseBar
      X  Elsa och Omar-underkapitlen är utfällda i menyn så snart man är inne
         i något av dem, även förälderkapitlet.                    -> buildToc
 
@@ -72,6 +70,14 @@
      Z  Bild-quizet på kapitel 2 och 3 byggt om till kryssrutefråga med
         Rätta-knapp under, som i övningskapitlet. Bilderna flyttade upp
         ovanför sin rubrik i trespalten.                  -> initExtra + CSS
+
+     Omgång 9
+     AA Totalen tillbaka till 20 kapitel. Elsa och Omar del 2–4 är inte egna
+        steg utan räknas som kapitel 5.                        -> v1Steps()
+     BB Progressraden visar kapitlet man står på, inte hur långt man nått.
+                                                     -> buildCourseBar
+     CC "Fortsätt" på Min sida går till senaste kapitlet man stod på.
+                                                            -> initExtra
 
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
@@ -237,26 +243,63 @@ const V1_COURSE_INFO = {
 
 
 /* ==========================================================================
-   KRAV W – grundkursens total är 21 kapitel
-   Basen räknar 20 (TOTAL i app.js, data-total i min-sida.html). Det faktiska
-   antalet kapitelposter i CHAPTERS är 21: 18 huvudkapitel + Elsa och Omar
-   del 2–4. Här räknas totalen fram ur CHAPTERS så den följer kapitellistan.
+   KRAV AA – stegräkning: 20 kapitel, Elsa och Omar räknas som ett
+   Totalen är 20, som i basen. Elsa och Omar del 2–4 är inte egna steg utan
+   ärver förälderns nummer, så man står kvar på kapitel 5 genom hela
+   berättelsen.
 
-   "Genomförda" räknas som hur långt man nått, inte hur många man klickat på –
-   samma princip som basen använder på Min sida, så siffran inte sjunker när
-   man klickar sig bakåt. +1 eftersom kapitelindex börjar på 0 men numreringen
-   på 1: är man inne på första kapitlet har man genomfört 1 av 21.
-
-   Både Min sidas kurskort och progressraden i kurshuvudet läser härifrån, så
-   de kan inte säga olika saker.
+   OBS: kapitellistan innehåller 18 huvudkapitel, så högsta nåbara steg är 18
+   av 20. Skillnaden ligger i att CHAPTERS är kortare än den riktiga kursen.
    ========================================================================== */
-function v1Total() {
-  return CHAPTERS.length;
+const V1_TOTAL = 20;
+
+function v1Total() { return V1_TOTAL; }
+
+/* index -> stegnummer. Underkapitel ärver förälderns steg. */
+let _v1Steps = null;
+function v1Steps() {
+  if (_v1Steps) return _v1Steps;
+  const map = {};
+  let step = 0;
+  CHAPTERS.forEach(ch => {
+    if (ch.level === 1) map[ch.i] = step;      // Elsa del 2–4 = samma steg
+    else                map[ch.i] = ++step;
+  });
+  _v1Steps = map;
+  return map;
 }
-function v1ChaptersDone() {
+
+
+/* ==========================================================================
+   KRAV CC – senaste kapitlet man stod på
+   Sparas per flik. Värdet valideras mot basens besökta-lista, så en
+   nollställd session (?reset, Nollställ session, ny flik) inte kan lämna
+   kvar ett gammalt kapitel – då är listan tom och det sparade värdet
+   ignoreras.
+
+   Tre ställen läser härifrån och kan alltså inte säga olika saker:
+   progressraden i kurshuvudet, kurskortet på Min sida och Fortsätt-knappen.
+   ========================================================================== */
+const V1_LAST_KEY = 'rk_last';
+
+function v1SetLast(i) {
+  try { sessionStorage.setItem(V1_LAST_KEY, String(i)); } catch (e) {}
+}
+
+function v1Last() {
   const visited = getVisited();
-  if (!visited.size) return 0;
-  return Math.min(v1Total(), Math.max.apply(null, [...visited]) + 1);
+  if (!visited.size) return null;
+  let stored = null;
+  try { stored = sessionStorage.getItem(V1_LAST_KEY); } catch (e) {}
+  const n = stored === null ? NaN : parseInt(stored, 10);
+  if (!isNaN(n) && visited.has(n)) return n;
+  return Math.max.apply(null, [...visited]);   // reserv om värdet saknas
+}
+
+/* steget för kapitlet man senast stod på – Min sidas kurskort */
+function v1ChaptersDone() {
+  const last = v1Last();
+  return last === null ? 0 : (v1Steps()[last] || 0);
 }
 
 
@@ -289,8 +332,9 @@ function v1Nums() {
    kapitel man just nu råkar läsa. Klickar man sig bakåt står siffran alltså
    kvar, precis som på Min sida.
    ========================================================================== */
-function v1ProgressPct() {
-  return Math.round(v1ChaptersDone() / v1Total() * 100);
+function v1ProgressPct(ch) {
+  const step = ch ? (v1Steps()[ch.i] || 0) : v1ChaptersDone();
+  return Math.round(step / v1Total() * 100);
 }
 
 
@@ -342,9 +386,15 @@ function v1BuildCourseCards() {
     let done, total;
 
     if (item.id === 'courseGrundkurs') {
-      // krav W: grundkursen räknas ur CHAPTERS (21), inte ur basens "av 20"
+      // krav AA: 20 kapitel, Elsa och Omar som ett enda steg
       total = v1Total();
       done  = v1ChaptersDone();
+
+      // krav CC: Fortsätt går till senaste kapitlet man stod på
+      const cta = item.querySelector('.course-cta');
+      const last = v1Last();
+      const target = last === null ? null : CHAPTERS[last];
+      if (cta && target && target.file) cta.setAttribute('href', target.file);
     } else {
       // statiska kort: läs "4 av 4" ur rubrikraden
       const countEl = item.querySelector('.course-count') ||
@@ -461,8 +511,8 @@ window.RK_V1 = {
       </div>
 
       <div class="v1-progress" role="progressbar" aria-label="Kursens framsteg"
-           aria-valuenow="${v1ProgressPct()}" aria-valuemin="0" aria-valuemax="100">
-        <div class="v1-progress__fill" style="width:${v1ProgressPct()}%"></div>
+           aria-valuenow="${v1ProgressPct(ch)}" aria-valuemin="0" aria-valuemax="100">
+        <div class="v1-progress__fill" style="width:${v1ProgressPct(ch)}%"></div>
       </div>
 
     </div>`;
@@ -528,6 +578,7 @@ window.RK_V1 = {
   initExtra({ ch, type }) {
     if (type === 'title') v1BuildMinSida();
     if (type === 'course') {
+      if (ch) v1SetLast(ch.i);  // krav CC: minns var man stod
       v1NormalizeWidths();      // krav Q: samma bredd överallt
       v1NumberHeading(ch);      // krav Y: kapitelnummer i rubriken
       v1RebuildImageQuiz();     // krav Z: bild-quiz -> kryssrutefråga
