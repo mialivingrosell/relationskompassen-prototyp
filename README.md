@@ -85,9 +85,13 @@ Basversionen är låst i git som taggen `v0-bas`.
   bredd, tre eller fler staplas. "Ladda ner intyg" är vit så den inte
   konkurrerar med "Fortsätt".
 - **Byt lösenord:** halverad fältbredd med ögonikon i fältet.
-- **Kapitelnumrering** i innehållsmenyn, från 1 (basen börjar på 0), direkt
-  bredvid kapitelnamnet: "1. Relationskompassens grundkurs". Underkapitlen
+- **Kapitelnumrering** i innehållsmenyn och i kapitelsidans rubrik, från 1
+  (basen börjar på 0): "1. Relationskompassens grundkurs". Underkapitlen
   ärver förälderns nummer: 5.1, 5.2, 5.3.
+- **Bild-quizet på kapitel 2 och 3** är ombyggt till kryssrutefråga med
+  Rätta-knapp under — samma form som frågorna i övningskapitlet — eftersom
+  bilderna lästes som illustrationer i stället för svarsalternativ. Bilderna
+  har flyttat ner till trespalten, ovanför sin egen rubrik.
 - **Handritad pil** i styleguidens ikonmanér ersätter teckenpilarna (← →) i
   knappar och svarta listen. Styleguidens ikonsida innehåller ingen pil, så
   den är ritad efter manéret: en enkel bågad linje med rundade ändar.

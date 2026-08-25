@@ -66,6 +66,13 @@
      X  Elsa och Omar-underkapitlen är utfällda i menyn så snart man är inne
         i något av dem, även förälderkapitlet.                    -> buildToc
 
+     Omgång 8
+     Y  Kapitelnummer i kapitelsidans rubrik: "3. Fler exempel på viktiga
+        relationer". Placeringen orörd.                        -> initExtra
+     Z  Bild-quizet på kapitel 2 och 3 byggt om till kryssrutefråga med
+        Rätta-knapp under, som i övningskapitlet. Bilderna flyttade upp
+        ovanför sin rubrik i trespalten.                  -> initExtra + CSS
+
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
@@ -119,6 +126,95 @@ function v1NormalizeWidths() {
   main.querySelectorAll('[style*="max-width"]').forEach(el => {
     el.style.maxWidth = '';
   });
+}
+
+
+/* ==========================================================================
+   KRAV Y – kapitelnummer i sidrubriken
+   "3. Fler exempel på viktiga relationer". Samma nummer som i menyn, så de
+   inte kan glida ifrån varandra. Rubrikens placering rörs inte – bara texten.
+   ========================================================================== */
+function v1NumberHeading(ch) {
+  if (!ch) return;
+  const h1 = document.querySelector('.coursepage .course-main > h1');
+  if (!h1) return;
+  h1.textContent = v1Nums()[ch.i] + '. ' + h1.textContent.trim();
+}
+
+
+/* ==========================================================================
+   KRAV Z – bild-quizet byggs om till kryssrutefråga
+   Basens quiz är tre stora bilder med etiketter under, och rätt svar visas
+   som en grön ram. Frågan är lätt att missa – bilderna läses som
+   illustrationer, inte som svarsalternativ.
+
+   Här byggs samma fråga om till kryssrutor på rad med en Rätta-knapp under,
+   alltså samma form som frågorna i övningskapitlet. Bilderna flyttas ner och
+   hamnar ovanför sin egen rubrik i trespalten, där de fungerar som
+   illustrationer på riktigt.
+
+   Gäller kapitel 2 och 3, som har identisk struktur i basen. Kör bara om
+   både .quiz-options och .three-col finns på sidan.
+   ========================================================================== */
+function v1RebuildImageQuiz() {
+  const main = document.querySelector('.coursepage .course-main');
+  if (!main) return;
+
+  const options  = main.querySelector('.quiz-options');
+  const threeCol = main.querySelector('.three-col');
+  if (!options || !threeCol) return;
+
+  const txt = el => (el ? el.textContent.trim() : '');
+
+  const opts = Array.from(options.querySelectorAll('.quiz-option')).map(o => ({
+    name:     txt(o.querySelector('.quiz-option__label')),
+    feedback: txt(o.querySelector('.quiz-option__feedback')),
+    correct:  o.classList.contains('is-correct'),
+    img:      o.querySelector('.ph'),
+  }));
+  if (!opts.length) return;
+
+  /* 1. kryssrutefrågan – samma markup och samma rättningsfunktion
+        (rattaCheck) som övningskapitlet använder */
+  const qid = 'v1quiz';
+  let rows = '';
+  opts.forEach(o => {
+    rows += `<div class="checkrow"${o.correct ? ' data-correct="true"' : ''}>` +
+            `<span class="box"></span> ${o.name}</div>`;
+    // facittexten hör till det rätta svaret och är en bekräftelse, inte en
+    // varning – därför grön i stället för basens röda feedback-box
+    if (o.feedback) {
+      rows += `<div class="feedback-box v1-feedback--ok">${o.feedback}</div>`;
+    }
+  });
+
+  const quiz = el(`
+    <div class="checkquiz v1-quiz">
+      <div class="q" id="${qid}">
+        ${rows}
+        <button class="btn-ratta" onclick="rattaCheck(this,'${qid}')">Rätta
+          <span style="color:var(--navy)">⌄</span></button>
+      </div>
+    </div>`);
+  options.insertAdjacentElement('beforebegin', quiz);
+
+  /* 2. flytta bilderna upp ovanför sin rubrik i trespalten.
+        Noderna flyttas, inte kopieras, så app.js:s utbyte av platshållaren
+        mot riktig bild fortsätter att träffa rätt element. */
+  threeCol.querySelectorAll(':scope > div').forEach(col => {
+    const h3 = col.querySelector('h3');
+    if (!h3) return;
+    const match = opts.find(o => o.name === txt(h3));
+    if (match && match.img) col.insertBefore(match.img, h3);
+  });
+
+  /* 3. rensa bort den gamla bildraden och dess Rätta-knapp */
+  const oldBtn = main.querySelector('.center .btn-ratta');
+  if (oldBtn) {
+    const wrap = oldBtn.closest('.center');
+    (wrap || oldBtn).remove();
+  }
+  options.remove();
 }
 
 
@@ -429,10 +525,14 @@ window.RK_V1 = {
   },
 
   /* Körs sist i uppstarten, när all bas-DOM finns */
-  initExtra({ type }) {
-    if (type === 'title')  v1BuildMinSida();
-    if (type === 'course') v1NormalizeWidths();   // krav Q: samma bredd överallt
-    v1SwapArrows();          // krav P: handritad pil överallt, alla sidtyper
+  initExtra({ ch, type }) {
+    if (type === 'title') v1BuildMinSida();
+    if (type === 'course') {
+      v1NormalizeWidths();      // krav Q: samma bredd överallt
+      v1NumberHeading(ch);      // krav Y: kapitelnummer i rubriken
+      v1RebuildImageQuiz();     // krav Z: bild-quiz -> kryssrutefråga
+    }
+    v1SwapArrows();             // krav P: handritad pil överallt, alla sidtyper
   },
 
 };

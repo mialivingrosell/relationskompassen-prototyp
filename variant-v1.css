@@ -383,6 +383,25 @@
 .rk-v1 .coursepage .btn-ratta { background: transparent; }
 .rk-v1 .coursepage .btn-ratta:hover { background: rgba(255,255,255,.45); }
 
+
+/* ==========================================================================
+   KRAV Z – ombyggt bild-quiz (kapitel 2 och 3)
+   Kryssrutorna ligger nu på rad med en Rätta-knapp under, och bilderna har
+   flyttat ner till trespalten ovanför sin egen rubrik.
+   ========================================================================== */
+.rk-v1 .v1-quiz { margin: 22px 0 34px; }
+.rk-v1 .v1-quiz .btn-ratta { margin: 18px 0 0; }
+
+/* facittexten hör till det rätta svaret och är en bekräftelse – grön i
+   stället för basens röda varningsruta */
+.rk-v1 .feedback-box.v1-feedback--ok {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* bilderna ovanför rubrikerna i trespalten */
+.rk-v1 .coursepage .three-col .ph { margin-bottom: 18px; }
+
 /* den handritade pilen sitter i linje med knapptexten */
 .rk-v1 .v1-arr { display: block; }
 .rk-v1 .btn .arrow { display: inline-flex; align-items: center; }
