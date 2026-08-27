@@ -85,9 +85,12 @@ Basversionen är låst i git som taggen `v0-bas`.
   bredd, tre eller fler staplas. "Ladda ner intyg" är vit så den inte
   konkurrerar med "Fortsätt".
 - **Byt lösenord:** halverad fältbredd med ögonikon i fältet.
-- **Kapitelnumrering** i innehållsmenyn och i kapitelsidans rubrik, från 1
-  (basen börjar på 0): "1. Relationskompassens grundkurs". Underkapitlen
-  ärver förälderns nummer: 5.1, 5.2, 5.3.
+- **Startsidan** har en primärknapp "Starta Relationskompassens grundkurs" i
+  den mörka ytan högst upp. Orange botten med marinblå text (kontrast 4,8:1).
+- **Kapitelnumrering** i innehållsmenyn, i kapitelsidans rubrik och i
+  prev/next-knapparna, från 1 (basen börjar på 0):
+  "1. Relationskompassens grundkurs". Underkapitlen ärver förälderns nummer:
+  5.1, 5.2, 5.3.
 - **Bild-quizet på kapitel 2 och 3** är ombyggt till kryssrutefråga med
   Rätta-knapp under — samma form som frågorna i övningskapitlet — eftersom
   bilderna lästes som illustrationer i stället för svarsalternativ. Bilderna
@@ -101,16 +104,17 @@ Basversionen är låst i git som taggen `v0-bas`.
   prev/next linjerar med innehållet. Basens inline-bredder nollas.
 - **Prev/next** har transparent bakgrund och svart ram, som originalet.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
-  Svarta listen är sticky och innehåller vit bakåtpil till Min sida,
-  ett litet lodrätt streck, kursnamnet, och INNEHÅLL + hamburgare längst till
-  höger. Innehållsmenyn fälls ut högerställd, ovanpå progressraden, med en
-  knapp "Till Min sida" efter sista kapitlet.
+  Svarta listen är sticky: bakåtpil + MIN SIDA och ett lodrätt streck till
+  vänster, kursnamnet centrerat, INNEHÅLL + hamburgare till höger.
+  Innehållsmenyn fälls ut högerställd, ovanpå progressraden, med en knapp
+  "Till Min sida" efter sista kapitlet.
 - **Stegräkning:** 18 kapitel totalt, räknat ur `CHAPTERS` (antalet
   huvudkapitel) i stället för inskrivet. Elsa och Omar del 2–4 är inte egna
   steg utan räknas som kapitel 5, så man står kvar på 5 genom hela berättelsen.
 - **Två olika progressmått, med avsikt:**
-  - *Tunn indikator under svarta listen på kapitelsidor* – vilket kapitel man
-    **står på**. Går bakåt om man klickar sig bakåt.
+  - *Indikatorn under svarta listen på kapitelsidor* – vilket kapitel man
+    **står på**, med "X av 18" i högerkanten. Går bakåt om man klickar
+    sig bakåt.
   - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
     distinkta kapitel bland de besökta, så den bara kan växa.
 - **"Fortsätt"** på Min sida går till det senaste kapitlet man stod på, inte

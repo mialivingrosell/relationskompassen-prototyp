@@ -80,6 +80,16 @@
      CC "Fortsätt" på Min sida går till senaste kapitlet man stod på.
                                                             -> initExtra
 
+     Omgång 10
+     DD Primärknapp "Starta Relationskompassens grundkurs" i startsidans
+        mörka yta, under introtexten.                      -> initExtra + CSS
+     EE Kursrubriken centrerad i svarta listen, MIN SIDA tillagd till höger
+        om bakåtpilen.                              -> buildCourseBar + CSS
+     FF Progressbaren högre och med "X av 18" i högerkanten.
+                                                     -> buildCourseBar + CSS
+     GG Kapitelnummer i prev/next-knapparna: "2. Barns olika relationer".
+                                                          -> buildPageNav
+
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
@@ -133,6 +143,24 @@ function v1NormalizeWidths() {
   main.querySelectorAll('[style*="max-width"]').forEach(el => {
     el.style.maxWidth = '';
   });
+}
+
+
+/* ==========================================================================
+   KRAV DD – primärknapp på startsidan
+   Läggs i den mörka ytan högst upp, under introtexten. Basen har bara en
+   outline-knapp längre ner i kurskortet – den här är den tydliga vägen in.
+
+   Orange botten med marinblå text: contrast 4.8:1, alltså godkänt enligt
+   WCAG AA. Vit text på orange hade bara gett 3.5:1 och underkänts.
+   ========================================================================== */
+function v1HomeCta() {
+  const hero = document.querySelector('.hero');
+  if (!hero || hero.querySelector('.v1-hero-cta')) return;
+  hero.insertAdjacentHTML('beforeend',
+    '<p class="v1-hero-cta">' +
+    '<a class="btn v1-btn--primary" href="grundkurs.html">' +
+    'Starta Relationskompassens grundkurs <span class="arrow">→</span></a></p>');
 }
 
 
@@ -519,9 +547,12 @@ window.RK_V1 = {
 
       <div class="coursebar">
         <div class="coursebar__inner">
-          <a class="v1-back" href="min-sida.html" aria-label="Tillbaka till Min sida"
-             title="Tillbaka till Min sida"><span class="arrow">←</span></a>
-          <span class="v1-headsep" aria-hidden="true"></span>
+          <div class="v1-headleft">
+            <a class="v1-back" href="min-sida.html">
+              <span class="arrow">←</span> MIN SIDA
+            </a>
+            <span class="v1-headsep" aria-hidden="true"></span>
+          </div>
           <span class="coursebar__title">Relationskompassens grundkurs</span>
           <button class="coursebar__toggle v1-toc-toggle" onclick="toggleToc(this)">
             INNEHÅLL <span class="hamburger"><span></span><span></span><span></span></span>
@@ -531,8 +562,10 @@ window.RK_V1 = {
       </div>
 
       <div class="v1-progress" role="progressbar" aria-label="Kursens framsteg"
-           aria-valuenow="${v1ProgressPct(ch)}" aria-valuemin="0" aria-valuemax="100">
+           aria-valuenow="${v1CurrentStep(ch)}" aria-valuemin="0"
+           aria-valuemax="${v1Total()}">
         <div class="v1-progress__fill" style="width:${v1ProgressPct(ch)}%"></div>
+        <span class="v1-progress__label">${v1CurrentStep(ch)} av ${v1Total()}</span>
       </div>
 
     </div>`;
@@ -587,15 +620,35 @@ window.RK_V1 = {
     return `<span class="toc__item${sub}${stateClass}">${label}${chev}</span>`;
   },
 
+  /* krav EE: kapitelnummer i prev/next-knapparna, t.ex.
+     "2. Barns olika relationer". Samma numrering som menyn och sidrubriken,
+     eftersom alla tre läser v1Nums(). I övrigt identisk med basen. */
+  buildPageNav(ch) {
+    const prev = CHAPTERS[ch.i - 1];
+    const next = CHAPTERS[ch.i + 1];
+    const label = c => v1Nums()[c.i] + '. ' + c.title;
+
+    const prevBtn = prev
+      ? `<a class="btn btn--outline" href="${prev.file || '#'}"><span class="arrow">←</span> ${label(prev)}</a>`
+      : `<span></span>`;
+
+    const nextDisabled = !next || !next.file;   // sista byggda sidan
+    const nextBtn = next
+      ? `<a class="btn btn--outline ${nextDisabled ? 'btn--disabled' : ''}" href="${next.file || '#'}">${label(next)} <span class="arrow">→</span></a>`
+      : `<span></span>`;
+
+    return `<div class="pagenav">${prevBtn}${nextBtn}</div>`;
+  },
+
   /* krav 6: progressindikatorn i botten av kapitelsidan tas bort. Den nya
-     ligger i stället i kurshuvudet (krav N).
-     Prev/next behålls oförändrad (ingen override av buildPageNav). */
+     ligger i stället i kurshuvudet (krav N). */
   buildProgress(ch) {
     return '';
   },
 
   /* Körs sist i uppstarten, när all bas-DOM finns */
   initExtra({ ch, type }) {
+    v1HomeCta();              // krav DD: primärknapp på startsidan
     if (type === 'title') v1BuildMinSida();
     if (type === 'course') {
       if (ch) v1SetLast(ch.i);  // krav CC: minns var man stod

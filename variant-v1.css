@@ -14,6 +14,26 @@
 
 
 /* ==========================================================================
+   KRAV DD – primärknapp på startsidan
+   Ligger i den mörka ytan högst upp, under introtexten.
+
+   Orange botten med marinblå text ger contrast 4.8:1 = WCAG AA godkänt.
+   Vit text på orange hade bara gett 3.5:1. Pilen måste också vändas till
+   marinblå – basens .btn .arrow är orange och hade försvunnit i knappen.
+   ========================================================================== */
+.rk-v1 .v1-hero-cta { margin: 30px 0 0; }
+.rk-v1 .v1-btn--primary {
+  background: var(--orange);
+  color: var(--navy);
+  font-size: 1.05rem;
+  padding: 16px 26px;
+}
+.rk-v1 .v1-btn--primary .arrow { color: var(--navy); }
+.rk-v1 .v1-btn--primary:hover { background: var(--orange-dark); color: #fff; }
+.rk-v1 .v1-btn--primary:hover .arrow { color: #fff; }
+
+
+/* ==========================================================================
    KRAV A – typografi på artikel- och kapitelsidor
    Rubrikerna upplevdes för små. Brödtexten är rätt och lämnas orörd –
    inga regler här rör p, li eller body.
@@ -278,8 +298,25 @@
   top: 0;
   z-index: 60;
 }
-.rk-v1 .v1-coursehead .coursebar__inner { gap: 18px; }
-.rk-v1 .v1-coursehead .coursebar__title { margin-right: auto; }
+/* KRAV EE – tre fält: vänstergrupp, centrerad kursrubrik, INNEHÅLL.
+   Raster i stället för flex, så rubriken hamnar i mitten av listen oavsett
+   hur breda sidogrupperna är. */
+.rk-v1 .v1-coursehead .coursebar__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+}
+.rk-v1 .v1-coursehead .coursebar__title {
+  text-align: center;
+  justify-self: center;
+}
+.rk-v1 .v1-headleft {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
 
 
 /* ==========================================================================
@@ -288,21 +325,30 @@
    Pilen är samma tecken som i prev/next-knapparna längst ner på sidan,
    men vit i stället för orange.
    ========================================================================== */
+/* Bakåtpil + MIN SIDA som en märkt tillbakalänk. Versalt som INNEHÅLL mitt
+   emot, och som MIN SIDA i sajtens vanliga header. */
 .rk-v1 .v1-back {
   display: inline-flex;
   align-items: center;
-  text-decoration: none;
-  padding: 0 2px;
+  gap: 12px;
   flex: 0 0 auto;
+  text-decoration: none;
+  color: #fff;                  /* currentColor -> pilen blir vit */
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: .08em;
+  line-height: 1;
+  padding: 0 2px;
 }
 .rk-v1 .v1-back .arrow {
   display: inline-flex;
   align-items: center;
-  color: #fff;                  /* currentColor -> den handritade pilen blir vit */
+  color: inherit;
   line-height: 1;
 }
-.rk-v1 .v1-back .v1-arr { width: 34px; height: 21px; }
-.rk-v1 .v1-back:hover .arrow { color: var(--orange); }
+.rk-v1 .v1-back .v1-arr { width: 32px; height: 20px; }
+.rk-v1 .v1-back:hover { color: var(--orange); }
 
 /* Litet lodrätt streck mellan pilen och kursrubriken, så att pilen läses som
    "tillbaka till sidan innan kursen" och inte som en del av rubriken. */
@@ -315,7 +361,7 @@
 
 /* INNEHÅLL till höger. Basens .coursebar__toggle är redan vit, versal och
    condensed – här behövs bara placeringen. */
-.rk-v1 .v1-toc-toggle { margin-left: auto; }
+.rk-v1 .v1-toc-toggle { justify-self: end; }
 
 /* Innehållsmenyn: samma utseende som i basen, men högerställd. Den hänger från
    svarta listens underkant (menyn ligger inuti .coursebar) och lägger sig
@@ -348,13 +394,32 @@
    Visar samma tal som Min sida (se v1ProgressPct i variant-v1.js).
    ========================================================================== */
 .rk-v1 .v1-progress {
-  height: 8px;
+  position: relative;
+  height: 28px;                 /* krav FF: högre, får plats med siffran */
   background: var(--grey-track);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
 .rk-v1 .v1-progress__fill {
-  height: 100%;
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
   background: var(--orange);
   transition: width .3s ease;
+}
+/* "X av 18" i högerkanten, linjerar med INNEHÅLL ovanför. Ligger över
+   fyllningen; marinblå text håller kontrast både mot grå ränna (13:1) och
+   mot orange (4.8:1). */
+.rk-v1 .v1-progress__label {
+  position: relative;
+  margin-left: auto;
+  padding-right: var(--edge);
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: .85rem;
+  letter-spacing: .03em;
+  color: var(--navy);
+  white-space: nowrap;
 }
 
 
