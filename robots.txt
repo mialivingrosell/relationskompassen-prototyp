@@ -1,0 +1,4 @@
+# Prototyp för användartest – ska inte indexeras.
+# Materialet (bilder, film, text) tillhör Jämställdhetsmyndigheten / JÄMY.
+User-agent: *
+Disallow: /

@@ -3,6 +3,12 @@
 Statisk HTML/CSS/JS-prototyp som kopierar den befintliga webbkursens huvudflöde.
 Byggd för att sedan utvärderas (med fokus på meny & navigation) och itereras vidare.
 
+> **Om innehållet.** Detta är en designprototyp för användartest, inte den
+> riktiga kursen. Bilder, film och text tillhör Jämställdhetsmyndigheten /
+> JÄMY och används här enbart som underlag i designarbetet. Sidorna är
+> märkta `noindex` och `robots.txt` stänger ute sökmotorer — länken är
+> alltså inte hemlig, bara osökbar. Sprid den inte vidare.
+
 ## Öppna prototypen
 
 Enklast: dubbelklicka på `index.html`.
