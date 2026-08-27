@@ -79,7 +79,6 @@
 }
 
 /* rubriker och brödtext i den smalare spalten */
-.rk-v1 .coursepage .course-main > h1,
 .rk-v1 .coursepage .course-main > h2,
 .rk-v1 .coursepage .course-main > h3,
 .rk-v1 .coursepage .course-main > p,
@@ -87,6 +86,15 @@
 .rk-v1 .coursepage .course-main > ol,
 .rk-v1 .coursepage .transcribe__body,
 .rk-v1 .coursepage .checkquiz { max-width: var(--v1-text); }
+
+/* KRAV LL – sidrubriken får hela innehållsbredden, inte textspalten.
+   Radbrytningen berodde på att h1 satt i den 800px smala textspalten; med
+   mediabredden ryms de flesta kapitelrubriker på en rad. Resten sköts av
+   v1FitHeading() i variant-v1.js, som krymper graden tills raden räcker. */
+.rk-v1 .coursepage .course-main > h1 {
+  max-width: var(--v1-media);
+  text-wrap: balance;           /* jämnare brytning om den ändå måste brytas */
+}
 
 /* filmen fyller hela mediabredden – basen kapade den till 820px */
 .rk-v1 .coursepage .videoblock { max-width: var(--v1-media); }
@@ -411,21 +419,26 @@
   transition: width .3s ease;
 }
 
-/* KRAV II – "X av 18" inne i den orangea ytan, linjerad mot skärningspunkten
+/* KRAV II – "1/18" inne i den orangea ytan, indragen från skärningspunkten
    mot grått. left sätts inline till fyllningens bredd och translateX(-100%)
    lägger texten till vänster om kanten.
 
-   max(...) i inline-stilen är ett golv: vid 1 av 18 är den orangea ytan för
-   smal för texten, och då glider den precis över skärningen i stället för att
-   klippas. Marinblå text håller kontrast både mot orange (4.8:1) och mot den
-   gråa rännan (13:1), så den är läsbar i båda lägena. */
+   max(...) i inline-stilen är ett golv: vid 1/18 är den orangea ytan för smal
+   för texten, och då glider den precis över skärningen i stället för att
+   klippas.
+
+   FÄRGVAL: texten är marinblå, inte vit. Vit på orange (#F1551F) ger 3.47:1
+   och underkänns av WCAG AA, som kräver 4.5:1 för text i den här graden.
+   Marinblå ger 4.8:1 mot orange och 13:1 mot den gråa rännan, alltså läsbar
+   i båda lägena. Vit skulle bli godkänd först om graden höjdes till minst
+   18.7px fet (då gäller 3:1-regeln för stor text). */
 .rk-v1 .v1-progress__label {
   position: absolute;
   top: 0; bottom: 0;
   transform: translateX(-100%);
   display: flex;
   align-items: center;
-  padding-right: 18px;
+  padding-right: 30px;          /* indrag från skärningen */
   font-family: var(--font-body);
   font-weight: 800;
   font-size: .85rem;

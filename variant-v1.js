@@ -100,6 +100,14 @@
      KK Startsidans primärknapp vit med svart text och orange pil, centrerad
         i hero-ytan.                                                  -> CSS
 
+     Omgång 12
+     LL Kapitelrubriken ryms på en rad: h1 får hela innehållsbredden, och
+        graden krymps automatiskt för de längre rubrikerna.
+                                                       -> v1FitHeading + CSS
+        Progressiffran kortad till "1/18" och indragen från skärningen.
+        Behåller marinblå text – vit på orange ger bara 3.47:1 och
+        underkänns av WCAG AA.                                        -> CSS
+
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
@@ -255,6 +263,39 @@ function v1NumberHeading(ch) {
   const h1 = document.querySelector('.coursepage .course-main > h1');
   if (!h1) return;
   h1.textContent = v1Nums()[ch.i] + '. ' + h1.textContent.trim();
+}
+
+
+/* ==========================================================================
+   KRAV LL – kapitelrubriken på en rad
+   CSS ger rubriken hela innehållsbredden (se variant-v1.css), vilket räcker
+   för de flesta kapitel. För de längre krymps graden här tills raden räcker,
+   i stället för att sätta en fast liten grad för alla – korta rubriker får
+   alltså behålla sin fulla storlek.
+
+   Mäts efter att webbtypsnitten laddat; annars mäts fallback-typsnittet och
+   graden blir fel. Golvet gör att extremt långa rubriker bryts i stället för
+   att krympa till oläslighet.
+   ========================================================================== */
+function v1FitHeading() {
+  const h1 = document.querySelector('.coursepage .course-main > h1');
+  if (!h1) return;
+
+  const FLOOR = 34;                       // px – under detta bryter vi hellre
+  const prevWrap = h1.style.whiteSpace;
+
+  // tillbaka till CSS-graden först, så rubriken kan växa igen när fönstret
+  // breddas – annars kunde den bara krympa, aldrig återhämta sig
+  h1.style.fontSize = '';
+  h1.style.whiteSpace = 'nowrap';         // så scrollWidth blir radens bredd
+
+  let px = parseFloat(getComputedStyle(h1).fontSize);
+  while (h1.scrollWidth > h1.clientWidth && px > FLOOR) {
+    px -= 1;
+    h1.style.fontSize = px + 'px';
+  }
+
+  h1.style.whiteSpace = prevWrap;         // tillbaka – nu ryms den ändå
 }
 
 
@@ -646,7 +687,7 @@ window.RK_V1 = {
            aria-valuemax="${v1Total()}">
         <div class="v1-progress__fill" style="width:${v1ProgressPct(ch)}%"></div>
         <span class="v1-progress__label"
-              style="left:max(${v1ProgressPct(ch)}%, 108px)">${v1CurrentStep(ch)} av ${v1Total()}</span>
+              style="left:max(${v1ProgressPct(ch)}%, 96px)">${v1CurrentStep(ch)}/${v1Total()}</span>
       </div>
 
     </div>`;
@@ -739,6 +780,14 @@ window.RK_V1 = {
       v1NormalizeWidths();      // krav Q: samma bredd överallt
       v1NumberHeading(ch);      // krav Y: kapitelnummer i rubriken
       v1RebuildImageQuiz();     // krav Z: bild-quiz -> kryssrutefråga
+
+      // krav LL: rubriken på en rad – mäts när typsnitten är laddade
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(v1FitHeading);
+      } else {
+        v1FitHeading();
+      }
+      window.addEventListener('resize', v1FitHeading);
     }
     v1ApplyLoginState();        // krav HH: rikta om ingångarna – efter Min sida
     v1SwapArrows();             // krav P: handritad pil överallt, alla sidtyper
