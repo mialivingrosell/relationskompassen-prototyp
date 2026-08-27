@@ -380,12 +380,17 @@
   z-index: 70;                  /* över progressraden */
 }
 
-/* krav O: extra väg ut ur kursen. Ligger fast efter sista kapitlet i listan
-   (inte klistrad i underkanten) och har .btn:s mått, alltså samma storlek som
-   övriga knappar på sajten – men bara så bred som texten kräver. */
+/* krav O – två vägar ut ur kursen, sida vid sida efter sista kapitlet i
+   listan. .btn ger samma mått som övriga knappar på sajten; bredden följer
+   texten. flex-wrap gör att de staplas om menyn blir smal. */
+.rk-v1 .toc .v1-toc-exits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 20px 8px;
+}
 .rk-v1 .toc .v1-toc-exit {
   display: inline-flex;
-  margin: 20px 20px 8px;
   background: transparent;
   border: 1.5px solid #fff;
   color: #fff;

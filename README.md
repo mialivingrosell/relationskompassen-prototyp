@@ -121,10 +121,10 @@ Basversionen är låst i git som taggen `v0-bas`.
   prev/next linjerar med innehållet. Basens inline-bredder nollas.
 - **Prev/next** har transparent bakgrund och svart ram, som originalet.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
-  Svarta listen är sticky: orange bakåtpil + MIN SIDA till vänster,
-  kursnamnet centrerat, INNEHÅLL + hamburgare till höger.
-  Innehållsmenyn fälls ut högerställd, ovanpå progressraden, med en knapp
-  "Till Min sida" efter sista kapitlet.
+  Svarta listen är sticky: orange bakåtpil + STARTSIDAN till vänster,
+  kursnamnet centrerat, KURSINNEHÅLL + hamburgare till höger.
+  Innehållsmenyn fälls ut högerställd, ovanpå progressraden, med två utgångar
+  sida vid sida efter sista kapitlet: "Till Min sida" och "Till startsidan".
 - **Stegräkning:** 18 kapitel totalt, räknat ur `CHAPTERS` (antalet
   huvudkapitel) i stället för inskrivet. Elsa och Omar del 2–4 är inte egna
   steg utan räknas som kapitel 5, så man står kvar på 5 genom hela berättelsen.

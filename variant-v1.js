@@ -100,6 +100,12 @@
      KK Startsidans primärknapp vit med svart text och orange pil, centrerad
         i hero-ytan.                                                  -> CSS
 
+     Omgång 15
+     PP Kapitelsidans svarta list: MIN SIDA -> STARTSIDAN (och länkar nu dit),
+        INNEHÅLL -> KURSINNEHÅLL. Nedfällda menyn har två utgångar sida vid
+        sida: "Till Min sida" och "Till startsidan".
+                                                       -> buildCourseBar/buildToc + CSS
+
      Omgång 14
      OO Progressstrecket på Min sida linjerar med knappradens högerkant.
         Bredden mäts per kort.                    -> v1SizeCourseTracks + CSS
@@ -850,13 +856,13 @@ window.RK_V1 = {
       <div class="coursebar">
         <div class="coursebar__inner">
           <div class="v1-headleft">
-            <a class="v1-back" href="min-sida.html">
-              <span class="arrow">←</span> MIN SIDA
+            <a class="v1-back" href="index.html" title="Tillbaka till startsidan">
+              <span class="arrow">←</span> STARTSIDAN
             </a>
           </div>
           <span class="coursebar__title">Relationskompassens grundkurs</span>
           <button class="coursebar__toggle v1-toc-toggle" onclick="toggleToc(this)">
-            INNEHÅLL <span class="hamburger"><span></span><span></span><span></span></span>
+            KURSINNEHÅLL <span class="hamburger"><span></span><span></span><span></span></span>
           </button>
         </div>
         ${buildToc(ch.i)}
@@ -891,9 +897,12 @@ window.RK_V1 = {
         html += `<div class="toc__subgroup${elsaCollapsed ? ' collapsed' : ''}" id="tocSub">${subs}</div>`;
       }
     });
-    // extra väg ut ur kursen, fast placerad efter sista kapitlet.
+    // två vägar ut ur kursen, fast placerade efter sista kapitlet.
     // .btn ger samma storlek som övriga knappar på sajten.
-    html += `<a class="btn v1-toc-exit" href="min-sida.html">Till Min sida</a>`;
+    html += `<div class="v1-toc-exits">` +
+            `<a class="btn v1-toc-exit" href="min-sida.html">Till Min sida</a>` +
+            `<a class="btn v1-toc-exit" href="index.html">Till startsidan</a>` +
+            `</div>`;
     return `<div class="toc" id="toc">${html}</div>`;
   },
 
