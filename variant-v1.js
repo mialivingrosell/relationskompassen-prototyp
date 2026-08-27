@@ -90,6 +90,16 @@
      GG Kapitelnummer i prev/next-knapparna: "2. Barns olika relationer".
                                                           -> buildPageNav
 
+     Omgång 11
+     HH Inloggning krävs för BÅDA ingångarna. Riktig sessionflagga i stället
+        för basens hårdkodade data-logged.                 -> initExtra
+     II "X av 18" flyttad in i den orangea ytan, linjerad mot skärningen,
+        och mjuk rundad högerkant på fyllningen.    -> buildCourseBar + CSS
+     JJ Nästa-knappen svart med vit text och orange pil. Föregående behåller
+        outline-stilen.                                    -> buildPageNav + CSS
+     KK Startsidans primärknapp vit med svart text och orange pil, centrerad
+        i hero-ytan.                                                  -> CSS
+
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
    ========================================================================== */
@@ -143,6 +153,77 @@ function v1NormalizeWidths() {
   main.querySelectorAll('[style*="max-width"]').forEach(el => {
     el.style.maxWidth = '';
   });
+}
+
+
+/* ==========================================================================
+   KRAV HH – inloggning krävs för båda ingångarna
+   Basen har ingen inloggningsstatus: varje sida har ett hårdkodat
+   data-logged. Därför gick "Starta Relationskompassens grundkurs" rakt in i
+   kursen medan "Min sida" krävde inloggning.
+
+   Här hålls en riktig flagga per flik. Den sätts när inloggningsformuläret
+   skickas, och nollas när sessionen nollställs – på alla tre vägar:
+     ?reset i adressen         -> hanteras vid parse, före app.js
+     "Nollställ session" i sidfoten -> basens resetVisited() byggs på
+     Nollställ i prototypstämpeln   -> stämpeln lägger på &reset
+   ========================================================================== */
+/* Båda sessionsnycklarna deklareras här, eftersom v1ClearSession() körs redan
+   vid parse (?reset) och då måste båda finnas. V1_LAST_KEY används av krav CC
+   längre ner i filen. */
+const V1_LOGGED_KEY = 'rk_logged';
+const V1_LAST_KEY   = 'rk_last';
+
+function v1SetLogged(on) {
+  try {
+    if (on) sessionStorage.setItem(V1_LOGGED_KEY, '1');
+    else    sessionStorage.removeItem(V1_LOGGED_KEY);
+  } catch (e) {}
+}
+function v1IsLogged() {
+  try { return sessionStorage.getItem(V1_LOGGED_KEY) === '1'; } catch (e) { return false; }
+}
+function v1ClearSession() {
+  try {
+    sessionStorage.removeItem(V1_LOGGED_KEY);
+    sessionStorage.removeItem(V1_LAST_KEY);
+  } catch (e) {}
+}
+
+/* Körs vid parse, alltså före app.js hanterar ?reset. */
+if (location.search.indexOf('reset') !== -1) v1ClearSession();
+
+/* Fångar inloggningsformuläret i capture-fasen, så flaggan hinner sparas
+   innan basens inline-onsubmit navigerar vidare till Min sida. */
+document.addEventListener('submit', (e) => {
+  const form = e.target;
+  const go = form && form.getAttribute ? (form.getAttribute('onsubmit') || '') : '';
+  if (go.indexOf('min-sida.html') !== -1) v1SetLogged(true);
+}, true);
+
+/* Riktar om ingångarna efter inloggningsstatus. Kursvyn lämnas orörd – är man
+   inne i ett kapitel är man redan förbi ingången. */
+function v1ApplyLoginState() {
+  if (document.body.dataset.subbar === 'course') return;
+
+  if (v1IsLogged()) {
+    // inloggad: MIN SIDA i headern ska gå till Min sida, inte till inloggning
+    document.querySelectorAll('.site-header a[href="logga-in.html"]')
+      .forEach(a => a.setAttribute('href', 'min-sida.html'));
+  } else {
+    // ej inloggad: kursen nås bara via inloggning – gäller båda knapparna på
+    // startsidan och kurslänken i MENY-panelen
+    document.querySelectorAll('a[href="grundkurs.html"]')
+      .forEach(a => a.setAttribute('href', 'logga-in.html'));
+  }
+}
+
+/* Låt basens "Nollställ session" i sidfoten även nolla v1:s nycklar. */
+function v1PatchReset() {
+  if (window._v1ResetPatched || typeof window.resetVisited !== 'function') return;
+  const baseReset = window.resetVisited;
+  window.resetVisited = function () { baseReset(); v1ClearSession(); };
+  window._v1ResetPatched = true;
 }
 
 
@@ -320,9 +401,8 @@ function v1CurrentStep(ch) {
 
    Tre ställen läser härifrån och kan alltså inte säga olika saker:
    progressraden i kurshuvudet, kurskortet på Min sida och Fortsätt-knappen.
+   (V1_LAST_KEY deklareras i krav HH-blocket längre upp.)
    ========================================================================== */
-const V1_LAST_KEY = 'rk_last';
-
 function v1SetLast(i) {
   try { sessionStorage.setItem(V1_LAST_KEY, String(i)); } catch (e) {}
 }
@@ -565,7 +645,8 @@ window.RK_V1 = {
            aria-valuenow="${v1CurrentStep(ch)}" aria-valuemin="0"
            aria-valuemax="${v1Total()}">
         <div class="v1-progress__fill" style="width:${v1ProgressPct(ch)}%"></div>
-        <span class="v1-progress__label">${v1CurrentStep(ch)} av ${v1Total()}</span>
+        <span class="v1-progress__label"
+              style="left:max(${v1ProgressPct(ch)}%, 108px)">${v1CurrentStep(ch)} av ${v1Total()}</span>
       </div>
 
     </div>`;
@@ -632,9 +713,11 @@ window.RK_V1 = {
       ? `<a class="btn btn--outline" href="${prev.file || '#'}"><span class="arrow">←</span> ${label(prev)}</a>`
       : `<span></span>`;
 
+    /* krav JJ: nästa-knappen är svart med vit text och orange pil, alltså den
+       tydliga vägen framåt. Föregående behåller outline-stilen. */
     const nextDisabled = !next || !next.file;   // sista byggda sidan
     const nextBtn = next
-      ? `<a class="btn btn--outline ${nextDisabled ? 'btn--disabled' : ''}" href="${next.file || '#'}">${label(next)} <span class="arrow">→</span></a>`
+      ? `<a class="btn v1-btn--next ${nextDisabled ? 'btn--disabled' : ''}" href="${next.file || '#'}">${label(next)} <span class="arrow">→</span></a>`
       : `<span></span>`;
 
     return `<div class="pagenav">${prevBtn}${nextBtn}</div>`;
@@ -648,6 +731,7 @@ window.RK_V1 = {
 
   /* Körs sist i uppstarten, när all bas-DOM finns */
   initExtra({ ch, type }) {
+    v1PatchReset();           // krav HH: nollställning tar även v1:s nycklar
     v1HomeCta();              // krav DD: primärknapp på startsidan
     if (type === 'title') v1BuildMinSida();
     if (type === 'course') {
@@ -656,6 +740,7 @@ window.RK_V1 = {
       v1NumberHeading(ch);      // krav Y: kapitelnummer i rubriken
       v1RebuildImageQuiz();     // krav Z: bild-quiz -> kryssrutefråga
     }
+    v1ApplyLoginState();        // krav HH: rikta om ingångarna – efter Min sida
     v1SwapArrows();             // krav P: handritad pil överallt, alla sidtyper
   },
 

@@ -15,22 +15,24 @@
 
 /* ==========================================================================
    KRAV DD – primärknapp på startsidan
-   Ligger i den mörka ytan högst upp, under introtexten.
+   Vit botten, marinblå text, orange pil. Centrerad i den mörka hero-ytan.
 
-   Orange botten med marinblå text ger contrast 4.8:1 = WCAG AA godkänt.
-   Vit text på orange hade bara gett 3.5:1. Pilen måste också vändas till
-   marinblå – basens .btn .arrow är orange och hade försvunnit i knappen.
+   Obs: basens .hero p ger max-width 760px + margin auto. Marginalen måste
+   därför sättas med auto i sidled, annars hamnar knappen i vänsterkanten av
+   den 760px breda rutan i stället för i mitten av hero-ytan.
    ========================================================================== */
-.rk-v1 .v1-hero-cta { margin: 30px 0 0; }
+.rk-v1 .v1-hero-cta {
+  margin: 32px auto 0;
+  text-align: center;
+}
 .rk-v1 .v1-btn--primary {
-  background: var(--orange);
+  background: #fff;
   color: var(--navy);
   font-size: 1.05rem;
   padding: 16px 26px;
 }
-.rk-v1 .v1-btn--primary .arrow { color: var(--navy); }
-.rk-v1 .v1-btn--primary:hover { background: var(--orange-dark); color: #fff; }
-.rk-v1 .v1-btn--primary:hover .arrow { color: #fff; }
+.rk-v1 .v1-btn--primary .arrow { color: var(--orange); }
+.rk-v1 .v1-btn--primary:hover { background: var(--cream); }
 
 
 /* ==========================================================================
@@ -397,29 +399,40 @@
   position: relative;
   height: 28px;                 /* krav FF: högre, får plats med siffran */
   background: var(--grey-track);
-  display: flex;
-  align-items: center;
   overflow: hidden;
 }
+/* Mjuk högerkant på fyllningen, i linje med profilens rundade formspråk.
+   14px = halva höjden, alltså en hel rundning. */
 .rk-v1 .v1-progress__fill {
   position: absolute;
   left: 0; top: 0; bottom: 0;
   background: var(--orange);
+  border-radius: 0 14px 14px 0;
   transition: width .3s ease;
 }
-/* "X av 18" i högerkanten, linjerar med INNEHÅLL ovanför. Ligger över
-   fyllningen; marinblå text håller kontrast både mot grå ränna (13:1) och
-   mot orange (4.8:1). */
+
+/* KRAV II – "X av 18" inne i den orangea ytan, linjerad mot skärningspunkten
+   mot grått. left sätts inline till fyllningens bredd och translateX(-100%)
+   lägger texten till vänster om kanten.
+
+   max(...) i inline-stilen är ett golv: vid 1 av 18 är den orangea ytan för
+   smal för texten, och då glider den precis över skärningen i stället för att
+   klippas. Marinblå text håller kontrast både mot orange (4.8:1) och mot den
+   gråa rännan (13:1), så den är läsbar i båda lägena. */
 .rk-v1 .v1-progress__label {
-  position: relative;
-  margin-left: auto;
-  padding-right: var(--edge);
+  position: absolute;
+  top: 0; bottom: 0;
+  transform: translateX(-100%);
+  display: flex;
+  align-items: center;
+  padding-right: 18px;
   font-family: var(--font-body);
   font-weight: 800;
   font-size: .85rem;
   letter-spacing: .03em;
   color: var(--navy);
   white-space: nowrap;
+  transition: left .3s ease;
 }
 
 
@@ -436,11 +449,24 @@
   max-width: var(--v1-media);
   padding-bottom: 48px;
 }
+/* föregående: transparent med svart ram, som originalet */
 .rk-v1 .coursepage .pagenav .btn--outline {
   background: transparent;
   border: 1.5px solid var(--navy);
 }
 .rk-v1 .coursepage .pagenav .btn--outline:hover { background: rgba(255,255,255,.45); }
+
+/* krav JJ: nästa – svart med vit text och orange pil, den tydliga vägen framåt */
+.rk-v1 .coursepage .pagenav .v1-btn--next {
+  background: var(--navy);
+  color: #fff;
+  border: 1.5px solid var(--navy);
+}
+.rk-v1 .coursepage .pagenav .v1-btn--next .arrow { color: var(--orange); }
+.rk-v1 .coursepage .pagenav .v1-btn--next:hover {
+  background: var(--navy-2);
+  border-color: var(--navy-2);
+}
 
 /* samma sak för de andra knappytorna på kapitelsidorna: originalet låter den
    ljusblå bakgrunden lysa igenom i stället för att lägga en vit platta */

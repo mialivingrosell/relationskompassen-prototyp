@@ -145,7 +145,8 @@ function buildVariantStamp() {
   box.querySelector('.rkvs-reset a').addEventListener('click', (e) => {
     e.preventDefault();
     if (typeof resetVisited === 'function') resetVisited();
-    location.href = 'index.html?nav=' + V.id;
+    // &reset i adressen så att även variantens egna sessionsnycklar nollas
+    location.href = 'index.html?nav=' + V.id + '&reset';
   });
 
   document.body.appendChild(box);

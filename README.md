@@ -85,8 +85,13 @@ Basversionen är låst i git som taggen `v0-bas`.
   bredd, tre eller fler staplas. "Ladda ner intyg" är vit så den inte
   konkurrerar med "Fortsätt".
 - **Byt lösenord:** halverad fältbredd med ögonikon i fältet.
-- **Startsidan** har en primärknapp "Starta Relationskompassens grundkurs" i
-  den mörka ytan högst upp. Orange botten med marinblå text (kontrast 4,8:1).
+- **Startsidan** har en primärknapp "Starta Relationskompassens grundkurs"
+  centrerad i den mörka ytan högst upp: vit botten, marinblå text, orange pil.
+- **Inloggning krävs för båda ingångarna.** Basen har ingen
+  inloggningsstatus – varje sida har ett hårdkodat `data-logged`, så
+  kursknappen gick rakt in medan Min sida krävde inloggning. v1 håller en
+  riktig flagga per flik som sätts när inloggningsformuläret skickas och nollas
+  vid alla tre nollställningsvägar (`?reset`, sidfotens länk, prototypstämpeln).
 - **Kapitelnumrering** i innehållsmenyn, i kapitelsidans rubrik och i
   prev/next-knapparna, från 1 (basen börjar på 0):
   "1. Relationskompassens grundkurs". Underkapitlen ärver förälderns nummer:
@@ -113,8 +118,9 @@ Basversionen är låst i git som taggen `v0-bas`.
   steg utan räknas som kapitel 5, så man står kvar på 5 genom hela berättelsen.
 - **Två olika progressmått, med avsikt:**
   - *Indikatorn under svarta listen på kapitelsidor* – vilket kapitel man
-    **står på**, med "X av 18" i högerkanten. Går bakåt om man klickar
-    sig bakåt.
+    **står på**, med "X av 18" inne i den orangea ytan, linjerad mot
+    skärningen mot grått. Fyllningen har mjuk rundad högerkant. Går bakåt om
+    man klickar sig bakåt.
   - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
     distinkta kapitel bland de besökta, så den bara kan växa.
 - **"Fortsätt"** på Min sida går till det senaste kapitlet man stod på, inte
