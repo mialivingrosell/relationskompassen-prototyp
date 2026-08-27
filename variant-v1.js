@@ -100,6 +100,10 @@
      KK Startsidans primärknapp vit med svart text och orange pil, centrerad
         i hero-ytan.                                                  -> CSS
 
+     Omgång 14
+     OO Progressstrecket på Min sida linjerar med knappradens högerkant.
+        Bredden mäts per kort.                    -> v1SizeCourseTracks + CSS
+
      Omgång 13
      MM Strecket till höger om MIN SIDA borttaget. Bakåtpilen orange i
         stället för vit, som hamburgaren mitt emot.  -> buildCourseBar + CSS
@@ -755,6 +759,48 @@ function v1BuildCourseCards() {
 
   items.forEach(item => item.remove());
   wrap.appendChild(grid);
+
+  /* krav OO: progressstrecket linjerar med knappradens högerkant. Mäts när
+     typsnitten laddat – knappbredden beror på dem. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(v1SizeCourseTracks);
+  } else {
+    v1SizeCourseTracks();
+  }
+  window.addEventListener('resize', v1SizeCourseTracks);
+}
+
+/* ==========================================================================
+   KRAV OO – progressstreckets längd på Min sida
+   Strecket ska gå kant i kant med knappraden under. Knappraden är olika bred
+   på de två korten ("Fortsätt" ensam mot "Se igen" + "Ladda ner intyg"), så
+   ett fast mått kan inte linjera med båda – bredden mäts därför per kort.
+
+   .v1-card__actions är en flexbehållare i full kortbredd, så dess egen bredd
+   säger inget om knapparna. Måttet tas från behållarens vänsterkant till den
+   högsta högerkanten bland knapparna, vilket också fungerar om de radbryter.
+
+   Golvet på 340px finns för att ett ensamt smalt "Fortsätt" annars skulle
+   krympa strecket till en stump.
+   ========================================================================== */
+function v1SizeCourseTracks() {
+  document.querySelectorAll('.v1-card').forEach(card => {
+    const actions = card.querySelector('.v1-card__actions');
+    const track = card.querySelector('.v1-card__track');
+    if (!actions || !track) return;
+
+    const btns = actions.querySelectorAll('.btn');
+    if (!btns.length) return;
+
+    const left = actions.getBoundingClientRect().left;
+    let right = left;
+    btns.forEach(b => {
+      right = Math.max(right, b.getBoundingClientRect().right);
+    });
+
+    const w = Math.round(right - left);
+    if (w > 0) track.style.maxWidth = Math.max(340, w) + 'px';
+  });
 }
 
 /* krav K: lösenordsfälten halveras och får en ögonikon längst till höger,

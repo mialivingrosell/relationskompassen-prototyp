@@ -256,7 +256,9 @@
   color: rgba(27,29,45,.6);
 }
 /* Strecket har eget breddtak även när kortet är brett – annars kommer det
-   långa orange bandet tillbaka. */
+   långa orange bandet tillbaka. Måttet nedan är utgångsläge och golv;
+   v1SizeCourseTracks() i variant-v1.js sätter sedan bredden per kort så att
+   strecket linjerar med knappradens högerkant (krav OO). */
 .rk-v1 .v1-card__track {
   height: 10px;
   max-width: 340px;
