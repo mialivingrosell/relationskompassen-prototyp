@@ -100,6 +100,12 @@ Basversionen är låst i git som taggen `v0-bas`.
   Rätta-knapp under — samma form som frågorna i övningskapitlet — eftersom
   bilderna lästes som illustrationer i stället för svarsalternativ. Bilderna
   har flyttat ner till trespalten, ovanför sin egen rubrik.
+- **Quiz-frågorna är svarbara och obligatoriska.** I basen är `.checkrow`
+  dekorativa divar utan interaktion; v1 gör dem klickbara med mus och
+  tangentbord. Nästa-knappen spärras tills alla frågor på sidan har minst ett
+  valt alternativ, med felmeddelande både vid frågan och vid knappen, och
+  sidan hoppar till första obesvarade frågan. Gäller kapitel 2, 3 och 7.
+  Ditt val visas marinblått, facit grönt/rött, så de går att skilja.
 - **Handritad pil** i styleguidens ikonmanér ersätter teckenpilarna (← →) i
   knappar och svarta listen. Styleguidens ikonsida innehåller ingen pil, så
   den är ritad efter manéret: en enkel bågad linje med rundade ändar.
@@ -109,8 +115,8 @@ Basversionen är låst i git som taggen `v0-bas`.
   prev/next linjerar med innehållet. Basens inline-bredder nollas.
 - **Prev/next** har transparent bakgrund och svart ram, som originalet.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
-  Svarta listen är sticky: bakåtpil + MIN SIDA och ett lodrätt streck till
-  vänster, kursnamnet centrerat, INNEHÅLL + hamburgare till höger.
+  Svarta listen är sticky: orange bakåtpil + MIN SIDA till vänster,
+  kursnamnet centrerat, INNEHÅLL + hamburgare till höger.
   Innehållsmenyn fälls ut högerställd, ovanpå progressraden, med en knapp
   "Till Min sida" efter sista kapitlet.
 - **Stegräkning:** 18 kapitel totalt, räknat ur `CHAPTERS` (antalet

@@ -100,6 +100,12 @@
      KK Startsidans primärknapp vit med svart text och orange pil, centrerad
         i hero-ytan.                                                  -> CSS
 
+     Omgång 13
+     MM Strecket till höger om MIN SIDA borttaget. Bakåtpilen orange i
+        stället för vit, som hamburgaren mitt emot.  -> buildCourseBar + CSS
+     NN Quiz-frågorna svarbara och obligatoriska. Nästa-knappen spärras med
+        felmeddelande vid frågan och vid knappen.      -> initExtra + CSS
+
      Omgång 12
      LL Kapitelrubriken ryms på en rad: h1 får hela innehållsbredden, och
         graden krymps automatiskt för de längre rubrikerna.
@@ -146,6 +152,135 @@ function v1SwapArrows(root) {
     if (t === '←')      span.innerHTML = V1_ARROW_LEFT;
     else if (t === '→') span.innerHTML = V1_ARROW_RIGHT;
   });
+}
+
+
+/* ==========================================================================
+   KRAV NN – obligatoriska quiz-frågor med validering
+   Motiv: kursen är obligatorisk. Utan spärr klickar man bara vidare.
+
+   Basen har inga svarbara frågor: .checkrow är dekorativa divar och
+   rattaCheck() visar bara facit. Därför görs raderna först klickbara här
+   (mus + tangentbord, role="checkbox"), sedan spärras Nästa-knappen.
+
+   "Besvarad" = minst ett alternativ valt. Frågorna är flervalsfrågor, så
+   antalet val kan inte krävas. Vill man dessutom kräva att man tryckt Rätta
+   och sett facit räcker det att lägga till kravet i v1Unanswered().
+
+   Felmeddelandet visas på två nivåer, vilket är standardmönstret för
+   formulärvalidering: en sammanfattning vid knappen man tryckte på, och ett
+   meddelande vid varje fråga som saknar svar. Sidan hoppar till den första.
+   Knappen lämnas klickbar – en utgråad knapp berättar inte vad som saknas.
+   ========================================================================== */
+
+/* Alla frågor på sidan. .reflect i övningskapitlet saknar .q och räknas
+   alltså inte som fråga. */
+function v1Questions() {
+  return Array.from(document.querySelectorAll('.checkquiz .q'));
+}
+function v1Unanswered() {
+  return v1Questions().filter(q => !q.querySelector('.checkrow.v1-checked'));
+}
+
+/* Gör kryssrutorna svarbara */
+function v1WireQuiz() {
+  const rows = document.querySelectorAll('.checkquiz .checkrow');
+  if (!rows.length) return;
+
+  rows.forEach(row => {
+    row.setAttribute('role', 'checkbox');
+    row.setAttribute('aria-checked', 'false');
+    row.setAttribute('tabindex', '0');
+
+    const toggle = () => {
+      const on = row.classList.toggle('v1-checked');
+      row.setAttribute('aria-checked', on ? 'true' : 'false');
+      // rutans innehåll rörs inte om facit redan visats (då står ✓/✕ där)
+      const box = row.querySelector('.box');
+      if (box && !row.classList.contains('correct') && !row.classList.contains('wrong')) {
+        box.textContent = on ? '✓' : '';
+      }
+      v1ClearQuizError(row.closest('.q'));
+    };
+
+    row.addEventListener('click', toggle);
+    row.addEventListener('keydown', e => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+    });
+  });
+
+  /* Rätta på en obesvarad fråga visar samma fel. Lyssnaren sitter på document
+     i capture-fasen och stoppar propagationen, så basens inline-onclick
+     (rattaCheck) inte hinner avslöja facit. */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest ? e.target.closest('.btn-ratta') : null;
+    if (!btn) return;
+    const q = btn.closest('.q');
+    if (q && !q.querySelector('.checkrow.v1-checked')) {
+      e.preventDefault();
+      e.stopPropagation();
+      v1ShowQuizErrors([q]);
+    }
+  }, true);
+}
+
+/* Spärra Nästa-knappen */
+function v1GateNext() {
+  if (!v1Questions().length) return;          // inga frågor -> ingen spärr
+  const next = document.querySelector('.pagenav .v1-btn--next');
+  if (!next) return;
+
+  next.addEventListener('click', e => {
+    const missing = v1Unanswered();
+    if (!missing.length) return;              // allt besvarat, gå vidare
+    e.preventDefault();
+    v1ShowQuizErrors(missing);
+  });
+}
+
+function v1ShowQuizErrors(missing) {
+  missing.forEach(q => {
+    q.classList.add('v1-q--error');
+    if (!q.querySelector('.v1-qerror')) {
+      const msg = el('<p class="v1-qerror" role="alert">Du behöver välja minst ' +
+                     'ett alternativ här innan du går vidare.</p>');
+      const btn = q.querySelector('.btn-ratta');
+      if (btn) btn.insertAdjacentElement('beforebegin', msg);
+      else q.appendChild(msg);
+    }
+  });
+
+  // sammanfattning vid Nästa-knappen
+  const pagenav = document.querySelector('.pagenav');
+  if (pagenav) {
+    let box = document.getElementById('v1NavError');
+    if (!box) {
+      box = el('<div class="v1-naverror" id="v1NavError" role="alert"></div>');
+      pagenav.insertAdjacentElement('beforebegin', box);
+    }
+    const total = v1Unanswered().length;
+    box.textContent = total === 1
+      ? 'Du behöver svara på frågan innan du går vidare.'
+      : 'Du behöver svara på alla frågor innan du går vidare. ' +
+        total + ' frågor är obesvarade.';
+  }
+
+  // hoppa till första obesvarade frågan
+  const firstRow = missing[0].querySelector('.checkrow');
+  if (firstRow) firstRow.focus({ preventScroll: true });
+  missing[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function v1ClearQuizError(q) {
+  if (q) {
+    q.classList.remove('v1-q--error');
+    const msg = q.querySelector('.v1-qerror');
+    if (msg) msg.remove();
+  }
+  if (!v1Unanswered().length) {
+    const box = document.getElementById('v1NavError');
+    if (box) box.remove();
+  }
 }
 
 
@@ -672,7 +807,6 @@ window.RK_V1 = {
             <a class="v1-back" href="min-sida.html">
               <span class="arrow">←</span> MIN SIDA
             </a>
-            <span class="v1-headsep" aria-hidden="true"></span>
           </div>
           <span class="coursebar__title">Relationskompassens grundkurs</span>
           <button class="coursebar__toggle v1-toc-toggle" onclick="toggleToc(this)">
@@ -780,6 +914,8 @@ window.RK_V1 = {
       v1NormalizeWidths();      // krav Q: samma bredd överallt
       v1NumberHeading(ch);      // krav Y: kapitelnummer i rubriken
       v1RebuildImageQuiz();     // krav Z: bild-quiz -> kryssrutefråga
+      v1WireQuiz();             // krav NN: gör frågorna svarbara – efter Z
+      v1GateNext();             // krav NN: spärra Nästa tills allt är besvarat
 
       // krav LL: rubriken på en rad – mäts när typsnitten är laddade
       if (document.fonts && document.fonts.ready) {

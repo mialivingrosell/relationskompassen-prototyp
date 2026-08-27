@@ -351,23 +351,16 @@
   line-height: 1;
   padding: 0 2px;
 }
+/* Pilen orange, texten vit – pilen linjerar färgmässigt med hamburgaren
+   i INNEHÅLL mitt emot. */
 .rk-v1 .v1-back .arrow {
   display: inline-flex;
   align-items: center;
-  color: inherit;
+  color: var(--orange);
   line-height: 1;
 }
 .rk-v1 .v1-back .v1-arr { width: 32px; height: 20px; }
-.rk-v1 .v1-back:hover { color: var(--orange); }
-
-/* Litet lodrätt streck mellan pilen och kursrubriken, så att pilen läses som
-   "tillbaka till sidan innan kursen" och inte som en del av rubriken. */
-.rk-v1 .v1-headsep {
-  flex: 0 0 auto;
-  width: 2px;
-  height: 30px;
-  background: rgba(255,255,255,.45);
-}
+.rk-v1 .v1-back:hover { text-decoration: underline; }
 
 /* INNEHÅLL till höger. Basens .coursebar__toggle är redan vit, versal och
    condensed – här behövs bara placeringen. */
@@ -505,6 +498,50 @@
 
 /* bilderna ovanför rubrikerna i trespalten */
 .rk-v1 .coursepage .three-col .ph { margin-bottom: 18px; }
+
+
+/* ==========================================================================
+   KRAV NN – svarbara kryssrutor + validering
+   Basens .checkrow är dekorativa divar. Här blir de klickbara, får
+   fokusmarkering och ett eget valt-läge som går att skilja från facit:
+     marinblå ruta = ditt val     grön = rätt svar     röd = fel svar
+   ========================================================================== */
+.rk-v1 .checkquiz .checkrow {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 7px 8px;
+  margin-left: -8px;
+}
+.rk-v1 .checkquiz .checkrow:hover { background: rgba(255,255,255,.5); }
+.rk-v1 .checkquiz .checkrow:hover .box { border-color: var(--orange); }
+.rk-v1 .checkquiz .checkrow:focus-visible {
+  outline: 2.5px solid var(--orange);
+  outline-offset: 2px;
+}
+/* ditt val – marinblå, alltså skilt från facitets grönt och rött */
+.rk-v1 .checkquiz .checkrow.v1-checked .box {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+/* obesvarad fråga som spärrat vidareklick: röda rutor, ingen layoutförskjutning */
+.rk-v1 .v1-q--error .checkrow .box { border-color: var(--red); }
+
+/* felmeddelandena – vid frågan och vid Nästa-knappen */
+.rk-v1 .v1-qerror,
+.rk-v1 .v1-naverror {
+  max-width: var(--v1-text);
+  background: #fff;
+  border: 1.5px solid var(--red);
+  border-left-width: 6px;
+  color: var(--red);
+  font-weight: 700;
+  font-size: .98rem;
+  padding: 13px 18px;
+  margin: 16px 0;
+}
+.rk-v1 .v1-naverror { margin: 26px 0 0; }
 
 /* den handritade pilen sitter i linje med knapptexten */
 .rk-v1 .v1-arr { display: block; }
