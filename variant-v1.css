@@ -568,24 +568,46 @@
   background: #fff;
 }
 
-/* fotot i kortet */
-.rk-v1 .v1-selcard__img { flex: 0 0 auto; width: 150px; }
-.rk-v1 .v1-selcard__img .ph {
-  margin: 0;
-  min-height: 0;
-  aspect-ratio: 4/3;
-  font-size: .68rem;
-}
-.rk-v1 .v1-selcard__img .ph__label { font-size: .68rem; max-width: 92%; }
-.rk-v1 .v1-selcard__img .ph small { font-size: .62rem; margin-top: 2px; }
-.rk-v1 .v1-selcard__img img { display: block; width: 100%; }
-
 .rk-v1 .v1-selcard__label {
+  flex: 1 1 auto;               /* tar mellanrummet, skjuter bilden åt höger */
   font-family: var(--font-head);
   font-weight: 700;
   font-size: 1.55rem;
   line-height: 1.1;
   color: var(--navy);
+}
+
+/* Fotot till höger i kortet.
+   Rutan har uttalad höjd, inte bara aspect-ratio: basens .ph.has-img sätter
+   display:block och aspect-ratio:auto när den riktiga bilden laddats, och då
+   behöll bilden sin egen höjd och bleedde ut ur kortet. Fast höjd +
+   overflow:hidden + object-fit:cover gör att vilket bildformat som helst
+   fyller rutan snyggt och beskärs i stället för att spränga kortet. */
+.rk-v1 .v1-selcard__img {
+  flex: 0 0 auto;
+  width: 160px;
+  height: 120px;
+  overflow: hidden;
+}
+.rk-v1 .v1-selcard__img .ph,
+.rk-v1 .v1-selcard__img .ph.has-img {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+  overflow: hidden;
+  font-size: .68rem;
+}
+.rk-v1 .v1-selcard__img .ph__label { font-size: .68rem; max-width: 92%; }
+.rk-v1 .v1-selcard__img .ph small { font-size: .62rem; margin-top: 2px; }
+.rk-v1 .v1-selcard__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
 }
 
 /* facit: rätt svar grönt, ditt felval rött */
@@ -613,8 +635,8 @@
 .rk-v1 .v1-q--error .v1-selcard { border-color: var(--red); }
 
 @media (max-width: 700px) {
-  .rk-v1 .v1-selcard { gap: 14px; padding: 12px 16px 12px 12px; }
-  .rk-v1 .v1-selcard__img { width: 96px; }
+  .rk-v1 .v1-selcard { gap: 14px; padding: 12px 14px 12px 12px; }
+  .rk-v1 .v1-selcard__img { width: 104px; height: 78px; }
   .rk-v1 .v1-selcard__label { font-size: 1.25rem; }
 }
 

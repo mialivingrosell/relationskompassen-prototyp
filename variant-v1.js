@@ -531,8 +531,8 @@ function v1RebuildImageQuiz() {
       `<button type="button" class="v1-selcard" role="radio" aria-checked="false"` +
       ` data-opt="${i}"${o.correct ? ' data-correct="true"' : ''}>` +
       `<span class="v1-selcard__radio" aria-hidden="true"></span>` +
-      `<span class="v1-selcard__img" data-slot="${i}"></span>` +
       `<span class="v1-selcard__label">${o.name}</span>` +
+      `<span class="v1-selcard__img" data-slot="${i}"></span>` +
       `</button>`;
     // facittexten hör till det rätta svaret och är en bekräftelse, inte en
     // varning – därför grön i stället för basens röda feedback-box
