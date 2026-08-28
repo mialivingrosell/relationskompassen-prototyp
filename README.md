@@ -102,16 +102,18 @@ Basversionen är låst i git som taggen `v0-bas`.
   prev/next-knapparna, från 1 (basen börjar på 0):
   "1. Relationskompassens grundkurs". Underkapitlen ärver förälderns nummer:
   5.1, 5.2, 5.3.
-- **Bild-quizet på kapitel 2 och 3** är ombyggt till kryssrutefråga med
-  Rätta-knapp under — samma form som frågorna i övningskapitlet — eftersom
-  bilderna lästes som illustrationer i stället för svarsalternativ. Bilderna
-  har flyttat ner till trespalten, ovanför sin egen rubrik.
+- **Quizet på kapitel 2 och 3** är ombyggt till **selection cards**: stora
+  klickbara kort med fotot inne i kortet, så bilden blir själva valet. Enkelval
+  (`<button role="radio">`, tangentbordsstyrt). Rätt svar markeras grönt och
+  ett felval rött; korten låses när facit visats. Trespalten under är
+  textbaserad eftersom fotona flyttat in i korten.
 - **Quiz-frågorna är svarbara och obligatoriska.** I basen är `.checkrow`
   dekorativa divar utan interaktion; v1 gör dem klickbara med mus och
-  tangentbord. Nästa-knappen spärras tills alla frågor på sidan har minst ett
-  valt alternativ, med felmeddelande både vid frågan och vid knappen, och
-  sidan hoppar till första obesvarade frågan. Gäller kapitel 2, 3 och 7.
-  Ditt val visas marinblått, facit grönt/rött, så de går att skilja.
+  tangentbord. Nästa-knappen spärras tills alla frågor på sidan är besvarade,
+  med felmeddelande både vid frågan och vid knappen, och sidan hoppar till
+  första obesvarade frågan. Gäller kapitel 2, 3 och 7. `.v1-checked` är den
+  gemensamma markören för "besvarad", så samma spärr fungerar för både
+  selection cards (kap 2–3) och kryssrutorna i övningskapitlet (kap 7).
 - **Handritad pil** i styleguidens ikonmanér ersätter teckenpilarna (← →) i
   knappar och svarta listen. Styleguidens ikonsida innehåller ingen pil, så
   den är ritad efter manéret: en enkel bågad linje med rundade ändar.

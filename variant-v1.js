@@ -100,6 +100,12 @@
      KK Startsidans primärknapp vit med svart text och orange pil, centrerad
         i hero-ytan.                                                  -> CSS
 
+     Omgång 16
+     QQ Quizet på kapitel 2 och 3 byggt om till selection cards: stora
+        klickbara kort med fotot inne i kortet. Enkelval. Trespalten under
+        blir textbaserad eftersom fotona flyttat in i korten.
+                                        -> v1RebuildImageQuiz/v1RattaCards + CSS
+
      Omgång 15
      PP Kapitelsidans svarta list: MIN SIDA -> STARTSIDAN (och länkar nu dit),
         INNEHÅLL -> KURSINNEHÅLL. Nedfällda menyn har två utgångar sida vid
@@ -188,12 +194,60 @@ function v1SwapArrows(root) {
 function v1Questions() {
   return Array.from(document.querySelectorAll('.checkquiz .q'));
 }
+/* .v1-checked är den gemensamma markören för "besvarad", så samma spärr
+   fungerar både för kryssrutorna i övningskapitlet och för selection cards
+   på kapitel 2–3. */
 function v1Unanswered() {
-  return v1Questions().filter(q => !q.querySelector('.checkrow.v1-checked'));
+  return v1Questions().filter(q => !q.querySelector('.v1-checked'));
+}
+/* Första svarsalternativet i en fråga, oavsett komponent – dit fokus hoppar
+   när spärren slår till. */
+function v1FirstOption(q) {
+  return q.querySelector('.v1-selcard, .checkrow');
 }
 
-/* Gör kryssrutorna svarbara */
+/* Gör frågorna svarbara */
 function v1WireQuiz() {
+  /* Rätta på en obesvarad fråga visar samma fel. Lyssnaren sitter på document
+     i capture-fasen och stoppar propagationen, så basens inline-onclick
+     (rattaCheck / v1RattaCards) inte hinner avslöja facit. Registreras alltid,
+     oavsett vilken frågekomponent sidan använder. */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest ? e.target.closest('.btn-ratta') : null;
+    if (!btn) return;
+    const q = btn.closest('.q');
+    if (q && !q.querySelector('.v1-checked')) {
+      e.preventDefault();
+      e.stopPropagation();
+      v1ShowQuizErrors([q]);
+    }
+  }, true);
+
+  v1WireSelectionCards();
+  v1WireCheckrows();
+}
+
+/* Selection cards – enkelval inom sin fråga */
+function v1WireSelectionCards() {
+  document.querySelectorAll('.checkquiz .q').forEach(q => {
+    const cards = q.querySelectorAll('.v1-selcard');
+    if (!cards.length) return;
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        cards.forEach(c => {
+          c.classList.remove('v1-checked');
+          c.setAttribute('aria-checked', 'false');
+        });
+        card.classList.add('v1-checked');
+        card.setAttribute('aria-checked', 'true');
+        v1ClearQuizError(q);
+      });
+    });
+  });
+}
+
+/* Kryssrutorna i övningskapitlet – flerval */
+function v1WireCheckrows() {
   const rows = document.querySelectorAll('.checkquiz .checkrow');
   if (!rows.length) return;
 
@@ -218,20 +272,6 @@ function v1WireQuiz() {
       if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
     });
   });
-
-  /* Rätta på en obesvarad fråga visar samma fel. Lyssnaren sitter på document
-     i capture-fasen och stoppar propagationen, så basens inline-onclick
-     (rattaCheck) inte hinner avslöja facit. */
-  document.addEventListener('click', e => {
-    const btn = e.target.closest ? e.target.closest('.btn-ratta') : null;
-    if (!btn) return;
-    const q = btn.closest('.q');
-    if (q && !q.querySelector('.checkrow.v1-checked')) {
-      e.preventDefault();
-      e.stopPropagation();
-      v1ShowQuizErrors([q]);
-    }
-  }, true);
 }
 
 /* Spärra Nästa-knappen */
@@ -252,8 +292,12 @@ function v1ShowQuizErrors(missing) {
   missing.forEach(q => {
     q.classList.add('v1-q--error');
     if (!q.querySelector('.v1-qerror')) {
-      const msg = el('<p class="v1-qerror" role="alert">Du behöver välja minst ' +
-                     'ett alternativ här innan du går vidare.</p>');
+      // selection cards är enkelval, kryssrutorna flerval – olika formulering
+      const single = !!q.querySelector('.v1-selcard');
+      const msg = el('<p class="v1-qerror" role="alert">' + (single
+        ? 'Välj ett alternativ innan du går vidare.'
+        : 'Du behöver välja minst ett alternativ här innan du går vidare.') +
+        '</p>');
       const btn = q.querySelector('.btn-ratta');
       if (btn) btn.insertAdjacentElement('beforebegin', msg);
       else q.appendChild(msg);
@@ -276,7 +320,7 @@ function v1ShowQuizErrors(missing) {
   }
 
   // hoppa till första obesvarade frågan
-  const firstRow = missing[0].querySelector('.checkrow');
+  const firstRow = v1FirstOption(missing[0]);
   if (firstRow) firstRow.focus({ preventScroll: true });
   missing[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
@@ -445,15 +489,17 @@ function v1FitHeading() {
 
 
 /* ==========================================================================
-   KRAV Z – bild-quizet byggs om till kryssrutefråga
-   Basens quiz är tre stora bilder med etiketter under, och rätt svar visas
-   som en grön ram. Frågan är lätt att missa – bilderna läses som
+   KRAV Z + QQ – bild-quizet byggs om till selection cards
+   Basens quiz är tre stora bilder i rad med etiketter under, och rätt svar
+   visas som en grön ram. Frågan är lätt att missa – bilderna läses som
    illustrationer, inte som svarsalternativ.
 
-   Här byggs samma fråga om till kryssrutor på rad med en Rätta-knapp under,
-   alltså samma form som frågorna i övningskapitlet. Bilderna flyttas ner och
-   hamnar ovanför sin egen rubrik i trespalten, där de fungerar som
-   illustrationer på riktigt.
+   Kryssrutor löste det men upplevdes trista. Här blir alternativen i stället
+   selection cards: stora klickbara kort på rad, med fotot inne i kortet så
+   bilden blir själva valet. Trespalten under blir därmed textbaserad.
+
+   Enkelval, inte flerval: frågan har ett rätt svar. Korten är <button> med
+   role="radio", så tangentbord fungerar utan extra kod.
 
    Gäller kapitel 2 och 3, som har identisk struktur i basen. Kör bara om
    både .quiz-options och .three-col finns på sidan.
@@ -466,7 +512,7 @@ function v1RebuildImageQuiz() {
   const threeCol = main.querySelector('.three-col');
   if (!options || !threeCol) return;
 
-  const txt = el => (el ? el.textContent.trim() : '');
+  const txt = e => (e ? e.textContent.trim() : '');
 
   const opts = Array.from(options.querySelectorAll('.quiz-option')).map(o => ({
     name:     txt(o.querySelector('.quiz-option__label')),
@@ -476,38 +522,43 @@ function v1RebuildImageQuiz() {
   }));
   if (!opts.length) return;
 
-  /* 1. kryssrutefrågan – samma markup och samma rättningsfunktion
-        (rattaCheck) som övningskapitlet använder */
+  /* 1. bygg frågan med tomma kort – bildnoderna flyttas in i steg 2 */
   const qid = 'v1quiz';
-  let rows = '';
-  opts.forEach(o => {
-    rows += `<div class="checkrow"${o.correct ? ' data-correct="true"' : ''}>` +
-            `<span class="box"></span> ${o.name}</div>`;
+  let cards = '';
+  let feedback = '';
+  opts.forEach((o, i) => {
+    cards +=
+      `<button type="button" class="v1-selcard" role="radio" aria-checked="false"` +
+      ` data-opt="${i}"${o.correct ? ' data-correct="true"' : ''}>` +
+      `<span class="v1-selcard__radio" aria-hidden="true"></span>` +
+      `<span class="v1-selcard__img" data-slot="${i}"></span>` +
+      `<span class="v1-selcard__label">${o.name}</span>` +
+      `</button>`;
     // facittexten hör till det rätta svaret och är en bekräftelse, inte en
     // varning – därför grön i stället för basens röda feedback-box
     if (o.feedback) {
-      rows += `<div class="feedback-box v1-feedback--ok">${o.feedback}</div>`;
+      feedback += `<div class="feedback-box v1-feedback--ok">${o.feedback}</div>`;
     }
   });
 
   const quiz = el(`
     <div class="checkquiz v1-quiz">
       <div class="q" id="${qid}">
-        ${rows}
-        <button class="btn-ratta" onclick="rattaCheck(this,'${qid}')">Rätta
+        <div class="v1-selcards" role="radiogroup"
+             aria-label="Välj ett alternativ">${cards}</div>
+        ${feedback}
+        <button class="btn-ratta" onclick="v1RattaCards(this)">Rätta
           <span style="color:var(--navy)">⌄</span></button>
       </div>
     </div>`);
   options.insertAdjacentElement('beforebegin', quiz);
 
-  /* 2. flytta bilderna upp ovanför sin rubrik i trespalten.
+  /* 2. flytta in fotot i sitt kort.
         Noderna flyttas, inte kopieras, så app.js:s utbyte av platshållaren
         mot riktig bild fortsätter att träffa rätt element. */
-  threeCol.querySelectorAll(':scope > div').forEach(col => {
-    const h3 = col.querySelector('h3');
-    if (!h3) return;
-    const match = opts.find(o => o.name === txt(h3));
-    if (match && match.img) col.insertBefore(match.img, h3);
+  opts.forEach((o, i) => {
+    const slot = quiz.querySelector(`.v1-selcard__img[data-slot="${i}"]`);
+    if (slot && o.img) slot.appendChild(o.img);
   });
 
   /* 3. rensa bort den gamla bildraden och dess Rätta-knapp */
@@ -517,6 +568,32 @@ function v1RebuildImageQuiz() {
     (wrap || oldBtn).remove();
   }
   options.remove();
+}
+
+
+/* Rättning för selection cards. Basens rattaCheck() letar efter .checkrow och
+   fungerar därför inte här. Efter rättning låses korten – att byta svar när
+   facit står framme fyller ingen funktion och skulle lämna kvar färgerna. */
+function v1RattaCards(btn) {
+  const q = btn.closest('.q');
+  if (!q) return;
+
+  q.querySelectorAll('.v1-selcard').forEach(card => {
+    const radio  = card.querySelector('.v1-selcard__radio');
+    const picked = card.getAttribute('aria-checked') === 'true';
+    if (card.dataset.correct === 'true') {
+      card.classList.add('v1-correct');
+      if (radio) radio.textContent = '✓';
+    } else if (picked) {
+      card.classList.add('v1-wrong');
+      if (radio) radio.textContent = '✕';
+    }
+    card.disabled = true;
+  });
+
+  const fb = q.querySelector('.feedback-box');
+  if (fb) fb.classList.add('show');
+  btn.disabled = true;
 }
 
 
