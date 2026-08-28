@@ -512,22 +512,25 @@
    Valt läge markeras med inre box-shadow i stället för tjockare ram – en
    ramändring skulle flytta innehållet någon pixel vid varje klick.
    ========================================================================== */
+/* Korten är smalare än textspalten. I full spaltbredd (800px) blev
+   mellanrummet mellan etikett och bild så stort att kortet läste som en tom
+   rad, inte som ett sammanhållet alternativ. */
 .rk-v1 .v1-selcards {
   display: grid;
-  gap: 14px;
-  max-width: var(--v1-text);
+  gap: 12px;
+  max-width: 440px;
   margin: 26px 0 0;
 }
 .rk-v1 .v1-selcard {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
   width: 100%;
   text-align: left;
   background: #fff;
   border: 1.5px solid var(--navy);
   border-radius: 0;             /* skarpa hörn, som kurskorten */
-  padding: 14px 22px 14px 16px;
+  padding: 13px 16px 13px 15px;
   cursor: pointer;
   font-family: var(--font-body);
   transition: box-shadow .15s ease, border-color .15s ease;
@@ -572,8 +575,8 @@
   flex: 1 1 auto;               /* tar mellanrummet, skjuter bilden åt höger */
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: 1.55rem;
-  line-height: 1.1;
+  font-size: 1.25rem;
+  line-height: 1.15;
   color: var(--navy);
 }
 
@@ -585,8 +588,8 @@
    fyller rutan snyggt och beskärs i stället för att spränga kortet. */
 .rk-v1 .v1-selcard__img {
   flex: 0 0 auto;
-  width: 160px;
-  height: 120px;
+  width: 140px;
+  height: 105px;
   overflow: hidden;
 }
 .rk-v1 .v1-selcard__img .ph,
@@ -635,9 +638,10 @@
 .rk-v1 .v1-q--error .v1-selcard { border-color: var(--red); }
 
 @media (max-width: 700px) {
-  .rk-v1 .v1-selcard { gap: 14px; padding: 12px 14px 12px 12px; }
+  .rk-v1 .v1-selcard { gap: 12px; padding: 11px 12px; }
+  .rk-v1 .v1-selcard__radio { width: 22px; height: 22px; }
   .rk-v1 .v1-selcard__img { width: 104px; height: 78px; }
-  .rk-v1 .v1-selcard__label { font-size: 1.25rem; }
+  .rk-v1 .v1-selcard__label { font-size: 1.1rem; }
 }
 
 
