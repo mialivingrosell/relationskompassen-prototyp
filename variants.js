@@ -10,12 +10,14 @@
    Valet sparas per flik (sessionStorage), så det följer med när man klickar
    sig vidare i kursen. Öppna v0 i en flik och v1 i en annan för A/B-test.
 
-   SÅ LÄGGER DU TILL EN NY VARIANT (t.ex. v2):
-     1. Lägg till en rad i VARIANTS nedan.
-     2. Skapa variant-v2.js  (samma upplägg som variant-v1.js)
-        och variant-v2.css   (tom går bra).
-     3. Lägg <script src="variant-v2.js"></script> i alla HTML-filer,
-        direkt efter variant-v1.js.
+   SÅ LÄGGER DU TILL EN NY VARIANT (t.ex. v3):
+     1. Lägg till en rad i VARIANTS nedan, och i REDESIGN om den ska ärva
+        v1:s stil och logik.
+     2. Skapa variant-v3.js. Ska den vara en variation på v1 räcker
+        window.RK_V3 = Object.assign({}, window.RK_V1, { ...avvikelser });
+        Behöver den egen stil, lägg till en addCss-rad i applyVariant().
+     3. Lägg <script src="variant-v3.js"></script> i alla HTML-filer,
+        direkt efter variant-v2.js.
    ========================================================================== */
 
 const VARIANTS = [
@@ -89,10 +91,9 @@ const V = {
   });
 
   // v0 kör enbart styles.css och är därmed helt orörd.
-  if (REDESIGN.indexOf(V.id) !== -1) {
-    addCss('variant-redesign.css');           // gemensam grund
-    if (V.id === 'v2') addCss('variant-v2.css');   // v2:s avvikelser
-  }
+  // v1 och v2 delar all stil: skillnaden mellan dem är bara numreringen,
+  // som styrs i JS. Därför behövs ingen variantspecifik stilmall.
+  if (REDESIGN.indexOf(V.id) !== -1) addCss('variant-redesign.css');
 })();
 
 /* ------------------------------------------------------ variantväljaren

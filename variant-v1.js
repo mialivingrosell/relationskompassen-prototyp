@@ -464,24 +464,6 @@ function v1WireImageQuiz() {
 }
 
 
-/* ---------------------------------------------------------------- krav I
-   Kursinformation som inte finns i min-sida.html. Nyckeln är kursnamnet så
-   som det står i rubrikraden på kortet.
-
-   Obs: tiden står bara på den egna raden, inte också i introtexten – annars
-   hade "2 timmar" stått två gånger i samma kort. */
-const V1_COURSE_INFO = {
-  'Relationskompassens grundkurs': {
-    time:  'Beräknad tid: ca 2 timmar',
-    intro: 'Detta är en webbkurs för alla vuxna som ska arbeta med Relationskompassen.',
-  },
-  'Att leda träffar i skolan': {
-    time:  'Beräknad tid: ca 45 minuter',
-    intro: 'Här får du som ska leda Relationskompassens träffar i skolan stöd för att planera och genomföra dem.',
-  },
-};
-
-
 /* ==========================================================================
    KRAV AA – stegräkning: Elsa och Omar räknas som ett kapitel
    Elsa och Omar del 2–4 är inte egna steg utan ärver förälderns nummer, så
@@ -604,187 +586,47 @@ function v1ProgressPct(ch) {
 }
 
 
-/* ==========================================================================
-   KRAV 1, 2, C, E, I, K – Min sida
-   Byggs om i DOM:en i stället för i min-sida.html, så att samma HTML-fil kan
-   visa både v0 och v1.
-   ========================================================================== */
-function v1BuildMinSida() {
-  const dash = document.querySelector('.dash');
-  if (!dash) return;
-
-  /* krav 2: flytta "Logga ut" upp i svarta listen, längst till höger */
-  const logout = dash.querySelector('a[href="logga-in.html"]');
-  const titlebar = document.querySelector('.titlebar__inner');
-  if (logout && titlebar) {
-    logout.classList.add('v1-logout');
-    titlebar.appendChild(logout);
-  }
-
-  /* krav E: "Mina uppgifter" är sektionsrubrik för hela den creme plattan och
-     får därför samma nivå som "Mina kurser" (h2). "Byt lösenord" och "Ta bort
-     användarkontot" ligger kvar som h3 och blir undersektioner.
-     Styleguiden anger bara typsnitt och vikter, ingen rubrikskala – nivåerna
-     är alltså prototypens egna (h2 clamp(1.6–2.3rem), h3 1.4rem). */
-  const firstHeading = dash.querySelector('.dash__side > section h3');
-  if (firstHeading) {
-    const h2 = document.createElement('h2');
-    h2.textContent = firstHeading.textContent;
-    firstHeading.replaceWith(h2);
-  }
-
-  v1BuildCourseCards();
-  v1PasswordFields();
-}
-
-/* krav C + I: ett vitt kort per kurs på den blå ytan.
-   Knapparna ("Fortsätt", "Se igen", "Ladda ner intyg") är godkända som de är
-   och flyttas därför över oförändrade i stället för att byggas om. */
-function v1BuildCourseCards() {
-  const wrap = document.querySelector('.dash__courses');
-  if (!wrap) return;
-
-  const items = Array.from(wrap.querySelectorAll('.course-item'));
-  if (!items.length) return;
-
-  const courses = items.map(item => {
-    const titleEl = item.querySelector('.row span');
-    let done, total;
-
-    if (item.id === 'courseGrundkurs') {
-      // krav AA: 20 kapitel, Elsa och Omar som ett enda steg
-      total = v1Total();
-      done  = v1ChaptersDone();
-
-      // krav CC: Fortsätt går till senaste kapitlet man stod på
-      const cta = item.querySelector('.course-cta');
-      const last = v1Last();
-      const target = last === null ? null : CHAPTERS[last];
-      if (cta && target && target.file) cta.setAttribute('href', target.file);
-    } else {
-      // statiska kort: läs "4 av 4" ur rubrikraden
-      const countEl = item.querySelector('.course-count') ||
-                      item.querySelector('.row span:last-child');
-      const m = (countEl ? countEl.textContent : '').match(/(\d+)\s*av\s*(\d+)/);
-      done  = m ? parseInt(m[1], 10) : 0;
-      total = m ? parseInt(m[2], 10) : 0;
-    }
-
-    return {
-      title: titleEl ? titleEl.textContent.trim() : '',
-      done, total,
-      pct: total ? Math.round(done / total * 100) : 0,
-      actions: item.querySelector('.course-actions') || item.querySelector('.course-cta'),
-    };
-  });
-
-  /* pågående kurs överst (= först, alltså överst till vänster i rastret),
-     genomförd kurs längst ner */
-  courses.sort((a, b) => (a.pct >= 100 ? 1 : 0) - (b.pct >= 100 ? 1 : 0));
-
-  const grid = document.createElement('div');
-  grid.className = 'v1-cards';
-  grid.dataset.count = courses.length;   // 2 -> två i bredd, annars staplade
-
-  courses.forEach(c => {
-    const info = V1_COURSE_INFO[c.title] || {};
-    const box = document.createElement('div');
-    box.className = 'v1-card' + (c.pct >= 100 ? ' v1-card--done' : '');
-    box.innerHTML = `
-      <h3 class="v1-card__title">${c.title}</h3>
-      ${info.intro ? `<p class="v1-card__intro">${info.intro}</p>` : ''}
-      ${info.time  ? `<p class="v1-card__time">${info.time}</p>` : ''}
-      <p class="v1-card__lead">Du har genomfört</p>
-      <div class="v1-card__pct">${c.pct}<span>%</span></div>
-      <p class="v1-card__sub">${c.done} av ${c.total} kapitel genomförda</p>
-      <div class="v1-card__track">
-        <div class="v1-card__fill" style="width:${c.pct}%"></div>
-      </div>`;
-
-    // befintliga knappar flyttas in i kortet, oförändrade
-    const actions = document.createElement('div');
-    actions.className = 'v1-card__actions';
-    if (c.actions) {
-      if (c.actions.classList.contains('course-actions')) {
-        while (c.actions.firstChild) actions.appendChild(c.actions.firstChild);
-      } else {
-        actions.appendChild(c.actions);
-      }
-    }
-    box.appendChild(actions);
-    grid.appendChild(box);
-  });
-
-  items.forEach(item => item.remove());
-  wrap.appendChild(grid);
-
-  /* krav OO: progressstrecket linjerar med knappradens högerkant. Mäts när
-     typsnitten laddat – knappbredden beror på dem. */
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(v1SizeCourseTracks);
-  } else {
-    v1SizeCourseTracks();
-  }
-  window.addEventListener('resize', v1SizeCourseTracks);
-}
 
 /* ==========================================================================
-   KRAV OO – progressstreckets längd på Min sida
-   Strecket ska gå kant i kant med knappraden under. Knappraden är olika bred
-   på de två korten ("Fortsätt" ensam mot "Se igen" + "Ladda ner intyg"), så
-   ett fast mått kan inte linjera med båda – bredden mäts därför per kort.
+   MIN SIDA – basversionens design i både v1 och v2
+   Kunden ville tillbaka till originalet, så ombyggnaden av panelerna, de vita
+   kurskorten, den flyttade "Logga ut" och ögonikonerna i lösenordsfälten är
+   borttagna. min-sida.html renderas alltså precis som i v0.
 
-   .v1-card__actions är en flexbehållare i full kortbredd, så dess egen bredd
-   säger inget om knapparna. Måttet tas från behållarens vänsterkant till den
-   högsta högerkanten bland knapparna, vilket också fungerar om de radbryter.
-
-   Golvet på 340px finns för att ett ensamt smalt "Fortsätt" annars skulle
-   krympa strecket till en stump.
+   Två saker rättas ändå, eftersom de är beteende och inte design:
+     1  Räkningen. Basen läser data-total i min-sida.html (20). Här skrivs
+        siffran, progressbaren och knapptexten om till 21 avsnitt, samma
+        räkning som progressraden i kurshuvudet använder.
+     2  Starta/Fortsätt går till senaste avsnittet man stod på, inte till
+        kursens början.
    ========================================================================== */
-function v1SizeCourseTracks() {
-  document.querySelectorAll('.v1-card').forEach(card => {
-    const actions = card.querySelector('.v1-card__actions');
-    const track = card.querySelector('.v1-card__track');
-    if (!actions || !track) return;
+function v1FixMinSida() {
+  const card = document.getElementById('courseGrundkurs');
+  if (!card) return;
 
-    const btns = actions.querySelectorAll('.btn');
-    if (!btns.length) return;
+  const total = v1Total();          // 21
+  const done  = v1ChaptersDone();   // antal genomgångna avsnitt
+  const pct   = total ? Math.round(done / total * 100) : 0;
 
-    const left = actions.getBoundingClientRect().left;
-    let right = left;
-    btns.forEach(b => {
-      right = Math.max(right, b.getBoundingClientRect().right);
-    });
+  const count = card.querySelector('.course-count');
+  if (count) count.textContent = done + ' av ' + total;
 
-    const w = Math.round(right - left);
-    if (w > 0) track.style.maxWidth = Math.max(340, w) + 'px';
-  });
-}
+  const fill = card.querySelector('.mini-fill');
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.classList.toggle('mini-fill--done', done >= total);
+  }
 
-/* krav K: lösenordsfälten halveras och får en ögonikon längst till höger,
-   som i originalet. Ikonen är samma öga som LÄTTLÄST i headern (ICON.eye),
-   alltså profilens handritade manér. */
-function v1PasswordFields() {
-  document.querySelectorAll('.dash__side input[type="password"]').forEach(input => {
-    const field = input.closest('.field');
-    if (field) {
-      field.style.maxWidth = '';        // släpper min-sida.html:s inline-bredd
-      field.classList.add('v1-pwfield');
-    }
+  const cta = card.querySelector('.course-cta');
+  if (!cta) return;
 
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'v1-eye';
-    btn.setAttribute('aria-label', 'Visa lösenord');
-    btn.innerHTML = ICON.eye;
-    btn.addEventListener('click', () => {
-      const show = input.type === 'password';
-      input.type = show ? 'text' : 'password';
-      btn.classList.toggle('is-on', show);
-      btn.setAttribute('aria-label', show ? 'Dölj lösenord' : 'Visa lösenord');
-    });
-    input.insertAdjacentElement('afterend', btn);
-  });
+  if (done >= total)   cta.innerHTML = 'Se igen <span class="arrow">\u2192</span>';
+  else if (done > 0)   cta.innerHTML = 'Forts\u00e4tt <span class="arrow">\u2192</span>';
+  else                 cta.innerHTML = 'Starta <span class="arrow">\u2192</span>';
+
+  const last = v1Last();
+  const target = last === null ? null : CHAPTERS[last];
+  if (target && target.file) cta.setAttribute('href', target.file);
 }
 
 
@@ -907,7 +749,7 @@ window.RK_V1 = {
     v1PatchReset();           // krav HH: nollställning tar även v1:s nycklar
     v1HomeCta();              // krav DD: primärknapp på startsidan
     buildFooterVersionLink(); // versionslänk i footern – footern finns nu
-    if (type === 'title') v1BuildMinSida();
+    if (type === 'title') v1FixMinSida();
     if (type === 'course') {
       if (ch) v1SetLast(ch.i);  // krav CC: minns var man stod
       v1NormalizeWidths();      // krav Q: samma bredd överallt

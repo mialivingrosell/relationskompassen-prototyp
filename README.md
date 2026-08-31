@@ -68,9 +68,9 @@ flik, så det följer med när man klickar sig vidare i kursen.
 |---|---|
 | `index.html` | **v0 – basversionen.** Kopian av befintliga Relationskompassen, oförändrad. |
 | `index.html?nav=v1` | **v1 – ny navigation, med numrerade avsnitt.** |
-| `index.html?nav=v2` | **v2 – som v1 men utan numrering**, och med Min sida i basdesign. |
+| `index.html?nav=v2` | **v2 – som v1 men utan numrering.** |
 
-v1 och v2 är A/B-paret: enda skillnaden i kursvyn är numreringen. Längst ner i
+v1 och v2 är A/B-paret: **numreringen är den enda skillnaden.** Längst ner i
 sidfoten finns en länk till den andra versionen, vid sidan om
 "Nollställ session".
 
@@ -85,18 +85,13 @@ Basversionen är låst i git som taggen `v0-bas`.
 - **Större rubriker** på artikel- och kapitelsidor. Brödtexten är oförändrad.
 - **Bredare videoruta** på kapitelsidor, medan rubriker och brödtext hålls i
   en smalare spalt (ca 800px) för läsbar radlängd.
-- **Min sida (bara v1):** två helbreda plattor med skarpa hörn. Den blå kursplattan har
-  luft ovanför så den läses som en ruta på sidan. Under den en creme platta
-  med "Mina uppgifter" som sektionsrubrik och "Byt lösenord" +
-  "Ta bort användarkontot" som undersektioner.
-- **Logga ut** flyttad till svarta listen, längst upp till höger.
-- **Kurskort:** ett vitt kort per kurs på den blå ytan med kursnamn, introtext,
-  beräknad tid, procent i stor siffra, kapitelantal, kort orange
-  progressstreck och knapp. Pågående kurs först, genomförd sist. Två kort i
-  bredd, tre eller fler staplas. "Ladda ner intyg" är vit så den inte
-  konkurrerar med "Fortsätt".
-- **Byt lösenord:** halverad fältbredd med ögonikon i fältet.
-- **Startsidan** har en primärknapp "Starta Relationskompassens grundkurs"
+- **Min sida är basversionens design** i alla versioner. Kunden ville tillbaka
+  till originalet, så ombyggnaden av panelerna, de vita kurskorten, den
+  flyttade "Logga ut" och ögonikonerna i lösenordsfälten är borttagna. Bara
+  två saker rättas, eftersom de är beteende och inte design: räkningen visar
+  21 avsnitt i stället för basens 20, och Starta/Fortsätt går till senaste
+  avsnittet man stod på.
+- **Startsidan** (v1 och v2) har en primärknapp "Starta Relationskompassens grundkurs"
   centrerad i den mörka ytan högst upp: vit botten, marinblå text, orange pil.
 - **Inloggning krävs för båda ingångarna.** Basen har ingen
   inloggningsstatus – varje sida har ett hårdkodat `data-logged`, så
@@ -151,12 +146,12 @@ Basversionen är låst i git som taggen `v0-bas`.
   versionslänken i sidfoten.
 - `variant-v1.js` – all logik för **både v1 och v2**. Allt som inte står här
   ärvs från `app.js` (basen).
-- `variant-v2.js` – v2:s avvikelser. `RK_V2` är en kopia av `RK_V1` som bara
-  skriver över Min sida; numreringen styrs av `V1_NUMBERS` i `variant-v1.js`.
-  En framtida ändring görs alltså på ett ställe, inte två.
+- `variant-v2.js` – en rad: `window.RK_V2 = window.RK_V1`. v2 har ingen egen
+  logik, eftersom numreringen är den enda skillnaden och den styrs av
+  `V1_NUMBERS` i `variant-v1.js`. Samma kodväg i båda versionerna, så
+  A/B-testet kan inte mäta något annat än numreringen.
 - `variant-redesign.css` – gemensam stil för v1 och v2, scopad på
   `.rk-redesign`.
-- `variant-v2.css` – v2:s avvikande stil, scopad på `.rk-v2`.
 
 `app.js` och `styles.css` är basversionen och rörs inte när nya versioner
 byggs – varje byggfunktion i `app.js` lämnar bara över till variantens egen

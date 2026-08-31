@@ -1,10 +1,15 @@
 /* ==========================================================================
-   VARIANT v1 – egen stil
-   Laddas BARA när v1 är aktiv (?nav=v1). Basversionen v0 kör enbart
-   styles.css och påverkas alltså inte av något här.
+   OMDESIGNENS STIL – delad av v1 och v2
+   Laddas BARA när v1 eller v2 är aktiv. Basversionen v0 kör enbart styles.css
+   och påverkas alltså inte av något här.
 
-   Alla regler hänger på .rk-redesign (klassen som variants.js sätter på <html>),
-   så inget kan läcka in i basen.
+   Alla regler hänger på .rk-redesign, klassen som variants.js sätter på
+   <html> för både v1 och v2, så inget kan läcka in i basen. v1 och v2 delar
+   all stil – skillnaden mellan dem är bara numreringen, som styrs i JS.
+
+   MIN SIDA finns inte här. Kunden ville tillbaka till originalets design, så
+   min-sida.html renderas som i v0 i alla versioner. Bara räkningen rättas,
+   i v1FixMinSida() i variant-v1.js.
 
    Grafisk profil (Reko 2026):
      Barlow (brödtext) · Barlow Condensed (endast rubriker)
@@ -106,194 +111,6 @@
 /* seriestrippar (Elsa och Omar) hålls smalare än bildraderna */
 .rk-redesign .coursepage .ph--comic { max-width: 880px; }
 
-
-/* ==========================================================================
-   KRAV 1 + KRAV B – Min sida: två plattor i full bredd
-   Den ljusblå ytan går inte upp i svarta listen utan har luft ovanför, så att
-   den läses som en ruta som ligger på sidan. Skarpa hörn (krav G).
-   ========================================================================== */
-.rk-redesign .dash {
-  grid-template-columns: 1fr;   /* en spalt – båda plattorna är helbreda */
-  gap: 40px;
-  padding: 0 var(--edge) 70px;
-}
-.rk-redesign .dash__courses {
-  margin-top: 40px;             /* krav B: white space ovanför rutan */
-  padding: 36px 40px 40px;
-  border-radius: 0;             /* krav G: skarpa hörn */
-}
-
-/* ==========================================================================
-   KRAV E – "Mina uppgifter" som en helbred platta med undersektioner
-   Plattan är lika bred som den blå kursplattan ovanför. Undersektionerna
-   ("Byt lösenord", "Ta bort användarkontot") ligger inuti den, avdelade med
-   en tunn linje i stället för egna bakgrundsplattor.
-   ========================================================================== */
-.rk-redesign .dash__side {
-  background: var(--cream-2);
-  padding: 36px 40px 40px;      /* skriver över basens padding-right */
-  gap: 34px;
-  border-radius: 0;             /* krav G: skarpa hörn */
-}
-.rk-redesign .dash__side > section {
-  background: none;             /* inte längre egna plattor */
-  padding: 0;
-  margin: 0;
-  max-width: 900px;             /* håller formulär och text på läsbar radbredd */
-}
-.rk-redesign .dash__side > section + section {
-  border-top: 1px solid rgba(27,29,45,.16);
-  padding-top: 32px;
-}
-
-/* ==========================================================================
-   KRAV K – lösenordsfält: halverad bredd + ögonikon i fältet
-   ========================================================================== */
-.rk-redesign .v1-pwfield {
-  position: relative;
-  max-width: 440px;             /* ca hälften av föregående bredd */
-}
-.rk-redesign .v1-pwfield input { padding-right: 54px; }
-.rk-redesign .v1-eye {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  background: none;
-  border: 0;
-  padding: 5px;
-  cursor: pointer;
-  color: var(--orange);
-}
-.rk-redesign .v1-eye.is-on { color: var(--navy); }   /* lösenordet syns */
-
-
-/* ==========================================================================
-   KRAV 2 – "Logga ut" i svarta listen, längst upp till höger
-   ========================================================================== */
-.rk-redesign .titlebar__inner { flex-wrap: wrap; }
-.rk-redesign .v1-logout {
-  margin-left: auto;                        /* skjuts ut till höger */
-  background: transparent;
-  color: #fff;
-  border: 1.5px solid rgba(255,255,255,.5);
-  padding: 9px 16px;
-  font-size: .95rem;
-}
-.rk-redesign .v1-logout:hover {
-  background: rgba(255,255,255,.1);
-  border-color: #fff;
-}
-.rk-redesign .v1-logout .arrow { color: var(--orange); }
-
-
-/* ==========================================================================
-   KRAV C – vita kurskort på den blå ytan
-   Kortbredden är hållen kort (max 400px) så progressstrecket blir ett kort
-   streck i stället för det långa orange band som blev problemet.
-   Två kort ligger i bredd; tre eller fler staplas under varandra.
-   ========================================================================== */
-.rk-redesign .v1-cards {
-  display: grid;
-  gap: 26px;
-  grid-template-columns: minmax(0, 1fr);            /* ett kort, eller staplade */
-  margin-top: 28px;
-}
-.rk-redesign .v1-cards[data-count="2"] {
-  grid-template-columns: repeat(2, minmax(0, 1fr)); /* två i bredd, linjerar med
-                                                       plattans högerkant */
-}
-
-.rk-redesign .v1-card {
-  background: #fff;
-  border-radius: 0;             /* krav G: skarpa hörn */
-  padding: 22px 26px 24px;      /* krav T: lägre kort */
-  box-shadow: 0 2px 12px rgba(27,29,45,.08);
-  display: flex;
-  flex-direction: column;
-}
-/* krav S: lättare kursnamn – som i originalet, där kursnamnet inte tar över
-   rubriken "Mina kurser". Vikt 700 i stället för 800, mindre grad. */
-.rk-redesign .v1-card__title {
-  font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 1.4rem;
-  line-height: 1.15;
-  margin: 0 0 12px;
-}
-/* krav I: introtext + rad med beräknad tid */
-.rk-redesign .v1-card__intro {
-  margin: 0 0 6px;
-  font-size: 1rem;
-  line-height: 1.4;
-}
-.rk-redesign .v1-card__time {
-  margin: 0 0 16px;
-  font-size: .95rem;
-  font-weight: 700;
-  color: rgba(27,29,45,.72);
-}
-
-.rk-redesign .v1-card__lead {
-  margin: 0;
-  font-size: 1rem;
-  color: rgba(27,29,45,.7);
-}
-.rk-redesign .v1-card__pct {
-  font-family: var(--font-head);
-  font-weight: 800;
-  font-size: 3.3rem;            /* krav T: lägre kort */
-  line-height: 1;
-  letter-spacing: -.02em;
-  color: var(--navy);
-  margin: 0 0 6px;
-}
-.rk-redesign .v1-card__pct span {           /* procenttecknet mindre än siffran */
-  font-size: 1.6rem;
-  margin-left: 5px;
-}
-.rk-redesign .v1-card__sub {
-  margin: 0 0 12px;
-  font-size: .95rem;
-  color: rgba(27,29,45,.6);
-}
-/* Strecket har eget breddtak även när kortet är brett – annars kommer det
-   långa orange bandet tillbaka. Måttet nedan är utgångsläge och golv;
-   v1SizeCourseTracks() i variant-v1.js sätter sedan bredden per kort så att
-   strecket linjerar med knappradens högerkant (krav OO). */
-.rk-redesign .v1-card__track {
-  height: 10px;
-  max-width: 340px;
-  background: rgba(27,29,45,.12);
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 0 0 18px;
-}
-/* krav H: orange linje för alla kurser, även pågående */
-.rk-redesign .v1-card__fill {
-  height: 100%;
-  background: var(--orange);
-  border-radius: 6px;
-}
-
-/* knapparna längst ner – margin-top:auto håller dem i linje mellan korten */
-.rk-redesign .v1-card__actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: auto;
-}
-
-/* krav J: "Ladda ner intyg" vit med svart text, så att den inte konkurrerar
-   med "Fortsätt" på den pågående kursen. PDF-märket förblir orange. */
-.rk-redesign .v1-card--done .btn--navy {
-  background: #fff;
-  color: var(--navy);
-  border: 1.5px solid var(--navy);
-}
-.rk-redesign .v1-card--done .btn--navy:hover { background: #f4f4f6; }
 
 
 /* ==========================================================================
@@ -553,14 +370,7 @@
    RESPONSIVT
    ========================================================================== */
 @media (max-width: 900px) {
-  /* korten staplas */
-  .rk-redesign .v1-cards,
-  .rk-redesign .v1-cards[data-count="2"] { grid-template-columns: minmax(0, 1fr); }
-
-  .rk-redesign .dash__courses,
-  .rk-redesign .dash__side { padding: 28px 24px 30px; }
-
-  /* svarta listen får plats för pil, kursnamn och INNEHÅLL */
+  /* svarta listen får plats för pil, kursnamn och KURSINNEHÅLL */
   .rk-redesign .v1-coursehead .coursebar__title { font-size: 1.15rem; }
   .rk-redesign .v1-toc-toggle { font-size: .95rem; }
   .rk-redesign .v1-coursehead .hamburger { width: 26px; }
