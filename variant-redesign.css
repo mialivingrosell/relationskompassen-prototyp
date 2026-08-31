@@ -3,7 +3,7 @@
    Laddas BARA när v1 är aktiv (?nav=v1). Basversionen v0 kör enbart
    styles.css och påverkas alltså inte av något här.
 
-   Alla regler hänger på .rk-v1 (klassen som variants.js sätter på <html>),
+   Alla regler hänger på .rk-redesign (klassen som variants.js sätter på <html>),
    så inget kan läcka in i basen.
 
    Grafisk profil (Reko 2026):
@@ -21,18 +21,18 @@
    därför sättas med auto i sidled, annars hamnar knappen i vänsterkanten av
    den 760px breda rutan i stället för i mitten av hero-ytan.
    ========================================================================== */
-.rk-v1 .v1-hero-cta {
+.rk-redesign .v1-hero-cta {
   margin: 32px auto 0;
   text-align: center;
 }
-.rk-v1 .v1-btn--primary {
+.rk-redesign .v1-btn--primary {
   background: #fff;
   color: var(--navy);
   font-size: 1.05rem;
   padding: 16px 26px;
 }
-.rk-v1 .v1-btn--primary .arrow { color: var(--orange); }
-.rk-v1 .v1-btn--primary:hover { background: var(--cream); }
+.rk-redesign .v1-btn--primary .arrow { color: var(--orange); }
+.rk-redesign .v1-btn--primary:hover { background: var(--cream); }
 
 
 /* ==========================================================================
@@ -45,9 +45,9 @@
      h2              clamp(1.6rem, 2.6vw, 2.3rem)
      h3              1.4rem
    ========================================================================== */
-.rk-v1 .coursepage h1 { font-size: clamp(2.7rem, 5vw,   4.2rem); }
-.rk-v1 .coursepage h2 { font-size: clamp(2rem,   3.4vw, 3rem); }
-.rk-v1 .coursepage h3 { font-size: 1.75rem; }
+.rk-redesign .coursepage h1 { font-size: clamp(2.7rem, 5vw,   4.2rem); }
+.rk-redesign .coursepage h2 { font-size: clamp(2rem,   3.4vw, 3rem); }
+.rk-redesign .coursepage h3 { font-size: 1.75rem; }
 
 
 /* ==========================================================================
@@ -68,39 +68,43 @@
    genusförändrande ansats. Att" – ca 99 tecken. Justera --v1-text om raden
    bryter en bit fel; typsnittsrenderingen gör måttet ungefärligt.
    ========================================================================== */
-.rk-v1 .coursepage {
+.rk-redesign .coursepage {
   --v1-media: 1064px;
   --v1-text:  800px;
 }
-.rk-v1 .coursepage .course-main {
+.rk-redesign .coursepage .course-main {
   max-width: calc(var(--v1-media) + 2 * var(--edge));
   margin: 0 auto;                       /* centrerad, som betan */
   padding: 34px var(--edge) 10px;       /* inget vänsterindrag */
 }
 
 /* rubriker och brödtext i den smalare spalten */
-.rk-v1 .coursepage .course-main > h2,
-.rk-v1 .coursepage .course-main > h3,
-.rk-v1 .coursepage .course-main > p,
-.rk-v1 .coursepage .course-main > ul,
-.rk-v1 .coursepage .course-main > ol,
-.rk-v1 .coursepage .transcribe__body,
-.rk-v1 .coursepage .checkquiz { max-width: var(--v1-text); }
+.rk-redesign .coursepage .course-main > h2,
+.rk-redesign .coursepage .course-main > h3,
+.rk-redesign .coursepage .course-main > p,
+.rk-redesign .coursepage .course-main > ul,
+.rk-redesign .coursepage .course-main > ol,
+.rk-redesign .coursepage .transcribe__body,
+.rk-redesign .coursepage .checkquiz { max-width: var(--v1-text); }
+/* undantag: bild-quizets tre foton är mediainnehåll och ska ha full bredd.
+   Behållaren läggs till av v1WireImageQuiz() bara för att spärren behöver
+   en .q att leta i – den ska inte krympa bildraden. */
+.rk-redesign .coursepage .checkquiz.v1-imgquiz { max-width: var(--v1-media); }
 
 /* KRAV LL – sidrubriken får hela innehållsbredden, inte textspalten.
    Radbrytningen berodde på att h1 satt i den 800px smala textspalten; med
    mediabredden ryms de flesta kapitelrubriker på en rad. Resten sköts av
    v1FitHeading() i variant-v1.js, som krymper graden tills raden räcker. */
-.rk-v1 .coursepage .course-main > h1 {
+.rk-redesign .coursepage .course-main > h1 {
   max-width: var(--v1-media);
   text-wrap: balance;           /* jämnare brytning om den ändå måste brytas */
 }
 
 /* filmen fyller hela mediabredden – basen kapade den till 820px */
-.rk-v1 .coursepage .videoblock { max-width: var(--v1-media); }
+.rk-redesign .coursepage .videoblock { max-width: var(--v1-media); }
 
 /* seriestrippar (Elsa och Omar) hålls smalare än bildraderna */
-.rk-v1 .coursepage .ph--comic { max-width: 880px; }
+.rk-redesign .coursepage .ph--comic { max-width: 880px; }
 
 
 /* ==========================================================================
@@ -108,12 +112,12 @@
    Den ljusblå ytan går inte upp i svarta listen utan har luft ovanför, så att
    den läses som en ruta som ligger på sidan. Skarpa hörn (krav G).
    ========================================================================== */
-.rk-v1 .dash {
+.rk-redesign .dash {
   grid-template-columns: 1fr;   /* en spalt – båda plattorna är helbreda */
   gap: 40px;
   padding: 0 var(--edge) 70px;
 }
-.rk-v1 .dash__courses {
+.rk-redesign .dash__courses {
   margin-top: 40px;             /* krav B: white space ovanför rutan */
   padding: 36px 40px 40px;
   border-radius: 0;             /* krav G: skarpa hörn */
@@ -125,19 +129,19 @@
    ("Byt lösenord", "Ta bort användarkontot") ligger inuti den, avdelade med
    en tunn linje i stället för egna bakgrundsplattor.
    ========================================================================== */
-.rk-v1 .dash__side {
+.rk-redesign .dash__side {
   background: var(--cream-2);
   padding: 36px 40px 40px;      /* skriver över basens padding-right */
   gap: 34px;
   border-radius: 0;             /* krav G: skarpa hörn */
 }
-.rk-v1 .dash__side > section {
+.rk-redesign .dash__side > section {
   background: none;             /* inte längre egna plattor */
   padding: 0;
   margin: 0;
   max-width: 900px;             /* håller formulär och text på läsbar radbredd */
 }
-.rk-v1 .dash__side > section + section {
+.rk-redesign .dash__side > section + section {
   border-top: 1px solid rgba(27,29,45,.16);
   padding-top: 32px;
 }
@@ -145,12 +149,12 @@
 /* ==========================================================================
    KRAV K – lösenordsfält: halverad bredd + ögonikon i fältet
    ========================================================================== */
-.rk-v1 .v1-pwfield {
+.rk-redesign .v1-pwfield {
   position: relative;
   max-width: 440px;             /* ca hälften av föregående bredd */
 }
-.rk-v1 .v1-pwfield input { padding-right: 54px; }
-.rk-v1 .v1-eye {
+.rk-redesign .v1-pwfield input { padding-right: 54px; }
+.rk-redesign .v1-eye {
   position: absolute;
   right: 8px;
   top: 50%;
@@ -163,14 +167,14 @@
   cursor: pointer;
   color: var(--orange);
 }
-.rk-v1 .v1-eye.is-on { color: var(--navy); }   /* lösenordet syns */
+.rk-redesign .v1-eye.is-on { color: var(--navy); }   /* lösenordet syns */
 
 
 /* ==========================================================================
    KRAV 2 – "Logga ut" i svarta listen, längst upp till höger
    ========================================================================== */
-.rk-v1 .titlebar__inner { flex-wrap: wrap; }
-.rk-v1 .v1-logout {
+.rk-redesign .titlebar__inner { flex-wrap: wrap; }
+.rk-redesign .v1-logout {
   margin-left: auto;                        /* skjuts ut till höger */
   background: transparent;
   color: #fff;
@@ -178,11 +182,11 @@
   padding: 9px 16px;
   font-size: .95rem;
 }
-.rk-v1 .v1-logout:hover {
+.rk-redesign .v1-logout:hover {
   background: rgba(255,255,255,.1);
   border-color: #fff;
 }
-.rk-v1 .v1-logout .arrow { color: var(--orange); }
+.rk-redesign .v1-logout .arrow { color: var(--orange); }
 
 
 /* ==========================================================================
@@ -191,18 +195,18 @@
    streck i stället för det långa orange band som blev problemet.
    Två kort ligger i bredd; tre eller fler staplas under varandra.
    ========================================================================== */
-.rk-v1 .v1-cards {
+.rk-redesign .v1-cards {
   display: grid;
   gap: 26px;
   grid-template-columns: minmax(0, 1fr);            /* ett kort, eller staplade */
   margin-top: 28px;
 }
-.rk-v1 .v1-cards[data-count="2"] {
+.rk-redesign .v1-cards[data-count="2"] {
   grid-template-columns: repeat(2, minmax(0, 1fr)); /* två i bredd, linjerar med
                                                        plattans högerkant */
 }
 
-.rk-v1 .v1-card {
+.rk-redesign .v1-card {
   background: #fff;
   border-radius: 0;             /* krav G: skarpa hörn */
   padding: 22px 26px 24px;      /* krav T: lägre kort */
@@ -212,7 +216,7 @@
 }
 /* krav S: lättare kursnamn – som i originalet, där kursnamnet inte tar över
    rubriken "Mina kurser". Vikt 700 i stället för 800, mindre grad. */
-.rk-v1 .v1-card__title {
+.rk-redesign .v1-card__title {
   font-family: var(--font-head);
   font-weight: 700;
   font-size: 1.4rem;
@@ -220,24 +224,24 @@
   margin: 0 0 12px;
 }
 /* krav I: introtext + rad med beräknad tid */
-.rk-v1 .v1-card__intro {
+.rk-redesign .v1-card__intro {
   margin: 0 0 6px;
   font-size: 1rem;
   line-height: 1.4;
 }
-.rk-v1 .v1-card__time {
+.rk-redesign .v1-card__time {
   margin: 0 0 16px;
   font-size: .95rem;
   font-weight: 700;
   color: rgba(27,29,45,.72);
 }
 
-.rk-v1 .v1-card__lead {
+.rk-redesign .v1-card__lead {
   margin: 0;
   font-size: 1rem;
   color: rgba(27,29,45,.7);
 }
-.rk-v1 .v1-card__pct {
+.rk-redesign .v1-card__pct {
   font-family: var(--font-head);
   font-weight: 800;
   font-size: 3.3rem;            /* krav T: lägre kort */
@@ -246,11 +250,11 @@
   color: var(--navy);
   margin: 0 0 6px;
 }
-.rk-v1 .v1-card__pct span {           /* procenttecknet mindre än siffran */
+.rk-redesign .v1-card__pct span {           /* procenttecknet mindre än siffran */
   font-size: 1.6rem;
   margin-left: 5px;
 }
-.rk-v1 .v1-card__sub {
+.rk-redesign .v1-card__sub {
   margin: 0 0 12px;
   font-size: .95rem;
   color: rgba(27,29,45,.6);
@@ -259,7 +263,7 @@
    långa orange bandet tillbaka. Måttet nedan är utgångsläge och golv;
    v1SizeCourseTracks() i variant-v1.js sätter sedan bredden per kort så att
    strecket linjerar med knappradens högerkant (krav OO). */
-.rk-v1 .v1-card__track {
+.rk-redesign .v1-card__track {
   height: 10px;
   max-width: 340px;
   background: rgba(27,29,45,.12);
@@ -268,14 +272,14 @@
   margin: 0 0 18px;
 }
 /* krav H: orange linje för alla kurser, även pågående */
-.rk-v1 .v1-card__fill {
+.rk-redesign .v1-card__fill {
   height: 100%;
   background: var(--orange);
   border-radius: 6px;
 }
 
 /* knapparna längst ner – margin-top:auto håller dem i linje mellan korten */
-.rk-v1 .v1-card__actions {
+.rk-redesign .v1-card__actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -284,12 +288,12 @@
 
 /* krav J: "Ladda ner intyg" vit med svart text, så att den inte konkurrerar
    med "Fortsätt" på den pågående kursen. PDF-märket förblir orange. */
-.rk-v1 .v1-card--done .btn--navy {
+.rk-redesign .v1-card--done .btn--navy {
   background: #fff;
   color: var(--navy);
   border: 1.5px solid var(--navy);
 }
-.rk-v1 .v1-card--done .btn--navy:hover { background: #f4f4f6; }
+.rk-redesign .v1-card--done .btn--navy:hover { background: #f4f4f6; }
 
 
 /* ==========================================================================
@@ -298,14 +302,14 @@
    göms. Elementet finns kvar i DOM:en eftersom app.js hänger kurshuvudet
    efter det – men det syns inte.
    ========================================================================== */
-.rk-v1 body[data-subbar="course"] .site-header,
-.rk-v1 body[data-subbar="course"] .breadcrumb { display: none; }
+.rk-redesign body[data-subbar="course"] .site-header,
+.rk-redesign body[data-subbar="course"] .breadcrumb { display: none; }
 
 /* Svarta listen, progressraden och innehållsmenyn i en gemensam
    sticky-behållare. Då följer allt med vid scroll utan uträknade pixelhöjder.
    position: relative i botten gör att innehållsmenyn hänger under hela
    huvudet, alltså nedanför progressraden. */
-.rk-v1 .v1-coursehead {
+.rk-redesign .v1-coursehead {
   position: sticky;
   top: 0;
   z-index: 60;
@@ -313,17 +317,17 @@
 /* KRAV EE – tre fält: vänstergrupp, centrerad kursrubrik, INNEHÅLL.
    Raster i stället för flex, så rubriken hamnar i mitten av listen oavsett
    hur breda sidogrupperna är. */
-.rk-v1 .v1-coursehead .coursebar__inner {
+.rk-redesign .v1-coursehead .coursebar__inner {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 18px;
 }
-.rk-v1 .v1-coursehead .coursebar__title {
+.rk-redesign .v1-coursehead .coursebar__title {
   text-align: center;
   justify-self: center;
 }
-.rk-v1 .v1-headleft {
+.rk-redesign .v1-headleft {
   display: flex;
   align-items: center;
   gap: 18px;
@@ -339,7 +343,7 @@
    ========================================================================== */
 /* Bakåtpil + MIN SIDA som en märkt tillbakalänk. Versalt som INNEHÅLL mitt
    emot, och som MIN SIDA i sajtens vanliga header. */
-.rk-v1 .v1-back {
+.rk-redesign .v1-back {
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -355,24 +359,24 @@
 }
 /* Pilen orange, texten vit – pilen linjerar färgmässigt med hamburgaren
    i INNEHÅLL mitt emot. */
-.rk-v1 .v1-back .arrow {
+.rk-redesign .v1-back .arrow {
   display: inline-flex;
   align-items: center;
   color: var(--orange);
   line-height: 1;
 }
-.rk-v1 .v1-back .v1-arr { width: 32px; height: 20px; }
-.rk-v1 .v1-back:hover { text-decoration: underline; }
+.rk-redesign .v1-back .v1-arr { width: 32px; height: 20px; }
+.rk-redesign .v1-back:hover { text-decoration: underline; }
 
 /* INNEHÅLL till höger. Basens .coursebar__toggle är redan vit, versal och
    condensed – här behövs bara placeringen. */
-.rk-v1 .v1-toc-toggle { justify-self: end; }
+.rk-redesign .v1-toc-toggle { justify-self: end; }
 
 /* Innehållsmenyn: samma utseende som i basen, men högerställd. Den hänger från
    svarta listens underkant (menyn ligger inuti .coursebar) och lägger sig
    därför OVANPÅ progressraden i stället för under den.
    Höjdtak så alla 22 kapitel går att nå på låga skärmar. */
-.rk-v1 .v1-coursehead .toc {
+.rk-redesign .v1-coursehead .toc {
   left: auto;
   right: var(--edge);
   max-height: calc(100vh - 90px);
@@ -383,27 +387,27 @@
 /* krav O – två vägar ut ur kursen, sida vid sida efter sista kapitlet i
    listan. .btn ger samma mått som övriga knappar på sajten; bredden följer
    texten. flex-wrap gör att de staplas om menyn blir smal. */
-.rk-v1 .toc .v1-toc-exits {
+.rk-redesign .toc .v1-toc-exits {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin: 20px 20px 8px;
 }
-.rk-v1 .toc .v1-toc-exit {
+.rk-redesign .toc .v1-toc-exit {
   display: inline-flex;
   background: transparent;
   border: 1.5px solid #fff;
   color: #fff;
   text-decoration: none;
 }
-.rk-v1 .toc .v1-toc-exit:hover { background: var(--orange); border-color: var(--orange); }
+.rk-redesign .toc .v1-toc-exit:hover { background: var(--orange); border-color: var(--orange); }
 
 
 /* ==========================================================================
    KRAV N – tunn progressindikator direkt under svarta listen
    Visar samma tal som Min sida (se v1ProgressPct i variant-v1.js).
    ========================================================================== */
-.rk-v1 .v1-progress {
+.rk-redesign .v1-progress {
   position: relative;
   height: 28px;                 /* krav FF: högre, får plats med siffran */
   background: var(--grey-track);
@@ -411,7 +415,7 @@
 }
 /* Mjuk högerkant på fyllningen, i linje med profilens rundade formspråk.
    14px = halva höjden, alltså en hel rundning. */
-.rk-v1 .v1-progress__fill {
+.rk-redesign .v1-progress__fill {
   position: absolute;
   left: 0; top: 0; bottom: 0;
   background: var(--orange);
@@ -432,7 +436,7 @@
    Marinblå ger 4.8:1 mot orange och 13:1 mot den gråa rännan, alltså läsbar
    i båda lägena. Vit skulle bli godkänd först om graden höjdes till minst
    18.7px fet (då gäller 3:1-regeln för stor text). */
-.rk-v1 .v1-progress__label {
+.rk-redesign .v1-progress__label {
   position: absolute;
   top: 0; bottom: 0;
   transform: translateX(-100%);
@@ -458,196 +462,43 @@
    film – de låg tidigare olika på olika kapitel. Bakgrunden är transparent
    med svart ram, som i originalet, i stället för basens vita platta.
    ========================================================================== */
-.rk-v1 .coursepage .pagenav {
+.rk-redesign .coursepage .pagenav {
   max-width: var(--v1-media);
   padding-bottom: 48px;
 }
 /* föregående: transparent med svart ram, som originalet */
-.rk-v1 .coursepage .pagenav .btn--outline {
+.rk-redesign .coursepage .pagenav .btn--outline {
   background: transparent;
   border: 1.5px solid var(--navy);
 }
-.rk-v1 .coursepage .pagenav .btn--outline:hover { background: rgba(255,255,255,.45); }
+.rk-redesign .coursepage .pagenav .btn--outline:hover { background: rgba(255,255,255,.45); }
 
 /* krav JJ: nästa – svart med vit text och orange pil, den tydliga vägen framåt */
-.rk-v1 .coursepage .pagenav .v1-btn--next {
+.rk-redesign .coursepage .pagenav .v1-btn--next {
   background: var(--navy);
   color: #fff;
   border: 1.5px solid var(--navy);
 }
-.rk-v1 .coursepage .pagenav .v1-btn--next .arrow { color: var(--orange); }
-.rk-v1 .coursepage .pagenav .v1-btn--next:hover {
+.rk-redesign .coursepage .pagenav .v1-btn--next .arrow { color: var(--orange); }
+.rk-redesign .coursepage .pagenav .v1-btn--next:hover {
   background: var(--navy-2);
   border-color: var(--navy-2);
 }
 
 /* samma sak för de andra knappytorna på kapitelsidorna: originalet låter den
    ljusblå bakgrunden lysa igenom i stället för att lägga en vit platta */
-.rk-v1 .coursepage .quiz-option__label,
-.rk-v1 .coursepage .btn-ratta { background: transparent; }
-.rk-v1 .coursepage .btn-ratta:hover { background: rgba(255,255,255,.45); }
+.rk-redesign .coursepage .quiz-option__label,
+.rk-redesign .coursepage .btn-ratta { background: transparent; }
+.rk-redesign .coursepage .btn-ratta:hover { background: rgba(255,255,255,.45); }
 
 
-/* ==========================================================================
-   KRAV Z – ombyggt bild-quiz (kapitel 2 och 3)
-   Kryssrutorna ligger nu på rad med en Rätta-knapp under, och bilderna har
-   flyttat ner till trespalten ovanför sin egen rubrik.
-   ========================================================================== */
-.rk-v1 .v1-quiz { margin: 22px 0 34px; }
-.rk-v1 .v1-quiz .btn-ratta { margin: 18px 0 0; }
-
-/* facittexten hör till det rätta svaret och är en bekräftelse – grön i
-   stället för basens röda varningsruta */
-.rk-v1 .feedback-box.v1-feedback--ok {
+/* Facittexten i övningskapitlets kryssrutefrågor: grön när den bekräftar ett
+   rätt svar, i stället för basens röda varningsruta. */
+.rk-redesign .feedback-box.v1-feedback--ok {
   border-color: var(--green);
   color: var(--green);
 }
 
-/* ==========================================================================
-   KRAV QQ – selection cards (kapitel 2 och 3)
-   Stora klickbara kort med fotot inne i kortet, så bilden blir själva valet.
-   Enkelval: korten är <button role="radio">, alltså tangentbordsstyrda utan
-   extra kod.
-
-   Valt läge markeras med inre box-shadow i stället för tjockare ram – en
-   ramändring skulle flytta innehållet någon pixel vid varje klick.
-   ========================================================================== */
-/* Korten är smalare än textspalten. I full spaltbredd (800px) blev
-   mellanrummet mellan etikett och bild så stort att kortet läste som en tom
-   rad, inte som ett sammanhållet alternativ. */
-.rk-v1 .v1-selcards {
-  display: grid;
-  gap: 12px;
-  max-width: 440px;
-  margin: 26px 0 0;
-}
-.rk-v1 .v1-selcard {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  text-align: left;
-  background: #fff;
-  border: 1.5px solid var(--navy);
-  border-radius: 0;             /* skarpa hörn, som kurskorten */
-  padding: 13px 16px 13px 15px;
-  cursor: pointer;
-  font-family: var(--font-body);
-  transition: box-shadow .15s ease, border-color .15s ease;
-}
-.rk-v1 .v1-selcard:hover:not(:disabled) { border-color: var(--orange); }
-.rk-v1 .v1-selcard:focus-visible {
-  outline: 2.5px solid var(--orange);
-  outline-offset: 3px;
-}
-.rk-v1 .v1-selcard:disabled { cursor: default; }
-
-/* radiomarkören – samma form som cirklarna i innehållsmenyn */
-.rk-v1 .v1-selcard__radio {
-  flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid var(--navy);
-  display: grid;
-  place-items: center;
-  font-size: .85rem;
-  font-weight: 700;
-  color: #fff;
-}
-.rk-v1 .v1-selcard[aria-checked="true"] {
-  border-color: var(--orange);
-  box-shadow: inset 0 0 0 2px var(--orange);
-}
-.rk-v1 .v1-selcard[aria-checked="true"] .v1-selcard__radio {
-  border-color: var(--orange);
-  background: var(--orange);
-}
-.rk-v1 .v1-selcard[aria-checked="true"] .v1-selcard__radio::after {
-  content: '';
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #fff;
-}
-
-.rk-v1 .v1-selcard__label {
-  flex: 1 1 auto;               /* tar mellanrummet, skjuter bilden åt höger */
-  font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 1.25rem;
-  line-height: 1.15;
-  color: var(--navy);
-}
-
-/* Fotot till höger i kortet.
-   Rutan har uttalad höjd, inte bara aspect-ratio: basens .ph.has-img sätter
-   display:block och aspect-ratio:auto när den riktiga bilden laddats, och då
-   behöll bilden sin egen höjd och bleedde ut ur kortet. Fast höjd +
-   overflow:hidden + object-fit:cover gör att vilket bildformat som helst
-   fyller rutan snyggt och beskärs i stället för att spränga kortet. */
-.rk-v1 .v1-selcard__img {
-  flex: 0 0 auto;
-  width: 140px;
-  height: 105px;
-  overflow: hidden;
-}
-.rk-v1 .v1-selcard__img .ph,
-.rk-v1 .v1-selcard__img .ph.has-img {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  aspect-ratio: auto;
-  overflow: hidden;
-  font-size: .68rem;
-}
-.rk-v1 .v1-selcard__img .ph__label { font-size: .68rem; max-width: 92%; }
-.rk-v1 .v1-selcard__img .ph small { font-size: .62rem; margin-top: 2px; }
-.rk-v1 .v1-selcard__img img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 0;
-}
-
-/* facit: rätt svar grönt, ditt felval rött */
-.rk-v1 .v1-selcard.v1-correct {
-  border-color: var(--green);
-  box-shadow: inset 0 0 0 2px var(--green);
-}
-.rk-v1 .v1-selcard.v1-correct .v1-selcard__radio {
-  background: var(--green);
-  border-color: var(--green);
-}
-.rk-v1 .v1-selcard.v1-wrong {
-  border-color: var(--red);
-  box-shadow: inset 0 0 0 2px var(--red);
-}
-.rk-v1 .v1-selcard.v1-wrong .v1-selcard__radio {
-  background: var(--red);
-  border-color: var(--red);
-}
-/* pricken tas bort när ✓ eller ✕ står i cirkeln */
-.rk-v1 .v1-selcard.v1-correct .v1-selcard__radio::after,
-.rk-v1 .v1-selcard.v1-wrong .v1-selcard__radio::after { content: none; }
-
-/* obesvarad fråga som spärrat vidareklick */
-.rk-v1 .v1-q--error .v1-selcard { border-color: var(--red); }
-
-@media (max-width: 700px) {
-  .rk-v1 .v1-selcard { gap: 12px; padding: 11px 12px; }
-  .rk-v1 .v1-selcard__radio { width: 22px; height: 22px; }
-  .rk-v1 .v1-selcard__img { width: 104px; height: 78px; }
-  .rk-v1 .v1-selcard__label { font-size: 1.1rem; }
-}
-
-
-/* trespalten är textbaserad på kapitel 2–3 sedan fotona flyttat in i korten;
-   regeln står kvar för sidor som har bilder kvar i trespalten */
-.rk-v1 .coursepage .three-col .ph { margin-bottom: 18px; }
 
 
 /* ==========================================================================
@@ -656,31 +507,31 @@
    fokusmarkering och ett eget valt-läge som går att skilja från facit:
      marinblå ruta = ditt val     grön = rätt svar     röd = fel svar
    ========================================================================== */
-.rk-v1 .checkquiz .checkrow {
+.rk-redesign .checkquiz .checkrow {
   cursor: pointer;
   border-radius: 4px;
   padding: 7px 8px;
   margin-left: -8px;
 }
-.rk-v1 .checkquiz .checkrow:hover { background: rgba(255,255,255,.5); }
-.rk-v1 .checkquiz .checkrow:hover .box { border-color: var(--orange); }
-.rk-v1 .checkquiz .checkrow:focus-visible {
+.rk-redesign .checkquiz .checkrow:hover { background: rgba(255,255,255,.5); }
+.rk-redesign .checkquiz .checkrow:hover .box { border-color: var(--orange); }
+.rk-redesign .checkquiz .checkrow:focus-visible {
   outline: 2.5px solid var(--orange);
   outline-offset: 2px;
 }
 /* ditt val – marinblå, alltså skilt från facitets grönt och rött */
-.rk-v1 .checkquiz .checkrow.v1-checked .box {
+.rk-redesign .checkquiz .checkrow.v1-checked .box {
   background: var(--navy);
   border-color: var(--navy);
   color: #fff;
 }
 
 /* obesvarad fråga som spärrat vidareklick: röda rutor, ingen layoutförskjutning */
-.rk-v1 .v1-q--error .checkrow .box { border-color: var(--red); }
+.rk-redesign .v1-q--error .checkrow .box { border-color: var(--red); }
 
 /* felmeddelandena – vid frågan och vid Nästa-knappen */
-.rk-v1 .v1-qerror,
-.rk-v1 .v1-naverror {
+.rk-redesign .v1-qerror,
+.rk-redesign .v1-naverror {
   max-width: var(--v1-text);
   background: #fff;
   border: 1.5px solid var(--red);
@@ -691,11 +542,11 @@
   padding: 13px 18px;
   margin: 16px 0;
 }
-.rk-v1 .v1-naverror { margin: 26px 0 0; }
+.rk-redesign .v1-naverror { margin: 26px 0 0; }
 
 /* den handritade pilen sitter i linje med knapptexten */
-.rk-v1 .v1-arr { display: block; }
-.rk-v1 .btn .arrow { display: inline-flex; align-items: center; }
+.rk-redesign .v1-arr { display: block; }
+.rk-redesign .btn .arrow { display: inline-flex; align-items: center; }
 
 
 /* ==========================================================================
@@ -703,17 +554,46 @@
    ========================================================================== */
 @media (max-width: 900px) {
   /* korten staplas */
-  .rk-v1 .v1-cards,
-  .rk-v1 .v1-cards[data-count="2"] { grid-template-columns: minmax(0, 1fr); }
+  .rk-redesign .v1-cards,
+  .rk-redesign .v1-cards[data-count="2"] { grid-template-columns: minmax(0, 1fr); }
 
-  .rk-v1 .dash__courses,
-  .rk-v1 .dash__side { padding: 28px 24px 30px; }
+  .rk-redesign .dash__courses,
+  .rk-redesign .dash__side { padding: 28px 24px 30px; }
 
   /* svarta listen får plats för pil, kursnamn och INNEHÅLL */
-  .rk-v1 .v1-coursehead .coursebar__title { font-size: 1.15rem; }
-  .rk-v1 .v1-toc-toggle { font-size: .95rem; }
-  .rk-v1 .v1-coursehead .hamburger { width: 26px; }
+  .rk-redesign .v1-coursehead .coursebar__title { font-size: 1.15rem; }
+  .rk-redesign .v1-toc-toggle { font-size: .95rem; }
+  .rk-redesign .v1-coursehead .hamburger { width: 26px; }
 
   /* innehållsmenyn får nästan full bredd, fortfarande högerställd */
-  .rk-v1 .v1-coursehead .toc { right: var(--edge); width: calc(100vw - 2 * var(--edge)); }
+  .rk-redesign .v1-coursehead .toc { right: var(--edge); width: calc(100vw - 2 * var(--edge)); }
 }
+
+/* ==========================================================================
+   KRAV RR – bild-quizet i ursprunglig design, men valbart
+   Basens layout står orörd: tre foton på rad med etikettknapp under och en
+   Rätta-knapp centrerad. Här läggs bara valbarheten till, som spärren på
+   obligatoriska frågor behöver. Valet markeras med orange ram – facit
+   behåller basens grönt.
+   ========================================================================== */
+.rk-redesign .coursepage .quiz-option { cursor: pointer; }
+.rk-redesign .coursepage .quiz-option:focus-visible {
+  outline: 2.5px solid var(--orange);
+  outline-offset: 4px;
+}
+.rk-redesign .coursepage .quiz-option:hover:not(.correct) .ph--photo,
+.rk-redesign .coursepage .quiz-option:hover:not(.correct) .quiz-option__label {
+  border-color: var(--orange);
+}
+/* valt läge – inre skugga i stället för tjockare ram, så inget hoppar */
+.rk-redesign .coursepage .quiz-option.v1-checked .ph--photo,
+.rk-redesign .coursepage .quiz-option.v1-checked .quiz-option__label {
+  border: 1.5px solid var(--orange);
+  box-shadow: inset 0 0 0 2px var(--orange);
+}
+
+/* obesvarad fråga som spärrat vidareklick */
+.rk-redesign .v1-q--error .quiz-option .quiz-option__label { border-color: var(--red); }
+
+/* felmeddelandet ligger under bildraden, inte inne i den */
+.rk-redesign .v1-imgquiz .v1-qerror { margin: 18px 0 0; }

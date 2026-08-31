@@ -1,134 +1,56 @@
 /* ==========================================================================
-   VARIANT v1 – ny meny & navigation
-   Bygger kravspec v1 (2026-08-24) + återkoppling omgång 2–4.
-   Allt som INTE står här ärvs från basversionen i app.js, så v0 är orörd.
+   VARIANT v1 – ny navigation med numrerade avsnitt
+   Delad logik för v1 och v2. Allt som INTE står här ärvs från basversionen
+   i app.js, så v0 förblir orörd.
 
-   KRAV SOM ÄR BYGGDA
-     Omgång 1
-     1  Min sida: "Mina kurser" överst, kontouppgifterna under.  -> initExtra + CSS
-     2  "Logga ut" flyttad till svarta listen, längst upp till höger.  -> initExtra
-     4  Kursvy: topheader + brödsmulor bort, svarta listen sticky.
-                                                          -> buildCourseBar + CSS
-     6  Progressindikatorn i botten av kapitelsidan borttagen.   -> buildProgress
+   v2 återanvänder den här filen: variant-v2.js gör RK_V2 till en kopia av
+   RK_V1 och skriver bara över Min sida. Numreringen styrs av V1_NUMBERS,
+   som läser vilken variant som är aktiv. Ändra alltså här, inte på två
+   ställen.
 
-     Omgång 2
-     A  Större rubriker på artikel-/kapitelsidor (brödtexten orörd).    -> CSS
-     B  Blå rutan på Min sida läses som en ruta med luft ovanför.       -> CSS
-     C  Vita kurskort på den blå ytan. Pågående kurs först, genomförd
-        sist. Två i bredd, tre eller fler staplas.          -> initExtra + CSS
-     D  Kapitelnumrering från 1 i innehållsmenyn, undernivåer 5.1–5.3.
-                                                              -> tocRow + CSS
+   FILUPPSÄTTNING
+     variants.js          växlaren: registret, klasserna, stämpeln,
+                          versionslänken i footern
+     variant-v1.js        all logik för både v1 och v2   <- denna fil
+     variant-v2.js        v2:s avvikelser (Min sida i basdesign)
+     variant-redesign.css gemensam stil, scopad på .rk-redesign
+     variant-v2.css       v2:s avvikande stil, scopad på .rk-v2
 
-     Omgång 3
-     E  "Mina uppgifter" är en helbred platta som även rymmer "Byt lösenord"
-        och "Ta bort användarkontot" som undersektioner.       -> initExtra + CSS
-     F  Större videoruta på kapitelsidor, smalare radbredd.             -> CSS
-     G  Skarpa hörn på kursplattan och kurskorten; korten breddade.     -> CSS
+   VAD SOM SKILJER FRÅN BASEN
 
-     Omgång 4
-     H  Orange progresslinje även för pågående kurs.                    -> CSS
-     I  Introtext + rad med beräknad tid på varje kurskort. -> initExtra + CSS
-     J  "Ladda ner intyg" vit med svart text så den inte konkurrerar
-        med "Fortsätt".                                                 -> CSS
-     K  Byt lösenord: halverad fältbredd + ögonikon i fältet.
-                                                            -> initExtra + CSS
-     L  Numret direkt bredvid kapitelnamnet: "1. Relationskompassens
-        grundkurs".                                               -> tocRow + CSS
-     M  Kapitelsidans svarta list enligt skiss: vit bakåtpil före
-        kursnamnet, INNEHÅLL + hamburgare uppflyttad till höger,
-        MIN SIDA borttagen.                               -> buildCourseBar + CSS
-     N  Tunn progressindikator direkt under svarta listen, synkad med
-        Min sidas progress.                               -> buildCourseBar + CSS
+   Startsidan
+     Primärknapp "Starta Relationskompassens grundkurs" i den mörka ytan.
+     Inloggning krävs för båda ingångarna – basen har ingen
+     inloggningsstatus, så v1 håller en egen flagga per flik.
 
-     Omgång 5
-     O  Innehållsmenyn ligger ovanpå progressraden, och har en knapp
-        "Till Min sida" klistrad i underkanten.  -> buildCourseBar/buildToc + CSS
-     P  Handritad pil i styleguidens manér, i knappar och svarta listen.
-                                                            -> initExtra + CSS
-     Q  Samma innehållsbredd på alla kapitelsidor: film och bildrader i
-        --v1-media, rubriker och brödtext i --v1-text. Spalten centrerad
-        som i betan. Prev/next linjerar med innehållet.      -> initExtra + CSS
-     R  Prev/next med transparent bakgrund och svart ram, som originalet.
-                                                                     -> CSS
+   Min sida (bara v1 – v2 kör basdesignen)
+     Två helbreda plattor med skarpa hörn. Vita kurskort med introtext,
+     beräknad tid, procent i stor siffra och orange progressstreck som
+     linjerar med knappraden. Pågående kurs först. "Logga ut" i svarta
+     listen. Lösenordsfält halverade med ögonikon.
 
-     Omgång 6
-     S  Lättare kursnamn på Min sida (vikt 700, mindre grad).          -> CSS
-     T  Lägre vita kurskort.                                           -> CSS
-     U  "Till Min sida" ligger fast efter sista kapitlet, med .btn:s mått
-        och bara textens bredd.                            -> buildToc + CSS
-     V  Litet lodrätt streck mellan bakåtpilen och kursrubriken i svarta
-        listen, så pilen läses som "tillbaka", inte som del av rubriken.
-                                                      -> buildCourseBar + CSS
+   Kursvyn
+     Egen sidkontext: topheader och brödsmulor borta. Svarta listen sticky
+     med bakåtpil + HEM, centrerad kursrubrik och KURSINNEHÅLL till höger.
+     Tunn progressindikator under listen. Innehållsmenyn högerställd ovanpå
+     progressraden, med utgångarna Hem och Min sida efter sista avsnittet.
 
-     Omgång 7
-     X  Elsa och Omar-underkapitlen är utfällda i menyn så snart man är inne
-        i något av dem, även förälderkapitlet.                    -> buildToc
+   Kapitelsidor
+     Större rubriker, en enda innehållsbredd (--v1-media för film och
+     bildrader, --v1-text för text), rubriken krymps så den ryms på en rad.
+     Handritad pil i styleguidens manér. Prev/next transparent respektive
+     svart, med avsnittsnummer i v1.
 
-     Omgång 8
-     Y  Kapitelnummer i kapitelsidans rubrik: "3. Fler exempel på viktiga
-        relationer". Placeringen orörd.                        -> initExtra
-     Z  Bild-quizet på kapitel 2 och 3 byggt om till kryssrutefråga med
-        Rätta-knapp under, som i övningskapitlet. Bilderna flyttade upp
-        ovanför sin rubrik i trespalten.                  -> initExtra + CSS
+   Räkning
+     21 avsnitt, räknat ur CHAPTERS. Elsa och Omar del 2–4 är egna avsnitt
+     6, 7 och 8. Progressraden i kurshuvudet visar avsnittet man STÅR PÅ;
+     kurskortet på Min sida visar hur många man GÅTT IGENOM.
 
-     Omgång 9
-     AA Totalen är 18 (antalet huvudkapitel, räknat ur CHAPTERS). Elsa och
-        Omar del 2–4 är inte egna steg utan räknas som kapitel 5. -> v1Steps()
-     BB Progressraden i kurshuvudet visar kapitlet man STÅR PÅ, medan
-        kurskortet på Min sida visar hur många kapitel man GÅTT IGENOM.
-                                       -> v1CurrentStep() / v1ChaptersDone()
-     CC "Fortsätt" på Min sida går till senaste kapitlet man stod på.
-                                                            -> initExtra
-
-     Omgång 10
-     DD Primärknapp "Starta Relationskompassens grundkurs" i startsidans
-        mörka yta, under introtexten.                      -> initExtra + CSS
-     EE Kursrubriken centrerad i svarta listen, MIN SIDA tillagd till höger
-        om bakåtpilen.                              -> buildCourseBar + CSS
-     FF Progressbaren högre och med "X av 18" i högerkanten.
-                                                     -> buildCourseBar + CSS
-     GG Kapitelnummer i prev/next-knapparna: "2. Barns olika relationer".
-                                                          -> buildPageNav
-
-     Omgång 11
-     HH Inloggning krävs för BÅDA ingångarna. Riktig sessionflagga i stället
-        för basens hårdkodade data-logged.                 -> initExtra
-     II "X av 18" flyttad in i den orangea ytan, linjerad mot skärningen,
-        och mjuk rundad högerkant på fyllningen.    -> buildCourseBar + CSS
-     JJ Nästa-knappen svart med vit text och orange pil. Föregående behåller
-        outline-stilen.                                    -> buildPageNav + CSS
-     KK Startsidans primärknapp vit med svart text och orange pil, centrerad
-        i hero-ytan.                                                  -> CSS
-
-     Omgång 16
-     QQ Quizet på kapitel 2 och 3 byggt om till selection cards: stora
-        klickbara kort med fotot inne i kortet. Enkelval. Trespalten under
-        blir textbaserad eftersom fotona flyttat in i korten.
-                                        -> v1RebuildImageQuiz/v1RattaCards + CSS
-
-     Omgång 15
-     PP Kapitelsidans svarta list: MIN SIDA -> STARTSIDAN (och länkar nu dit),
-        INNEHÅLL -> KURSINNEHÅLL. Nedfällda menyn har två utgångar sida vid
-        sida: "Till Min sida" och "Till startsidan".
-                                                       -> buildCourseBar/buildToc + CSS
-
-     Omgång 14
-     OO Progressstrecket på Min sida linjerar med knappradens högerkant.
-        Bredden mäts per kort.                    -> v1SizeCourseTracks + CSS
-
-     Omgång 13
-     MM Strecket till höger om MIN SIDA borttaget. Bakåtpilen orange i
-        stället för vit, som hamburgaren mitt emot.  -> buildCourseBar + CSS
-     NN Quiz-frågorna svarbara och obligatoriska. Nästa-knappen spärras med
-        felmeddelande vid frågan och vid knappen.      -> initExtra + CSS
-
-     Omgång 12
-     LL Kapitelrubriken ryms på en rad: h1 får hela innehållsbredden, och
-        graden krymps automatiskt för de längre rubrikerna.
-                                                       -> v1FitHeading + CSS
-        Progressiffran kortad till "1/18" och indragen från skärningen.
-        Behåller marinblå text – vit på orange ger bara 3.47:1 och
-        underkänns av WCAG AA.                                        -> CSS
+   Quiz
+     Frågorna är obligatoriska: Nästa spärras tills alla frågor på sidan är
+     besvarade, med felmeddelande vid frågan och vid knappen. Bild-quizet på
+     avsnitt 2–3 har basens ursprungliga design, men alternativen går att
+     välja – annars kan spärren inte fungera.
 
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
@@ -203,7 +125,7 @@ function v1Unanswered() {
 /* Första svarsalternativet i en fråga, oavsett komponent – dit fokus hoppar
    när spärren slår till. */
 function v1FirstOption(q) {
-  return q.querySelector('.v1-selcard, .checkrow');
+  return q.querySelector('.quiz-option, .checkrow');
 }
 
 /* Gör frågorna svarbara */
@@ -230,7 +152,7 @@ function v1WireQuiz() {
 /* Selection cards – enkelval inom sin fråga */
 function v1WireSelectionCards() {
   document.querySelectorAll('.checkquiz .q').forEach(q => {
-    const cards = q.querySelectorAll('.v1-selcard');
+    const cards = q.querySelectorAll('.quiz-option');
     if (!cards.length) return;
     cards.forEach(card => {
       card.addEventListener('click', () => {
@@ -293,7 +215,7 @@ function v1ShowQuizErrors(missing) {
     q.classList.add('v1-q--error');
     if (!q.querySelector('.v1-qerror')) {
       // selection cards är enkelval, kryssrutorna flerval – olika formulering
-      const single = !!q.querySelector('.v1-selcard');
+      const single = !!q.querySelector('.quiz-option');
       const msg = el('<p class="v1-qerror" role="alert">' + (single
         ? 'Välj ett alternativ innan du går vidare.'
         : 'Du behöver välja minst ett alternativ här innan du går vidare.') +
@@ -448,7 +370,7 @@ function v1HomeCta() {
    inte kan glida ifrån varandra. Rubrikens placering rörs inte – bara texten.
    ========================================================================== */
 function v1NumberHeading(ch) {
-  if (!ch) return;
+  if (!ch || !V1_NUMBERS) return;
   const h1 = document.querySelector('.coursepage .course-main > h1');
   if (!h1) return;
   h1.textContent = v1Nums()[ch.i] + '. ' + h1.textContent.trim();
@@ -489,111 +411,56 @@ function v1FitHeading() {
 
 
 /* ==========================================================================
-   KRAV Z + QQ – bild-quizet byggs om till selection cards
-   Basens quiz är tre stora bilder i rad med etiketter under, och rätt svar
-   visas som en grön ram. Frågan är lätt att missa – bilderna läses som
-   illustrationer, inte som svarsalternativ.
+   KRAV RR – bild-quizet tillbaka till ursprunglig design
+   Kunden ville tillbaka till basens layout: tre stora foton på rad med en
+   etikettknapp under varje, Rätta-knapp centrerad under, och trespalten som
+   text. Ombyggnaden till kryssrutor och selection cards är alltså borttagen.
 
-   Kryssrutor löste det men upplevdes trista. Här blir alternativen i stället
-   selection cards: stora klickbara kort på rad, med fotot inne i kortet så
-   bilden blir själva valet. Trespalten under blir därmed textbaserad.
+   Det enda som läggs till är att alternativen går att VÄLJA. Basens quiz har
+   ingen valbarhet – man trycker bara Rätta och får facit – och då kan inte
+   kravet på obligatoriska frågor uppfyllas. Valet markeras med orange ram,
+   vilket ligger inom den ursprungliga formen.
 
-   Enkelval, inte flerval: frågan har ett rätt svar. Korten är <button> med
-   role="radio", så tangentbord fungerar utan extra kod.
-
-   Gäller kapitel 2 och 3, som har identisk struktur i basen. Kör bara om
-   både .quiz-options och .three-col finns på sidan.
+   Vill man släppa spärren på dessa avsnitt räcker det att inte anropa
+   v1WireImageQuiz() i initExtra.
    ========================================================================== */
-function v1RebuildImageQuiz() {
-  const main = document.querySelector('.coursepage .course-main');
-  if (!main) return;
+function v1WireImageQuiz() {
+  const options = document.querySelector('.coursepage .quiz-options');
+  if (!options) return;
 
-  const options  = main.querySelector('.quiz-options');
-  const threeCol = main.querySelector('.three-col');
-  if (!options || !threeCol) return;
-
-  const txt = e => (e ? e.textContent.trim() : '');
-
-  const opts = Array.from(options.querySelectorAll('.quiz-option')).map(o => ({
-    name:     txt(o.querySelector('.quiz-option__label')),
-    feedback: txt(o.querySelector('.quiz-option__feedback')),
-    correct:  o.classList.contains('is-correct'),
-    img:      o.querySelector('.ph'),
-  }));
+  const opts = Array.from(options.querySelectorAll('.quiz-option'));
   if (!opts.length) return;
 
-  /* 1. bygg frågan med tomma kort – bildnoderna flyttas in i steg 2 */
-  const qid = 'v1quiz';
-  let cards = '';
-  let feedback = '';
-  opts.forEach((o, i) => {
-    cards +=
-      `<button type="button" class="v1-selcard" role="radio" aria-checked="false"` +
-      ` data-opt="${i}"${o.correct ? ' data-correct="true"' : ''}>` +
-      `<span class="v1-selcard__radio" aria-hidden="true"></span>` +
-      `<span class="v1-selcard__label">${o.name}</span>` +
-      `<span class="v1-selcard__img" data-slot="${i}"></span>` +
-      `</button>`;
-    // facittexten hör till det rätta svaret och är en bekräftelse, inte en
-    // varning – därför grön i stället för basens röda feedback-box
-    if (o.feedback) {
-      feedback += `<div class="feedback-box v1-feedback--ok">${o.feedback}</div>`;
-    }
+  /* Basens markup saknar en .q-behållare, som spärren letar efter. Här sätts
+     bildraden och Rätta-knappen i en sådan, utan att flytta något visuellt. */
+  const btnWrap = document.querySelector('.coursepage .center');
+  const q = el('<div class="checkquiz v1-imgquiz"><div class="q" id="v1quiz"></div></div>');
+  options.insertAdjacentElement('beforebegin', q);
+  const inner = q.querySelector('.q');
+  inner.appendChild(options);
+  if (btnWrap) inner.appendChild(btnWrap);
+
+  opts.forEach(o => {
+    o.setAttribute('role', 'radio');
+    o.setAttribute('aria-checked', 'false');
+    o.setAttribute('tabindex', '0');
+
+    const pick = () => {
+      if (o.classList.contains('correct')) return;   // facit visat, låst
+      opts.forEach(x => {
+        x.classList.remove('v1-checked');
+        x.setAttribute('aria-checked', 'false');
+      });
+      o.classList.add('v1-checked');
+      o.setAttribute('aria-checked', 'true');
+      v1ClearQuizError(inner);
+    };
+
+    o.addEventListener('click', pick);
+    o.addEventListener('keydown', e => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); pick(); }
+    });
   });
-
-  const quiz = el(`
-    <div class="checkquiz v1-quiz">
-      <div class="q" id="${qid}">
-        <div class="v1-selcards" role="radiogroup"
-             aria-label="Välj ett alternativ">${cards}</div>
-        ${feedback}
-        <button class="btn-ratta" onclick="v1RattaCards(this)">Rätta
-          <span style="color:var(--navy)">⌄</span></button>
-      </div>
-    </div>`);
-  options.insertAdjacentElement('beforebegin', quiz);
-
-  /* 2. flytta in fotot i sitt kort.
-        Noderna flyttas, inte kopieras, så app.js:s utbyte av platshållaren
-        mot riktig bild fortsätter att träffa rätt element. */
-  opts.forEach((o, i) => {
-    const slot = quiz.querySelector(`.v1-selcard__img[data-slot="${i}"]`);
-    if (slot && o.img) slot.appendChild(o.img);
-  });
-
-  /* 3. rensa bort den gamla bildraden och dess Rätta-knapp */
-  const oldBtn = main.querySelector('.center .btn-ratta');
-  if (oldBtn) {
-    const wrap = oldBtn.closest('.center');
-    (wrap || oldBtn).remove();
-  }
-  options.remove();
-}
-
-
-/* Rättning för selection cards. Basens rattaCheck() letar efter .checkrow och
-   fungerar därför inte här. Efter rättning låses korten – att byta svar när
-   facit står framme fyller ingen funktion och skulle lämna kvar färgerna. */
-function v1RattaCards(btn) {
-  const q = btn.closest('.q');
-  if (!q) return;
-
-  q.querySelectorAll('.v1-selcard').forEach(card => {
-    const radio  = card.querySelector('.v1-selcard__radio');
-    const picked = card.getAttribute('aria-checked') === 'true';
-    if (card.dataset.correct === 'true') {
-      card.classList.add('v1-correct');
-      if (radio) radio.textContent = '✓';
-    } else if (picked) {
-      card.classList.add('v1-wrong');
-      if (radio) radio.textContent = '✕';
-    }
-    card.disabled = true;
-  });
-
-  const fb = q.querySelector('.feedback-box');
-  if (fb) fb.classList.add('show');
-  btn.disabled = true;
 }
 
 
@@ -629,24 +496,20 @@ const V1_COURSE_INFO = {
    Det första kan gå bakåt när man klickar sig bakåt; det andra kan bara växa.
    ========================================================================== */
 
-/* index -> stegnummer. Underkapitel ärver förälderns steg. */
+/* index -> stegnummer. Alla avsnitt är egna steg, inklusive Elsa och Omar
+   del 2–4 som räknas som 6, 7 och 8. Steget är alltså index + 1. */
 let _v1Steps = null;
 function v1Steps() {
   if (_v1Steps) return _v1Steps;
   const map = {};
-  let step = 0;
-  CHAPTERS.forEach(ch => {
-    if (ch.level === 1) map[ch.i] = step;      // Elsa del 2–4 = samma steg
-    else                map[ch.i] = ++step;
-  });
+  CHAPTERS.forEach(ch => { map[ch.i] = ch.i + 1; });
   _v1Steps = map;
   return map;
 }
 
-/* antalet huvudkapitel = högsta stegnummer i listan */
+/* 21 avsnitt – räknas ur CHAPTERS så totalen följer listan */
 function v1Total() {
-  const steps = v1Steps();
-  return Object.keys(steps).reduce((max, k) => Math.max(max, steps[k]), 0);
+  return CHAPTERS.length;
 }
 
 /* kapitlet man står på just nu */
@@ -703,15 +566,27 @@ function v1ChaptersDone() {
    Obs: CHAPTERS bor i app.js som laddas EFTER den här filen – därför räknas
    kartan fram först vid första anropet, inte när filen läses.
    ========================================================================== */
+/* ==========================================================================
+   NUMRERING PÅ ELLER AV – skillnaden mellan v1 och v2
+   v1 numrerar avsnitten, v2 gör det inte. Allt som skriver ut ett nummer går
+   via v1Label() eller kollar V1_NUMBERS, så v2 inte behöver egna kopior av
+   tocRow, buildPageNav och rubriknumreringen.
+
+   Räkningen påverkas INTE: båda versionerna räknar 21 avsnitt och visar
+   progress på Min sida. Det är bara siffrorna i texten som skiljer.
+   ========================================================================== */
+const V1_NUMBERS = V.id !== 'v2';
+
+function v1Label(ch) {
+  return V1_NUMBERS ? v1Nums()[ch.i] + '. ' + ch.title : ch.title;
+}
+
 let _v1Nums = null;
 function v1Nums() {
   if (_v1Nums) return _v1Nums;
   const map = {};
-  let main = 0, sub = 0;
-  CHAPTERS.forEach(ch => {
-    if (ch.level === 1) { sub += 1; map[ch.i] = main + '.' + sub; }
-    else                { main += 1; sub = 0; map[ch.i] = String(main); }
-  });
+  const steps = v1Steps();
+  CHAPTERS.forEach(ch => { map[ch.i] = String(steps[ch.i]); });
   _v1Nums = map;
   return map;
 }
@@ -934,7 +809,7 @@ window.RK_V1 = {
         <div class="coursebar__inner">
           <div class="v1-headleft">
             <a class="v1-back" href="index.html" title="Tillbaka till startsidan">
-              <span class="arrow">←</span> STARTSIDAN
+              <span class="arrow">←</span> HEM
             </a>
           </div>
           <span class="coursebar__title">Relationskompassens grundkurs</span>
@@ -949,8 +824,8 @@ window.RK_V1 = {
            aria-valuenow="${v1CurrentStep(ch)}" aria-valuemin="0"
            aria-valuemax="${v1Total()}">
         <div class="v1-progress__fill" style="width:${v1ProgressPct(ch)}%"></div>
-        <span class="v1-progress__label"
-              style="left:max(${v1ProgressPct(ch)}%, 96px)">${v1CurrentStep(ch)}/${v1Total()}</span>
+        ${V1_NUMBERS ? `<span class="v1-progress__label"
+              style="left:max(${v1ProgressPct(ch)}%, 96px)">${v1CurrentStep(ch)}/${v1Total()}</span>` : ''}
       </div>
 
     </div>`;
@@ -959,26 +834,20 @@ window.RK_V1 = {
   /* krav O: samma kapitellista som basen, men med en utgång längst ner.
      Menyn hänger från svarta listens underkant (se buildCourseBar) och lägger
      sig därmed ovanpå progressraden i stället för under den. */
+  /* Platt lista. Elsa och Omar del 2–4 är egna avsnitt (6, 7, 8) och visas
+     därför som jämlikar, inte som en indragen fällbar undergrupp – det vore
+     motsägelsefullt när de numreras i följd med resten. */
   buildToc(currentIndex) {
     const visited = getVisited();
-    /* krav X: utfälld så snart man är inne i Elsa och Omar – även på
-       förälderkapitlet (index 4), inte bara på del 2–4 som i basen. */
-    const elsaCollapsed = ![4, 5, 6, 7].includes(currentIndex);
     let html = '';
     CHAPTERS.forEach(ch => {
-      if (ch.level === 1) return;               // underkapitel hanteras med sin grupp
-      html += tocRow(ch, currentIndex, visited, elsaCollapsed);
-      if (ch.i === 4) {                          // efter "Elsa och Omar": fällbar grupp
-        const subs = CHAPTERS.filter(c => c.level === 1)
-          .map(c => tocRow(c, currentIndex, visited, elsaCollapsed)).join('');
-        html += `<div class="toc__subgroup${elsaCollapsed ? ' collapsed' : ''}" id="tocSub">${subs}</div>`;
-      }
+      html += tocRow(ch, currentIndex, visited, true);
     });
-    // två vägar ut ur kursen, fast placerade efter sista kapitlet.
+    // två vägar ut ur kursen, fast placerade efter sista avsnittet.
     // .btn ger samma storlek som övriga knappar på sajten.
     html += `<div class="v1-toc-exits">` +
-            `<a class="btn v1-toc-exit" href="min-sida.html">Till Min sida</a>` +
-            `<a class="btn v1-toc-exit" href="index.html">Till startsidan</a>` +
+            `<a class="btn v1-toc-exit" href="index.html">Hem</a>` +
+            `<a class="btn v1-toc-exit" href="min-sida.html">Min sida</a>` +
             `</div>`;
     return `<div class="toc" id="toc">${html}</div>`;
   },
@@ -986,7 +855,7 @@ window.RK_V1 = {
   /* krav D + L: kapitelnummer i innehållsmenyn, direkt bredvid kapitelnamnet
      med punkt och ett blanksteg. Samma logik som basen i övrigt – den lilla
      cirkeln med bock/prick behålls som den är. */
-  tocRow(ch, currentIndex, visited, elsaCollapsed) {
+  tocRow(ch, currentIndex, visited) {
     const isCurrent = ch.i === currentIndex;
     const isDone    = !isCurrent && visited.has(ch.i);
 
@@ -995,17 +864,14 @@ window.RK_V1 = {
     else if (isCurrent) { radioClass += ' radio--current';                   stateClass = ' toc__item--current'; }
     else                { radioClass += ' radio--future';                    stateClass = ' toc__item--future'; }
 
-    const sub   = ch.level === 1 ? ' toc__item--sub' : '';
+    // v1Label() ger "5. Elsa och Omar"; v2 skriver över den och ger bara titeln
     const label = `<span class="${radioClass}">${radioInner}</span>` +
-                  `<span>${v1Nums()[ch.i]}. ${ch.title}</span>`;
-    const chev  = ch.i === 4
-      ? `<span class="toc__chev${elsaCollapsed ? ' collapsed' : ''}" onclick="toggleElsa(event)" role="button" aria-label="Visa/dölj underkapitel">${CHEVRON}</span>`
-      : '';
+                  `<span>${v1Label(ch)}</span>`;
 
     if ((isDone || isCurrent) && ch.file) {
-      return `<a class="toc__item${sub}${stateClass}" href="${ch.file}">${label}${chev}</a>`;
+      return `<a class="toc__item${stateClass}" href="${ch.file}">${label}</a>`;
     }
-    return `<span class="toc__item${sub}${stateClass}">${label}${chev}</span>`;
+    return `<span class="toc__item${stateClass}">${label}</span>`;
   },
 
   /* krav EE: kapitelnummer i prev/next-knapparna, t.ex.
@@ -1014,7 +880,7 @@ window.RK_V1 = {
   buildPageNav(ch) {
     const prev = CHAPTERS[ch.i - 1];
     const next = CHAPTERS[ch.i + 1];
-    const label = c => v1Nums()[c.i] + '. ' + c.title;
+    const label = v1Label;                    // med nummer i v1, utan i v2
 
     const prevBtn = prev
       ? `<a class="btn btn--outline" href="${prev.file || '#'}"><span class="arrow">←</span> ${label(prev)}</a>`
@@ -1040,13 +906,14 @@ window.RK_V1 = {
   initExtra({ ch, type }) {
     v1PatchReset();           // krav HH: nollställning tar även v1:s nycklar
     v1HomeCta();              // krav DD: primärknapp på startsidan
+    buildFooterVersionLink(); // versionslänk i footern – footern finns nu
     if (type === 'title') v1BuildMinSida();
     if (type === 'course') {
       if (ch) v1SetLast(ch.i);  // krav CC: minns var man stod
       v1NormalizeWidths();      // krav Q: samma bredd överallt
-      v1NumberHeading(ch);      // krav Y: kapitelnummer i rubriken
-      v1RebuildImageQuiz();     // krav Z: bild-quiz -> kryssrutefråga
-      v1WireQuiz();             // krav NN: gör frågorna svarbara – efter Z
+      v1NumberHeading(ch);      // krav Y: avsnittsnummer i rubriken (bara v1)
+      v1WireImageQuiz();        // krav RR: bild-quizet valbart – före v1WireQuiz
+      v1WireQuiz();             // krav NN: gör frågorna svarbara
       v1GateNext();             // krav NN: spärra Nästa tills allt är besvarat
 
       // krav LL: rubriken på en rad – mäts när typsnitten är laddade

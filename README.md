@@ -59,7 +59,7 @@ Prototypen minns vilka kapitel testpersonen besökt (sparas i `sessionStorage`):
 - En vanlig omladdning **behåller** progressen (så oavsiktliga omladdningar mitt
   i ett test inte nollställer). Använd nollställ-knappen inför nästa person.
 
-## Versioner (v0 / v1)
+## Versioner (v0 / v1 / v2)
 
 Prototypen innehåller flera designversioner i samma kod. Valet sparas per
 flik, så det följer med när man klickar sig vidare i kursen.
@@ -67,11 +67,16 @@ flik, så det följer med när man klickar sig vidare i kursen.
 | Adress | Version |
 |---|---|
 | `index.html` | **v0 – basversionen.** Kopian av befintliga Relationskompassen, oförändrad. |
-| `index.html?nav=v1` | **v1 – ny meny & navigation.** |
+| `index.html?nav=v1` | **v1 – ny navigation, med numrerade avsnitt.** |
+| `index.html?nav=v2` | **v2 – som v1 men utan numrering**, och med Min sida i basdesign. |
+
+v1 och v2 är A/B-paret: enda skillnaden i kursvyn är numreringen. Längst ner i
+sidfoten finns en länk till den andra versionen, vid sidan om
+"Nollställ session".
 
 Nere till höger sitter en stämpel där man klickar mellan versionerna och
 nollställer sessionen. Dölj den inför skarpa användartest med `?stamp=off`.
-Öppna v0 i en flik och v1 i en annan för att jämföra sida vid sida.
+Öppna v1 i en flik och v2 i en annan för att jämföra sida vid sida.
 
 Basversionen är låst i git som taggen `v0-bas`.
 
@@ -80,7 +85,7 @@ Basversionen är låst i git som taggen `v0-bas`.
 - **Större rubriker** på artikel- och kapitelsidor. Brödtexten är oförändrad.
 - **Bredare videoruta** på kapitelsidor, medan rubriker och brödtext hålls i
   en smalare spalt (ca 800px) för läsbar radlängd.
-- **Min sida:** två helbreda plattor med skarpa hörn. Den blå kursplattan har
+- **Min sida (bara v1):** två helbreda plattor med skarpa hörn. Den blå kursplattan har
   luft ovanför så den läses som en ruta på sidan. Under den en creme platta
   med "Mina uppgifter" som sektionsrubrik och "Byt lösenord" +
   "Ta bort användarkontot" som undersektioner.
@@ -98,22 +103,21 @@ Basversionen är låst i git som taggen `v0-bas`.
   kursknappen gick rakt in medan Min sida krävde inloggning. v1 håller en
   riktig flagga per flik som sätts när inloggningsformuläret skickas och nollas
   vid alla tre nollställningsvägar (`?reset`, sidfotens länk, prototypstämpeln).
-- **Kapitelnumrering** i innehållsmenyn, i kapitelsidans rubrik och i
-  prev/next-knapparna, från 1 (basen börjar på 0):
-  "1. Relationskompassens grundkurs". Underkapitlen ärver förälderns nummer:
-  5.1, 5.2, 5.3.
-- **Quizet på kapitel 2 och 3** är ombyggt till **selection cards**: stora
-  klickbara kort med fotot inne i kortet, så bilden blir själva valet. Enkelval
-  (`<button role="radio">`, tangentbordsstyrt). Rätt svar markeras grönt och
-  ett felval rött; korten låses när facit visats. Trespalten under är
-  textbaserad eftersom fotona flyttat in i korten.
+- **Avsnittsnumrering** (bara v1) i innehållsmenyn, i sidrubriken, i
+  prev/next-knapparna och i progressraden: "1. Relationskompassens grundkurs".
+  Alla 21 avsnitt numreras i följd, Elsa och Omar som 5–8. Innehållsmenyn är
+  därför en platt lista utan indragna undernivåer.
+- **Bild-quizet på avsnitt 2 och 3** har basens ursprungliga design: tre foton
+  på rad med etikettknapp under och Rätta-knappen centrerad. Enda tillägget är
+  att alternativen går att **välja** (orange ram) — basens quiz har ingen
+  valbarhet, och utan den kan spärren på obligatoriska frågor inte fungera.
 - **Quiz-frågorna är svarbara och obligatoriska.** I basen är `.checkrow`
   dekorativa divar utan interaktion; v1 gör dem klickbara med mus och
   tangentbord. Nästa-knappen spärras tills alla frågor på sidan är besvarade,
   med felmeddelande både vid frågan och vid knappen, och sidan hoppar till
-  första obesvarade frågan. Gäller kapitel 2, 3 och 7. `.v1-checked` är den
+  första obesvarade frågan. Gäller avsnitt 2, 3 och 7. `.v1-checked` är den
   gemensamma markören för "besvarad", så samma spärr fungerar för både
-  selection cards (kap 2–3) och kryssrutorna i övningskapitlet (kap 7).
+  bild-quizet (avsnitt 2–3) och kryssrutorna i övningskapitlet (avsnitt 7).
 - **Handritad pil** i styleguidens ikonmanér ersätter teckenpilarna (← →) i
   knappar och svarta listen. Styleguidens ikonsida innehåller ingen pil, så
   den är ritad efter manéret: en enkel bågad linje med rundade ändar.
@@ -123,18 +127,17 @@ Basversionen är låst i git som taggen `v0-bas`.
   prev/next linjerar med innehållet. Basens inline-bredder nollas.
 - **Prev/next** har transparent bakgrund och svart ram, som originalet.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
-  Svarta listen är sticky: orange bakåtpil + STARTSIDAN till vänster,
-  kursnamnet centrerat, KURSINNEHÅLL + hamburgare till höger.
-  Innehållsmenyn fälls ut högerställd, ovanpå progressraden, med två utgångar
-  sida vid sida efter sista kapitlet: "Till Min sida" och "Till startsidan".
-- **Stegräkning:** 18 kapitel totalt, räknat ur `CHAPTERS` (antalet
-  huvudkapitel) i stället för inskrivet. Elsa och Omar del 2–4 är inte egna
-  steg utan räknas som kapitel 5, så man står kvar på 5 genom hela berättelsen.
+  Svarta listen är sticky: orange bakåtpil + HEM till vänster, kursnamnet
+  centrerat, KURSINNEHÅLL + hamburgare till höger. Innehållsmenyn fälls ut
+  högerställd, ovanpå progressraden, med utgångarna "Hem" och "Min sida"
+  efter sista avsnittet.
+- **Stegräkning:** 21 avsnitt totalt, räknat ur `CHAPTERS`. Elsa och Omar
+  del 2–4 är egna avsnitt 6, 7 och 8. Samma räkning i v1 och v2.
 - **Två olika progressmått, med avsikt:**
   - *Indikatorn under svarta listen på kapitelsidor* – vilket kapitel man
-    **står på**, med "X av 18" inne i den orangea ytan, linjerad mot
-    skärningen mot grått. Fyllningen har mjuk rundad högerkant. Går bakåt om
-    man klickar sig bakåt.
+    **står på**, med "X/21" inne i den orangea ytan (bara i v1 — v2 har bar
+    utan siffra). Marinblå siffra: 4,8:1 mot orange och 10,5:1 mot grått,
+    alltså godkänt enligt WCAG AA. Fyllningen har mjuk rundad högerkant.
   - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
     distinkta kapitel bland de besökta, så den bara kan växa.
 - **"Fortsätt"** på Min sida går till det senaste kapitlet man stod på, inte
@@ -144,10 +147,16 @@ Basversionen är låst i git som taggen `v0-bas`.
 
 ### Filerna
 
-- `variants.js` – växlaren. Toppen av filen beskriver hur en v2 läggs till.
-- `variant-v1.js` – v1:s avvikelser. Allt som inte står här ärvs från
-  `app.js` (basen), så v1 skiljer sig bara där vi aktivt byggt något.
-- `variant-v1.css` – v1:s stil, laddas bara när v1 är aktiv.
+- `variants.js` – växlaren: registret, klasserna, prototypstämpeln och
+  versionslänken i sidfoten.
+- `variant-v1.js` – all logik för **både v1 och v2**. Allt som inte står här
+  ärvs från `app.js` (basen).
+- `variant-v2.js` – v2:s avvikelser. `RK_V2` är en kopia av `RK_V1` som bara
+  skriver över Min sida; numreringen styrs av `V1_NUMBERS` i `variant-v1.js`.
+  En framtida ändring görs alltså på ett ställe, inte två.
+- `variant-redesign.css` – gemensam stil för v1 och v2, scopad på
+  `.rk-redesign`.
+- `variant-v2.css` – v2:s avvikande stil, scopad på `.rk-v2`.
 
 `app.js` och `styles.css` är basversionen och rörs inte när nya versioner
 byggs – varje byggfunktion i `app.js` lämnar bara över till variantens egen

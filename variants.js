@@ -19,9 +19,15 @@
    ========================================================================== */
 
 const VARIANTS = [
-  { id: 'v0', label: 'v0 · Bas',   note: 'Kopia av befintliga Relationskompassen – oförändrad' },
-  { id: 'v1', label: 'v1 · Ny nav', note: 'Arbetsversion – ny meny & navigation' },
+  { id: 'v0', label: 'v0 · Bas', note: 'Kopia av befintliga Relationskompassen – oförändrad' },
+  { id: 'v1', label: 'v1 · Numrering', note: 'Ny navigation, med numrerade avsnitt' },
+  { id: 'v2', label: 'v2 · Utan numrering', note: 'Som v1 men utan numrering, och med ursprunglig Min sida' },
 ];
+
+/* v1 och v2 delar all grundstil (variant-redesign.css) och all logik i
+   variant-v1.js. v2 lägger bara till sina avvikelser. Därför får båda även
+   klassen rk-redesign, som CSS:en hänger på. */
+const REDESIGN = ['v1', 'v2'];
 
 const VARIANT_KEY = 'rk_variant';
 
@@ -65,17 +71,27 @@ const V = {
 
 /* ------------------------------------ märk sidan + ladda variantens CSS */
 (function applyVariant() {
-  // Klass på <html> och <body> så CSS kan hänga på: .rk-v1 .coursebar { ... }
-  document.documentElement.classList.add('rk-' + V.id);
-  if (document.body) document.body.classList.add('rk-' + V.id);
-
-  // Variantens egen stilmall laddas bara när varianten är aktiv.
-  // v0 kör enbart styles.css och är därmed helt orörd.
-  if (V.id !== 'v0') {
+  const addCss = (href) => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'variant-' + V.id + '.css';
+    link.href = href;
     document.head.appendChild(link);
+  };
+
+  // Klasser på <html> och <body> så CSS kan hänga på.
+  //   rk-v1 / rk-v2   – variantspecifikt
+  //   rk-redesign     – gemensamt för alla omdesignade versioner
+  const classes = ['rk-' + V.id];
+  if (REDESIGN.indexOf(V.id) !== -1) classes.push('rk-redesign');
+  classes.forEach(c => {
+    document.documentElement.classList.add(c);
+    if (document.body) document.body.classList.add(c);
+  });
+
+  // v0 kör enbart styles.css och är därmed helt orörd.
+  if (REDESIGN.indexOf(V.id) !== -1) {
+    addCss('variant-redesign.css');           // gemensam grund
+    if (V.id === 'v2') addCss('variant-v2.css');   // v2:s avvikelser
   }
 })();
 
@@ -152,4 +168,27 @@ function buildVariantStamp() {
   document.body.appendChild(box);
 }
 
+/* ------------------------------------------------------ versionslänk i footern
+   Vid sidan om "Nollställ session" ligger en länk till den andra versionen:
+   står man i v1 heter den "Version 2" och omvänt. Bara mellan v1 och v2 –
+   v0 lämnas orörd så basversionen ser ut exakt som den riktiga sajten.       */
+function buildFooterVersionLink() {
+  const slot = document.querySelector('.footer__reset');
+  if (!slot || document.getElementById('rkVersionLink')) return;
+  if (REDESIGN.indexOf(V.id) === -1) return;
+
+  const other = V.id === 'v1' ? 'v2' : 'v1';
+  const a = document.createElement('a');
+  a.id = 'rkVersionLink';
+  a.href = '#';
+  a.textContent = 'Version ' + other.slice(1);
+  a.style.marginLeft = '22px';
+  a.addEventListener('click', (e) => { e.preventDefault(); V.set(other); });
+
+  slot.appendChild(a);
+}
+
+/* Stämpeln är position:fixed och kan byggas direkt. Versionslänken måste
+   däremot vänta på att app.js hunnit bygga footern – den anropas därför från
+   variantens initExtra(), som körs sist i uppstarten. */
 document.addEventListener('DOMContentLoaded', buildVariantStamp);
