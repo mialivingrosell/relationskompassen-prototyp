@@ -3,8 +3,8 @@
    Delad logik för v1 och v2. Allt som INTE står här ärvs från basversionen
    i app.js, så v0 förblir orörd.
 
-   v2 återanvänder den här filen: variant-v2.js gör RK_V2 till en kopia av
-   RK_V1 och skriver bara över Min sida. Numreringen styrs av V1_NUMBERS,
+   v2 återanvänder den här filen rakt av: variant-v2.js är en rad som pekar
+   RK_V2 på RK_V1. Numreringen är enda skillnaden och styrs av V1_NUMBERS,
    som läser vilken variant som är aktiv. Ändra alltså här, inte på två
    ställen.
 
@@ -12,9 +12,8 @@
      variants.js          växlaren: registret, klasserna, stämpeln,
                           versionslänken i footern
      variant-v1.js        all logik för både v1 och v2   <- denna fil
-     variant-v2.js        v2:s avvikelser (Min sida i basdesign)
+     variant-v2.js        window.RK_V2 = window.RK_V1
      variant-redesign.css gemensam stil, scopad på .rk-redesign
-     variant-v2.css       v2:s avvikande stil, scopad på .rk-v2
 
    VAD SOM SKILJER FRÅN BASEN
 
@@ -23,11 +22,10 @@
      Inloggning krävs för båda ingångarna – basen har ingen
      inloggningsstatus, så v1 håller en egen flagga per flik.
 
-   Min sida (bara v1 – v2 kör basdesignen)
-     Två helbreda plattor med skarpa hörn. Vita kurskort med introtext,
-     beräknad tid, procent i stor siffra och orange progressstreck som
-     linjerar med knappraden. Pågående kurs först. "Logga ut" i svarta
-     listen. Lösenordsfält halverade med ögonikon.
+   Min sida
+     Basversionens design i alla versioner – ombyggnaden är borttagen. Bara
+     räkningen rättas (21 avsnitt i stället för basens 20) och Fortsätt går
+     till senaste avsnittet man stod på. Se v1FixMinSida().
 
    Kursvyn
      Egen sidkontext: topheader och brödsmulor borta. Svarta listen sticky
@@ -50,7 +48,8 @@
      Frågorna är obligatoriska: Nästa spärras tills alla frågor på sidan är
      besvarade, med felmeddelande vid frågan och vid knappen. Bild-quizet på
      avsnitt 2–3 har basens ursprungliga design, men alternativen går att
-     välja – annars kan spärren inte fungera.
+     välja – annars kan spärren inte fungera. Markeringen följer originalet:
+     marinblå ram när valt, grön om man svarade rätt, röd om fel.
 
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
@@ -132,7 +131,7 @@ function v1FirstOption(q) {
 function v1WireQuiz() {
   /* Rätta på en obesvarad fråga visar samma fel. Lyssnaren sitter på document
      i capture-fasen och stoppar propagationen, så basens inline-onclick
-     (rattaCheck / v1RattaCards) inte hinner avslöja facit. Registreras alltid,
+     (rattaCheck / rattaBild) inte hinner avslöja facit. Registreras alltid,
      oavsett vilken frågekomponent sidan använder. */
   document.addEventListener('click', e => {
     const btn = e.target.closest ? e.target.closest('.btn-ratta') : null;
@@ -145,27 +144,8 @@ function v1WireQuiz() {
     }
   }, true);
 
-  v1WireSelectionCards();
+  /* Bild-quizet kopplas av v1WireImageQuiz(); här bara kryssrutorna. */
   v1WireCheckrows();
-}
-
-/* Selection cards – enkelval inom sin fråga */
-function v1WireSelectionCards() {
-  document.querySelectorAll('.checkquiz .q').forEach(q => {
-    const cards = q.querySelectorAll('.quiz-option');
-    if (!cards.length) return;
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        cards.forEach(c => {
-          c.classList.remove('v1-checked');
-          c.setAttribute('aria-checked', 'false');
-        });
-        card.classList.add('v1-checked');
-        card.setAttribute('aria-checked', 'true');
-        v1ClearQuizError(q);
-      });
-    });
-  });
 }
 
 /* Kryssrutorna i övningskapitlet – flerval */
@@ -631,11 +611,9 @@ function v1FixMinSida() {
   const count = card.querySelector('.course-count');
   if (count) count.textContent = done + ' av ' + total;
 
+  // baren är orange oavsett hur långt man kommit, så ingen 100 %-klass behövs
   const fill = card.querySelector('.mini-fill');
-  if (fill) {
-    fill.style.width = pct + '%';
-    fill.classList.toggle('mini-fill--done', done >= total);
-  }
+  if (fill) fill.style.width = pct + '%';
 
   const cta = card.querySelector('.course-cta');
   if (!cta) return;
