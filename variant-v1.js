@@ -425,6 +425,19 @@ function v1WireImageQuiz() {
     o.setAttribute('aria-checked', 'false');
     o.setAttribute('tabindex', '0');
 
+    /* Bild och etikett samlas i en egen behållare, som markeringsramen sitter
+       på. I originalet omsluter ramen bara dessa två – facittexten ligger
+       utanför, under ramen. Låg den kvar som syskon inne i .quiz-option skulle
+       ramen dras runt även den. Noderna flyttas, så app.js:s utbyte av
+       platshållaren mot riktig bild fortsätter träffa rätt element. */
+    const box = document.createElement('div');
+    box.className = 'v1-optbox';
+    const ph = o.querySelector('.ph');
+    const label = o.querySelector('.quiz-option__label');
+    if (ph) box.appendChild(ph);
+    if (label) box.appendChild(label);
+    o.insertAdjacentElement('afterbegin', box);
+
     const pick = () => {
       if (inner.classList.contains('v1-rattad')) return;   // facit visat, låst
       opts.forEach(x => {

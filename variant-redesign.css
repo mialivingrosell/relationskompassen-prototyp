@@ -388,8 +388,12 @@
    slutar strax under etikettknappen. */
 .rk-redesign .coursepage .quiz-options { align-items: start; }
 
-.rk-redesign .coursepage .quiz-option {
-  cursor: pointer;
+.rk-redesign .coursepage .quiz-option { cursor: pointer; }
+
+/* Ramen sitter på .v1-optbox, som bara rymmer bild och etikett. Facittexten
+   ligger utanför den och omsluts därför inte – som i originalet.
+   Behållaren läggs till av v1WireImageQuiz(). */
+.rk-redesign .coursepage .v1-optbox {
   border: 4px solid transparent;
   padding: 5px;
 }
@@ -405,9 +409,9 @@
    nollas därför också. */
 .rk-redesign .coursepage .quiz-option__label { background: transparent; }
 
-.rk-redesign .coursepage .quiz-option.v1-checked { border-color: var(--navy); }
-.rk-redesign .coursepage .quiz-option.v1-right   { border-color: var(--green); }
-.rk-redesign .coursepage .quiz-option.v1-wrong   { border-color: var(--red); }
+.rk-redesign .coursepage .quiz-option.v1-checked .v1-optbox { border-color: var(--navy); }
+.rk-redesign .coursepage .quiz-option.v1-right   .v1-optbox { border-color: var(--green); }
+.rk-redesign .coursepage .quiz-option.v1-wrong   .v1-optbox { border-color: var(--red); }
 
 /* Basen sätter grön 3px-ram på bild och etikett hos det rätta alternativet,
    även när man svarat fel. Originalet gör inte det – där markeras bara ditt
