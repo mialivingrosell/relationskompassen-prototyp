@@ -25,7 +25,7 @@
    Min sida
      Basversionens design i alla versioner – ombyggnaden är borttagen. Bara
      räkningen rättas (21 avsnitt i stället för basens 20) och Fortsätt går
-     till senaste avsnittet man stod på. Se v1FixMinSida().
+     till det avsnitt man nått längst fram. Se v1FixMinSida().
 
    Kursvyn
      Egen sidkontext: topheader och brödsmulor borta. Svarta listen sticky
@@ -116,8 +116,8 @@ function v1Questions() {
   return Array.from(document.querySelectorAll('.checkquiz .q'));
 }
 /* .v1-checked är den gemensamma markören för "besvarad", så samma spärr
-   fungerar både för kryssrutorna i övningskapitlet och för selection cards
-   på kapitel 2–3. */
+   fungerar både för kryssrutorna i övningskapitlet och för bild-quizet på
+   avsnitt 2–3. */
 function v1Unanswered() {
   return v1Questions().filter(q => !q.querySelector('.v1-checked'));
 }
@@ -267,11 +267,7 @@ function v1NormalizeWidths() {
      "Nollställ session" i sidfoten -> basens resetVisited() byggs på
      Nollställ i prototypstämpeln   -> stämpeln lägger på &reset
    ========================================================================== */
-/* Båda sessionsnycklarna deklareras här, eftersom v1ClearSession() körs redan
-   vid parse (?reset) och då måste båda finnas. V1_LAST_KEY används av krav CC
-   längre ner i filen. */
 const V1_LOGGED_KEY = 'rk_logged';
-const V1_LAST_KEY   = 'rk_last';
 
 function v1SetLogged(on) {
   try {
@@ -283,10 +279,7 @@ function v1IsLogged() {
   try { return sessionStorage.getItem(V1_LOGGED_KEY) === '1'; } catch (e) { return false; }
 }
 function v1ClearSession() {
-  try {
-    sessionStorage.removeItem(V1_LOGGED_KEY);
-    sessionStorage.removeItem(V1_LAST_KEY);
-  } catch (e) {}
+  try { sessionStorage.removeItem(V1_LOGGED_KEY); } catch (e) {}
 }
 
 /* Körs vid parse, alltså före app.js hanterar ?reset. */
@@ -517,28 +510,20 @@ function v1CurrentStep(ch) {
 
 
 /* ==========================================================================
-   KRAV CC – senaste kapitlet man stod på
-   Sparas per flik. Värdet valideras mot basens besökta-lista, så en
-   nollställd session (?reset, Nollställ session, ny flik) inte kan lämna
-   kvar ett gammalt kapitel – då är listan tom och det sparade värdet
-   ignoreras.
+   KRAV CC – avsnittet man kommit längst i
+   "Fortsätt" ska gå till det avsnitt man nått längst fram, inte till det man
+   senast tittade på. Backar man för att läsa om ett tidigare avsnitt ska det
+   alltså inte flytta Fortsätt bakåt.
 
-   Tre ställen läser härifrån och kan alltså inte säga olika saker:
-   progressraden i kurshuvudet, kurskortet på Min sida och Fortsätt-knappen.
-   (V1_LAST_KEY deklareras i krav HH-blocket längre upp.)
+   Värdet är helt enkelt högsta besökta index. Ingen egen sessionsnyckel
+   behövs – informationen finns redan i basens besökta-lista, som dessutom
+   nollställs av basens egen resetVisited(). En separat nyckel kunde glida
+   ifrån listan; det här kan den inte.
    ========================================================================== */
-function v1SetLast(i) {
-  try { sessionStorage.setItem(V1_LAST_KEY, String(i)); } catch (e) {}
-}
-
-function v1Last() {
+function v1Furthest() {
   const visited = getVisited();
   if (!visited.size) return null;
-  let stored = null;
-  try { stored = sessionStorage.getItem(V1_LAST_KEY); } catch (e) {}
-  const n = stored === null ? NaN : parseInt(stored, 10);
-  if (!isNaN(n) && visited.has(n)) return n;
-  return Math.max.apply(null, [...visited]);   // reserv om värdet saknas
+  return Math.max.apply(null, [...visited]);
 }
 
 /* Antal kapitel man gått igenom – Min sidas kurskort.
@@ -613,8 +598,8 @@ function v1ProgressPct(ch) {
      1  Räkningen. Basen läser data-total i min-sida.html (20). Här skrivs
         siffran, progressbaren och knapptexten om till 21 avsnitt, samma
         räkning som progressraden i kurshuvudet använder.
-     2  Starta/Fortsätt går till senaste avsnittet man stod på, inte till
-        kursens början.
+     2  Starta/Fortsätt går till det avsnitt man nått längst fram, inte till
+        kursens början och inte till det man senast tittade på.
    ========================================================================== */
 function v1FixMinSida() {
   const card = document.getElementById('courseGrundkurs');
@@ -638,7 +623,7 @@ function v1FixMinSida() {
   else if (done > 0)   cta.innerHTML = 'Forts\u00e4tt <span class="arrow">\u2192</span>';
   else                 cta.innerHTML = 'Starta <span class="arrow">\u2192</span>';
 
-  const last = v1Last();
+  const last = v1Furthest();
   const target = last === null ? null : CHAPTERS[last];
   if (target && target.file) cta.setAttribute('href', target.file);
 }
@@ -765,7 +750,6 @@ window.RK_V1 = {
     buildFooterVersionLink(); // versionslänk i footern – footern finns nu
     if (type === 'title') v1FixMinSida();
     if (type === 'course') {
-      if (ch) v1SetLast(ch.i);  // krav CC: minns var man stod
       v1NormalizeWidths();      // krav Q: samma bredd överallt
       v1NumberHeading(ch);      // krav Y: avsnittsnummer i rubriken (bara v1)
       v1WireImageQuiz();        // krav RR: bild-quizet valbart – före v1WireQuiz

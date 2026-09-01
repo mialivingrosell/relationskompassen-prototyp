@@ -142,9 +142,11 @@ Basversionen är låst i git som taggen `v0-bas`.
     alltså godkänt enligt WCAG AA. Fyllningen har mjuk rundad högerkant.
   - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
     distinkta kapitel bland de besökta, så den bara kan växa.
-- **"Fortsätt"** på Min sida går till det senaste kapitlet man stod på, inte
-  till kursens början. Värdet sparas per flik och valideras mot besökta-listan,
-  så en nollställd session inte kan lämna kvar ett gammalt kapitel.
+- **"Fortsätt"** på Min sida går till det avsnitt man nått **längst fram**,
+  inte till kursens början och inte till det man senast tittade på. Backar man
+  för att läsa om ett tidigare avsnitt flyttas Fortsätt alltså inte bakåt.
+  Värdet är högsta besökta index ur basens besökta-lista — ingen egen
+  sessionsnyckel, så det kan inte glida ifrån räkningen.
 - **Progressindikatorn** i botten av kapitelsidan borttagen (prev/next kvar).
 
 ### Filerna
