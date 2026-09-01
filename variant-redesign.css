@@ -409,9 +409,14 @@
    nollas därför också. */
 .rk-redesign .coursepage .quiz-option__label { background: transparent; }
 
-.rk-redesign .coursepage .quiz-option.v1-checked .v1-optbox { border-color: var(--navy); }
-.rk-redesign .coursepage .quiz-option.v1-right   .v1-optbox { border-color: var(--green); }
-.rk-redesign .coursepage .quiz-option.v1-wrong   .v1-optbox { border-color: var(--red); }
+/* Marinblå bara innan facit visats. :not() i stället för att förlita sig på
+   regelordningen, eftersom .v1-checked ligger kvar även efter rättning – den
+   är spärrens markör för att frågan är besvarad. */
+.rk-redesign .coursepage .quiz-option.v1-checked:not(.v1-right):not(.v1-wrong) .v1-optbox {
+  border-color: var(--navy);
+}
+.rk-redesign .coursepage .quiz-option.v1-right .v1-optbox { border-color: var(--green); }
+.rk-redesign .coursepage .quiz-option.v1-wrong .v1-optbox { border-color: var(--red); }
 
 /* Basen sätter grön 3px-ram på bild och etikett hos det rätta alternativet,
    även när man svarat fel. Originalet gör inte det – där markeras bara ditt

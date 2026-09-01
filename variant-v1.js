@@ -470,8 +470,11 @@ function v1WireImageQuiz() {
     const picked = q.querySelector('.quiz-option.v1-checked');
     if (!picked) return;            // obesvarad (spärren tog den) eller kryssrutefråga
 
+    /* .v1-checked lämnas kvar – det är spärrens markör för "besvarad". Togs
+       den bort räknades frågan som obesvarad igen, och man fick
+       felmeddelandet trots att man svarat. CSS:en låter v1-right/v1-wrong
+       gå före den marinblå ramen. */
     q.classList.add('v1-rattad');
-    picked.classList.remove('v1-checked');
     picked.classList.add(picked.classList.contains('is-correct') ? 'v1-right' : 'v1-wrong');
   });
 }
