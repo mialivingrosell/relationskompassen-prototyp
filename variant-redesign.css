@@ -381,17 +381,23 @@
    tänds. Färgen säger vad DU svarade; facittexten under det rätta
    alternativet visar förklaringen oavsett vad du valde.
    ========================================================================== */
+/* Raster i stället för stretch: basens .quiz-options sträcker alla tre
+   kolumner till den högsta. Det syntes inte förut, men när ramen fick färg
+   drogs den ända ner till botten av den kolumn som har facittexten. Med
+   start blir varje alternativ bara så högt som sitt eget innehåll, och ramen
+   slutar strax under etikettknappen. */
+.rk-redesign .coursepage .quiz-options { align-items: start; }
+
 .rk-redesign .coursepage .quiz-option {
   cursor: pointer;
   border: 4px solid transparent;
   padding: 5px;
 }
+/* Ingen hover-effekt – originalet har ingen. Fokusmarkeringen behålls,
+   den behövs för tangentbordsnavigering. */
 .rk-redesign .coursepage .quiz-option:focus-visible {
   outline: 2.5px solid var(--orange);
   outline-offset: 2px;
-}
-.rk-redesign .coursepage .quiz-option:hover:not(.v1-right):not(.v1-wrong) .quiz-option__label {
-  border-color: var(--orange);
 }
 
 .rk-redesign .coursepage .quiz-option.v1-checked {
