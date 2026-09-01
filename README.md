@@ -80,6 +80,13 @@ nollställer sessionen. Dölj den inför skarpa användartest med `?stamp=off`.
 
 Basversionen är låst i git som taggen `v0-bas`.
 
+> **Obs:** `styles.css` och `min-sida.html` har justerats en gång efter att
+> basen låstes, för att göra kopian mer trogen originalet: ljusare och mindre
+> rosa ytor, luft ovanför Min sidas paneler, höger panel bleeder ut, samt
+> borttagen exempelkurs "Att leda träffar i skolan". Det påverkar alla tre
+> versioner lika, så A/B-paret v1/v2 är oförändrat jämförbart. Ursprungsläget
+> finns kvar på taggen `v0-bas`.
+
 ### Vad v1 ändrar
 
 - **Större rubriker** på artikel- och kapitelsidor. Brödtexten är oförändrad.

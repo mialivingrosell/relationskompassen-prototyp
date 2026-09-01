@@ -14,8 +14,14 @@
 
   --navy-2:       #2b2e42;   /* navy 80% (hover) */
   --orange-dark:  #d64715;   /* orange mörkare (hover) */
-  --cream:        #FBEDE6;   /* rosa ~15% – header/footer bakgrund */
-  --cream-2:      #F7E4DA;   /* rosa ~20% – ljust kort/sektion */
+
+  /* Ljusa ytor. Justerade mot skärmdump av originalet: de tidigare värdena
+     (#FBEDE6 / #F7E4DA) motsvarade rosa i ~45 % respektive ~55 % och blev
+     märkbart rosare än originalet, som har nästan neutrala varma ytor.
+     UPPSKATTADE ur skärmdump – exakta värden går att byta in här. */
+  --cream:        #FDF6F2;   /* rosa ~22 % – header/footer bakgrund */
+  --cream-2:      #F4EFE9;   /* varm ljusgrå – panelerna på Min sida */
+  --dash-panel:   #E2F1EF;   /* ljus mintton – "Mina kurser"-plattan */
   --white:        #FFFFFF;
 
   --grey-track:   #C9CDD6;   /* progress-track / placeholder */
@@ -485,29 +491,35 @@ a { color: var(--text); }
 }
 
 /* --------------------------------------------------------------- min sida */
-/* Min sida – breda paneler som fyller kolumnerna (vänster ljusblå bleeder ut) */
+/* Min sida – två breda paneler som bleeder ut i sina respektive ytterkanter.
+   Måtten är justerade mot skärmdump av originalet:
+     - luft ovanför plattorna, de startar inte i svarta listens underkant
+     - höger platta går ända ut till högerkanten (ingen padding-right)       */
 .dash {
   display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
-  max-width: 2200px; margin: 0 auto; padding: 0 0 70px 0;
+  max-width: 2200px; margin: 0 auto; padding: 40px 0 70px 0;
   align-items: start;
 }
 .dash__courses {
-  background: var(--skyblue);                     /* ljusblå, som originalet */
+  background: var(--dash-panel);                  /* ljus mintton, som originalet */
   padding: 40px 48px 48px var(--edge);            /* innehåll linjerar med "Min sida" */
 }
-.dash__side { padding-right: var(--edge); display: grid; gap: 30px; }
+.dash__side { display: grid; gap: 30px; }         /* bleeder ut till högerkanten */
 .dash__side > section {
   background: var(--cream-2); padding: 28px 34px;
 }
+/* "Mina kurser" i fast grad i stället för basens vw-baserade clamp – den
+   svängde med fönsterbredden och blev större än i originalet på vida skärmar */
+.dash h2 { font-size: 2rem; }
 .dash .course-item { margin-bottom: 40px; }
 .dash .course-item:last-child { margin-bottom: 0; }
 .dash .course-item .row {
   display: flex; justify-content: space-between; gap: 16px;
-  font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; margin-bottom: 14px;
+  font-family: var(--font-head); font-weight: 700; font-size: 1.35rem; margin-bottom: 14px;
 }
 /* progressbar: ljus ränna + fyllnad (mörk vid pågående, orange när klar) */
 .dash .mini-track {
-  height: 12px; background: rgba(27,29,45,.14); border-radius: 8px;
+  height: 10px; background: rgba(27,29,45,.14); border-radius: 8px;
   margin: 0 0 18px; overflow: hidden;
 }
 .dash .mini-fill { height: 100%; background: var(--navy); border-radius: 8px; }
