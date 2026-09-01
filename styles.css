@@ -498,7 +498,10 @@ a { color: var(--text); }
 .dash {
   display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
   max-width: 2200px; margin: 0 auto; padding: 40px 0 70px 0;
-  align-items: start;
+  /* stretch, inte start: den ljusa kursplattan ska gå ända ner och sluta i
+     linje med den nedersta beiga boxen i högerkolumnen. Innehållet i plattan
+     ligger kvar upptill – det är bara bakgrunden som fyller ut. */
+  align-items: stretch;
 }
 .dash__courses {
   background: var(--dash-panel);                  /* ljus mintton, som originalet */
