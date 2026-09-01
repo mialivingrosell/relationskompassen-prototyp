@@ -446,7 +446,7 @@ function v1WireImageQuiz() {
     o.setAttribute('tabindex', '0');
 
     const pick = () => {
-      if (o.classList.contains('correct')) return;   // facit visat, låst
+      if (inner.classList.contains('v1-rattad')) return;   // facit visat, låst
       opts.forEach(x => {
         x.classList.remove('v1-checked');
         x.setAttribute('aria-checked', 'false');
@@ -460,6 +460,26 @@ function v1WireImageQuiz() {
     o.addEventListener('keydown', e => {
       if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); pick(); }
     });
+  });
+
+  /* krav SS: efter Rätta ska ramen visa vad DU svarade – grön om rätt, röd om
+     fel – medan förklaringstexten under det rätta alternativet visas oavsett.
+     Basens rattaBild() vet inget om vad man valt, så det avgörs här.
+
+     Lyssnaren ligger i bubbelfasen på document och körs därför EFTER knappens
+     inline-onclick, alltså efter att basen hunnit visa facit. */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest ? e.target.closest('.btn-ratta') : null;
+    if (!btn) return;
+    const q = btn.closest('.q');
+    if (!q || q.classList.contains('v1-rattad')) return;
+
+    const picked = q.querySelector('.quiz-option.v1-checked');
+    if (!picked) return;            // obesvarad (spärren tog den) eller kryssrutefråga
+
+    q.classList.add('v1-rattad');
+    picked.classList.remove('v1-checked');
+    picked.classList.add(picked.classList.contains('is-correct') ? 'v1-right' : 'v1-wrong');
   });
 }
 
