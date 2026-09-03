@@ -4,11 +4,13 @@
    Gör att flera designversioner kan leva i samma prototyp utan att
    basversionen (v0) ändras.
 
-     index.html            -> v0, basversionen (kopian av befintliga kursen)
-     index.html?nav=v1     -> v1, arbetsversionen med ny navigation
+     index.html            -> v1 (default), ny navigation utan numrering
+     index.html?nav=v2     -> v2, samma men med numrerade avsnitt
+     index.html?nav=v0     -> v0, originalet – kopian av befintliga kursen
 
    Valet sparas per flik (sessionStorage), så det följer med när man klickar
-   sig vidare i kursen. Öppna v0 i en flik och v1 i en annan för A/B-test.
+   sig vidare i kursen. Öppna v1 i en flik och v2 i en annan för A/B-test.
+   Längst ner i footern finns länkar till de versioner man inte står i.
 
    SÅ LÄGGER DU TILL EN NY VARIANT (t.ex. v3):
      1. Lägg till en rad i VARIANTS nedan, och i REDESIGN om den ska ärva
@@ -22,8 +24,8 @@
 
 const VARIANTS = [
   { id: 'v0', label: 'v0 · Originalet', note: 'Kopia av befintliga Relationskompassen – oförändrad' },
-  { id: 'v1', label: 'v1 · Numrering', note: 'Ny navigation, med numrerade avsnitt' },
-  { id: 'v2', label: 'v2 · Utan numrering', note: 'Som v1 men utan numrering' },
+  { id: 'v1', label: 'v1 · Utan numrering', note: 'Ny navigation, avsnitten onumrerade' },
+  { id: 'v2', label: 'v2 · Numrering', note: 'Som v1 men med numrerade avsnitt' },
 ];
 
 /* Default när inget val finns i fliken. v1 är den version som testas, så den
@@ -32,9 +34,9 @@ const VARIANTS = [
    originalet och det såg ut som att arbetet försvunnit. */
 const DEFAULT_VARIANT = 'v1';
 
-/* v1 och v2 delar all grundstil (variant-redesign.css) och all logik i
-   variant-v1.js. v2 lägger bara till sina avvikelser. Därför får båda även
-   klassen rk-redesign, som CSS:en hänger på. */
+/* v1 och v2 delar grundstil (variant-redesign.css) och all logik
+   (variant-v1.js). Därför får båda även klassen rk-redesign, som CSS:en
+   hänger på. v2:s avvikelser scopas med .rk-v2 i samma fil. */
 const REDESIGN = ['v1', 'v2'];
 
 const VARIANT_KEY = 'rk_variant';
@@ -97,8 +99,8 @@ const V = {
   });
 
   // v0 kör enbart styles.css och är därmed helt orörd.
-  // v1 och v2 delar all stil: skillnaden mellan dem är bara numreringen,
-  // som styrs i JS. Därför behövs ingen variantspecifik stilmall.
+  // v1 och v2 delar samma stilmall; deras skillnader styrs i JS och av
+  // .rk-v2-scopade regler i samma fil.
   if (REDESIGN.indexOf(V.id) !== -1) addCss('variant-redesign.css');
 })();
 

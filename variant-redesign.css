@@ -4,8 +4,8 @@
    och påverkas alltså inte av något här.
 
    Alla regler hänger på .rk-redesign, klassen som variants.js sätter på
-   <html> för både v1 och v2, så inget kan läcka in i basen. v1 och v2 delar
-   all stil – skillnaden mellan dem är bara numreringen, som styrs i JS.
+   <html> för både v1 och v2, så inget kan läcka in i basen. Det v2 har för
+   sig själv scopas med .rk-v2 i samma fil (se längst ner).
 
    MIN SIDA finns inte här. Kunden ville tillbaka till originalets design, så
    min-sida.html renderas som i v0 i alla versioner. Bara räkningen rättas,
@@ -457,4 +457,19 @@
   font-weight: 600;
   padding: 16px 18px;
   line-height: 1.4;
+}
+
+/* ==========================================================================
+   KRAV TT – v2:s kryssrutefråga på avsnitt 2 och 3
+   Samma komponenter som övningskapitlet, så inga egna färger behövs: basens
+   .checkrow och .box, rättade av rattaCheck(). Här bara luft omkring.
+   ========================================================================== */
+.rk-v2 .v2-quiz { margin: 26px 0 34px; }
+.rk-v2 .v2-quiz .btn-ratta { margin: 22px 0 0; }
+
+/* Facittexten hör till det rätta svaret och bekräftar – grön i stället för
+   övningskapitlets röda ruta, som förklarar ett felaktigt svar. */
+.rk-v2 .feedback-box.v2-feedback--ok {
+  color: var(--green);
+  margin-left: 38px;
 }

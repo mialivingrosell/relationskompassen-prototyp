@@ -66,12 +66,20 @@ flik, så det följer med när man klickar sig vidare i kursen.
 
 | Adress | Version |
 |---|---|
-| `index.html` | **v1 – ny navigation, med numrerade avsnitt.** Default. |
-| `index.html?nav=v2` | **v2 – som v1 men utan numrering.** |
+| `index.html` | **v1 – ny navigation, avsnitten onumrerade.** Default. |
+| `index.html?nav=v2` | **v2 – som v1, men med numrerade avsnitt och kryssrutefrågor på avsnitt 2–3.** |
 | `index.html?nav=v0` | **v0 – originalet.** Kopian av befintliga Relationskompassen, oförändrad. |
 
-v1 och v2 är A/B-paret: **numreringen är den enda skillnaden.** v0 är
-referensen.
+v1 och v2 är A/B-paret, v0 är referensen. **v1 och v2 skiljer sig nu på två
+saker**, inte en:
+
+| | v1 | v2 |
+|---|---|---|
+| Numrering av avsnitt | nej | ja — i menyn, sidrubriken, prev/next och progressraden |
+| Quiz på avsnitt 2–3 | originalets bildquiz, valbart | kryssrutor som i övningskapitlet, fotona flyttade ner i trespalten |
+
+Styrs av två flaggor i `variant-v1.js` — `V1_NUMBERS` och `V1_IMAGE_QUIZ` —
+som läser aktiv variant. Ingen logik dupliceras.
 
 Längst ner i sidfoten, vid sidan om "Nollställ session", finns länkar till de
 två versioner man inte står i — även i v0, så man alltid kan komma vidare utan
@@ -111,14 +119,17 @@ Basversionen är låst i git som taggen `v0-bas`.
   kursknappen gick rakt in medan Min sida krävde inloggning. v1 håller en
   riktig flagga per flik som sätts när inloggningsformuläret skickas och nollas
   vid alla tre nollställningsvägar (`?reset`, sidfotens länk, prototypstämpeln).
-- **Avsnittsnumrering** (bara v1) i innehållsmenyn, i sidrubriken, i
+- **Avsnittsnumrering** (bara v2) i innehållsmenyn, i sidrubriken, i
   prev/next-knapparna och i progressraden: "1. Relationskompassens grundkurs".
   Alla 21 avsnitt numreras i följd, Elsa och Omar som 5–8. Innehållsmenyn är
   därför en platt lista utan indragna undernivåer.
-- **Bild-quizet på avsnitt 2 och 3** har basens ursprungliga design: tre foton
-  på rad med etikettknapp under och Rätta-knappen centrerad. Enda tillägget är
-  att alternativen går att **välja** (orange ram) — basens quiz har ingen
+- **Quizet på avsnitt 2 och 3** skiljer sig mellan versionerna. I **v1** har det
+  basens ursprungliga design — tre foton på rad med etikettknapp under och
+  Rätta-knappen centrerad — med tillägget att alternativen går att **välja**
+  (marinblå ram när valt, grön om rätt, röd om fel). Basens quiz har ingen
   valbarhet, och utan den kan spärren på obligatoriska frågor inte fungera.
+  I **v2** är samma fråga kryssrutor som i övningskapitlet, och fotona har
+  flyttat ner till trespalten ovanför sin egen rubrik.
 - **Quiz-frågorna är svarbara och obligatoriska.** I basen är `.checkrow`
   dekorativa divar utan interaktion; v1 gör dem klickbara med mus och
   tangentbord. Nästa-knappen spärras tills alla frågor på sidan är besvarade,
@@ -143,7 +154,7 @@ Basversionen är låst i git som taggen `v0-bas`.
   del 2–4 är egna avsnitt 6, 7 och 8. Samma räkning i v1 och v2.
 - **Två olika progressmått, med avsikt:**
   - *Indikatorn under svarta listen på kapitelsidor* – vilket kapitel man
-    **står på**, med "X/21" inne i den orangea ytan (bara i v1 — v2 har bar
+    **står på**, med "X/21" inne i den orangea ytan (bara i v2 — v1 har bar
     utan siffra). Marinblå siffra: 4,8:1 mot orange och 10,5:1 mot grått,
     alltså godkänt enligt WCAG AA. Fyllningen har mjuk rundad högerkant.
   - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
@@ -162,9 +173,9 @@ Basversionen är låst i git som taggen `v0-bas`.
 - `variant-v1.js` – all logik för **både v1 och v2**. Allt som inte står här
   ärvs från `app.js` (basen).
 - `variant-v2.js` – en rad: `window.RK_V2 = window.RK_V1`. v2 har ingen egen
-  logik, eftersom numreringen är den enda skillnaden och den styrs av
-  `V1_NUMBERS` i `variant-v1.js`. Samma kodväg i båda versionerna, så
-  A/B-testet kan inte mäta något annat än numreringen.
+  logik; skillnaderna styrs av flaggorna `V1_NUMBERS` och `V1_IMAGE_QUIZ` i
+  `variant-v1.js`. Samma kodväg i båda versionerna, så de kan inte glida
+  ifrån varandra på något annat än det flaggorna styr.
 - `variant-redesign.css` – gemensam stil för v1 och v2, scopad på
   `.rk-redesign`.
 

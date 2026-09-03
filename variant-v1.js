@@ -1,12 +1,15 @@
 /* ==========================================================================
-   VARIANT v1 – ny navigation med numrerade avsnitt
+   VARIANT v1 – ny navigation (numreringen ligger i v2)
    Delad logik för v1 och v2. Allt som INTE står här ärvs från basversionen
    i app.js, så v0 förblir orörd.
 
    v2 återanvänder den här filen rakt av: variant-v2.js är en rad som pekar
-   RK_V2 på RK_V1. Numreringen är enda skillnaden och styrs av V1_NUMBERS,
-   som läser vilken variant som är aktiv. Ändra alltså här, inte på två
-   ställen.
+   RK_V2 på RK_V1. Skillnaderna mellan versionerna styrs av två flaggor som
+   läser vilken variant som är aktiv – V1_NUMBERS och V1_IMAGE_QUIZ – så
+   ingen logik behöver dupliceras. Ändra alltså här, inte på två ställen.
+
+   v1  onumrerade avsnitt  ·  originalets bildquiz på avsnitt 2–3
+   v2  numrerade avsnitt   ·  kryssrutefrågor på avsnitt 2–3
 
    FILUPPSÄTTNING
      variants.js          växlaren: registret, klasserna, stämpeln,
@@ -37,7 +40,7 @@
      Större rubriker, en enda innehållsbredd (--v1-media för film och
      bildrader, --v1-text för text), rubriken krymps så den ryms på en rad.
      Handritad pil i styleguidens manér. Prev/next transparent respektive
-     svart, med avsnittsnummer i v1.
+     svart, med avsnittsnummer i v2.
 
    Räkning
      21 avsnitt, räknat ur CHAPTERS. Elsa och Omar del 2–4 är egna avsnitt
@@ -47,9 +50,11 @@
    Quiz
      Frågorna är obligatoriska: Nästa spärras tills alla frågor på sidan är
      besvarade, med felmeddelande vid frågan och vid knappen. Bild-quizet på
-     avsnitt 2–3 har basens ursprungliga design, men alternativen går att
-     välja – annars kan spärren inte fungera. Markeringen följer originalet:
-     marinblå ram när valt, grön om man svarade rätt, röd om fel.
+     avsnitt 2–3 har i v1 basens ursprungliga design, men alternativen går
+     att välja – annars kan spärren inte fungera. Markeringen följer
+     originalet: marinblå ram när valt, grön om man svarade rätt, röd om fel.
+     I v2 är samma fråga kryssrutor som i övningskapitlet, med fotona
+     flyttade ner ovanför sin rubrik i trespalten.
 
    Tillgängliga hooks och byggstenar: se kommentaren i variants.js samt
    funktionsnamnen i app.js.
@@ -397,6 +402,75 @@ function v1FitHeading() {
    Vill man släppa spärren på dessa avsnitt räcker det att inte anropa
    v1WireImageQuiz() i initExtra.
    ========================================================================== */
+/* ==========================================================================
+   KRAV TT – v2:s quiz på avsnitt 2 och 3: kryssrutor som i övningskapitlet
+   Bildraden byggs om till kryssrutor på rad med Rätta-knappen under, och
+   fotona flyttas ner till trespalten ovanför sin egen rubrik – där de blir
+   illustrationer i stället för svarsalternativ.
+
+   Samma komponenter och färger som övningskapitlet: basens .checkrow och
+   .box, rättade av basens rattaCheck(). Rätt svar får därmed grön ruta med
+   bock, precis som där.
+
+   Gäller bara v2. v1 behåller originalets bildquiz (v1WireImageQuiz).
+   ========================================================================== */
+function v2CheckboxQuiz() {
+  const main = document.querySelector('.coursepage .course-main');
+  if (!main) return;
+
+  const options  = main.querySelector('.quiz-options');
+  const threeCol = main.querySelector('.three-col');
+  if (!options || !threeCol) return;
+
+  const txt = e => (e ? e.textContent.trim() : '');
+  const opts = Array.from(options.querySelectorAll('.quiz-option')).map(o => ({
+    name:     txt(o.querySelector('.quiz-option__label')),
+    feedback: txt(o.querySelector('.quiz-option__feedback')),
+    correct:  o.classList.contains('is-correct'),
+    img:      o.querySelector('.ph'),
+  }));
+  if (!opts.length) return;
+
+  const qid = 'v2quiz';
+  const rows = opts.map(o =>
+    `<div class="checkrow"${o.correct ? ' data-correct="true"' : ''}>` +
+    `<span class="box"></span> ${o.name}</div>`).join('');
+
+  /* Facittexten hör till det rätta svaret och är en bekräftelse, inte en
+     varning – därför grön i stället för övningskapitlets röda ruta. */
+  const fb = opts.find(o => o.feedback);
+  const fbHtml = fb
+    ? `<div class="feedback-box v2-feedback--ok">${fb.feedback}</div>`
+    : '';
+
+  const quiz = el(`
+    <div class="checkquiz v2-quiz">
+      <div class="q" id="${qid}">
+        ${rows}
+        ${fbHtml}
+        <button class="btn-ratta" onclick="rattaCheck(this,'${qid}')">Rätta
+          <span style="color:var(--navy)">⌄</span></button>
+      </div>
+    </div>`);
+  options.insertAdjacentElement('beforebegin', quiz);
+
+  /* Fotona upp ovanför sin rubrik i trespalten. Noderna flyttas, inte
+     kopieras, så app.js:s utbyte av platshållaren mot riktig bild fortsätter
+     träffa rätt element. */
+  threeCol.querySelectorAll(':scope > div').forEach(col => {
+    const h3 = col.querySelector('h3');
+    if (!h3) return;
+    const match = opts.find(o => o.name === txt(h3));
+    if (match && match.img) col.insertBefore(match.img, h3);
+  });
+
+  /* Bort med den gamla bildraden och dess Rätta-knapp */
+  const oldBtn = main.querySelector('.center .btn-ratta');
+  if (oldBtn) (oldBtn.closest('.center') || oldBtn).remove();
+  options.remove();
+}
+
+
 function v1WireImageQuiz() {
   const options = document.querySelector('.coursepage .quiz-options');
   if (!options) return;
@@ -550,15 +624,23 @@ function v1ChaptersDone() {
    kartan fram först vid första anropet, inte när filen läses.
    ========================================================================== */
 /* ==========================================================================
-   NUMRERING PÅ ELLER AV – skillnaden mellan v1 och v2
-   v1 numrerar avsnitten, v2 gör det inte. Allt som skriver ut ett nummer går
-   via v1Label() eller kollar V1_NUMBERS, så v2 inte behöver egna kopior av
-   tocRow, buildPageNav och rubriknumreringen.
+   NUMRERING PÅ ELLER AV – en av skillnaderna mellan v1 och v2
+   v2 numrerar avsnitten, v1 gör det inte. Allt som skriver ut ett nummer går
+   via v1Label() eller kollar V1_NUMBERS, så ingen av versionerna behöver
+   egna kopior av tocRow, buildPageNav och rubriknumreringen.
 
    Räkningen påverkas INTE: båda versionerna räknar 21 avsnitt och visar
    progress på Min sida. Det är bara siffrorna i texten som skiljer.
    ========================================================================== */
-const V1_NUMBERS = V.id !== 'v2';
+const V1_NUMBERS = V.id === 'v2';
+
+/* Bild-quizet på avsnitt 2–3 skiljer sig också mellan versionerna:
+     v1  originalets tre foton som svarsalternativ, valbara
+     v2  kryssrutor på rad som i övningskapitlet, och fotona flyttade ner
+         ovanför sin rubrik i trespalten
+   (Samma version bär alltså både numreringen och kryssrutorna – se README.)
+   Se v1WireImageQuiz() respektive v2CheckboxQuiz(). */
+const V1_IMAGE_QUIZ = V.id !== 'v2';
 
 function v1Label(ch) {
   return V1_NUMBERS ? v1Nums()[ch.i] + '. ' + ch.title : ch.title;
@@ -750,8 +832,10 @@ window.RK_V1 = {
     if (type === 'title') v1FixMinSida();
     if (type === 'course') {
       v1NormalizeWidths();      // krav Q: samma bredd överallt
-      v1NumberHeading(ch);      // krav Y: avsnittsnummer i rubriken (bara v1)
-      v1WireImageQuiz();        // krav RR: bild-quizet valbart – före v1WireQuiz
+      v1NumberHeading(ch);      // krav Y: avsnittsnummer i rubriken (bara v2)
+      // krav RR/TT: quizets form skiljer mellan versionerna – före v1WireQuiz
+      if (V1_IMAGE_QUIZ) v1WireImageQuiz();   // originalets bildquiz, valbart
+      else               v2CheckboxQuiz();    // kryssrutor + foton i trespalten
       v1WireQuiz();             // krav NN: gör frågorna svarbara
       v1GateNext();             // krav NN: spärra Nästa tills allt är besvarat
 
