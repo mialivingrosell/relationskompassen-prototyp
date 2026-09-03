@@ -67,7 +67,7 @@ flik, så det följer med när man klickar sig vidare i kursen.
 | Adress | Version |
 |---|---|
 | `index.html` | **v1 – ny navigation, avsnitten onumrerade.** Default. |
-| `index.html?nav=v2` | **v2 – som v1, men med numrerade avsnitt och kryssrutefrågor på avsnitt 2–3.** |
+| `index.html?nav=v2` | **v2 – som v1, men med numrerade avsnitt och radiofrågor på avsnitt 2–3.** |
 | `index.html?nav=v0` | **v0 – originalet.** Kopian av befintliga Relationskompassen, oförändrad. |
 
 v1 och v2 är A/B-paret, v0 är referensen. **v1 och v2 skiljer sig nu på två
@@ -76,7 +76,7 @@ saker**, inte en:
 | | v1 | v2 |
 |---|---|---|
 | Numrering av avsnitt | nej | ja — i menyn, sidrubriken, prev/next och progressraden |
-| Quiz på avsnitt 2–3 | originalets bildquiz, valbart | kryssrutor som i övningskapitlet, fotona flyttade ner i trespalten |
+| Quiz på avsnitt 2–3 | originalets bildquiz, valbart | **radioknappar** (runda, enkelval) med övningskapitlets komponenter, fotona flyttade ner i trespalten |
 
 Styrs av två flaggor i `variant-v1.js` — `V1_NUMBERS` och `V1_IMAGE_QUIZ` —
 som läser aktiv variant. Ingen logik dupliceras.
@@ -128,8 +128,10 @@ Basversionen är låst i git som taggen `v0-bas`.
   Rätta-knappen centrerad — med tillägget att alternativen går att **välja**
   (marinblå ram när valt, grön om rätt, röd om fel). Basens quiz har ingen
   valbarhet, och utan den kan spärren på obligatoriska frågor inte fungera.
-  I **v2** är samma fråga kryssrutor som i övningskapitlet, och fotona har
-  flyttat ner till trespalten ovanför sin egen rubrik.
+  I **v2** är samma fråga svarsrader med övningskapitlets komponenter och
+  färger, och fotona har flyttat ner till trespalten ovanför sin egen rubrik.
+  Raderna är **runda radioknappar med enkelval**, eftersom frågan har ett enda
+  rätt svar — övningskapitlets frågor är flerval och har kvadratiska rutor.
 - **Quiz-frågorna är svarbara och obligatoriska.** I basen är `.checkrow`
   dekorativa divar utan interaktion; v1 gör dem klickbara med mus och
   tangentbord. Nästa-knappen spärras tills alla frågor på sidan är besvarade,

@@ -149,13 +149,48 @@ function v1WireQuiz() {
     }
   }, true);
 
-  /* Bild-quizet kopplas av v1WireImageQuiz(); här bara kryssrutorna. */
-  v1WireCheckrows();
+  /* Bild-quizet kopplas av v1WireImageQuiz(). */
+  v1WireCheckrows();      // övningskapitlet – flerval
+  v2WireRadioRows();      // v2:s avsnitt 2–3 – enkelval
 }
 
-/* Kryssrutorna i övningskapitlet – flerval */
+/* v2:s svarsrader på avsnitt 2–3 – enkelval. Väljer man ett alternativ
+   släpps de andra, som en radiogrupp. Rutans prick sätts med CSS i stället
+   för textinnehåll, så basens rattaCheck() kan skriva sitt ✓ eller ✕ över
+   den utan att de krockar. */
+function v2WireRadioRows() {
+  document.querySelectorAll('.checkquiz.v2-quiz .q').forEach(q => {
+    const rows = q.querySelectorAll('.checkrow');
+    if (!rows.length) return;
+
+    rows.forEach(row => {
+      row.setAttribute('role', 'radio');
+      row.setAttribute('aria-checked', 'false');
+      row.setAttribute('tabindex', '0');
+
+      const pick = () => {
+        rows.forEach(r => {
+          r.classList.remove('v1-checked');
+          r.setAttribute('aria-checked', 'false');
+        });
+        row.classList.add('v1-checked');
+        row.setAttribute('aria-checked', 'true');
+        v1ClearQuizError(q);
+      };
+
+      row.addEventListener('click', pick);
+      row.addEventListener('keydown', e => {
+        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); pick(); }
+      });
+    });
+  });
+}
+
+/* Kryssrutorna i övningskapitlet – flerval.
+   v2:s radiorader ligger i .v2-quiz och undantas här, annars hade de fått
+   både en toggle-lyssnare och radiolyssnaren nedan. */
 function v1WireCheckrows() {
-  const rows = document.querySelectorAll('.checkquiz .checkrow');
+  const rows = document.querySelectorAll('.checkquiz:not(.v2-quiz) .checkrow');
   if (!rows.length) return;
 
   rows.forEach(row => {
@@ -403,18 +438,22 @@ function v1FitHeading() {
    v1WireImageQuiz() i initExtra.
    ========================================================================== */
 /* ==========================================================================
-   KRAV TT – v2:s quiz på avsnitt 2 och 3: kryssrutor som i övningskapitlet
-   Bildraden byggs om till kryssrutor på rad med Rätta-knappen under, och
-   fotona flyttas ner till trespalten ovanför sin egen rubrik – där de blir
+   KRAV TT – v2:s quiz på avsnitt 2 och 3: radioknappar på rad
+   Bildraden byggs om till svarsrader med Rätta-knappen under, och fotona
+   flyttas ner till trespalten ovanför sin egen rubrik – där de blir
    illustrationer i stället för svarsalternativ.
 
    Samma komponenter och färger som övningskapitlet: basens .checkrow och
    .box, rättade av basens rattaCheck(). Rätt svar får därmed grön ruta med
    bock, precis som där.
 
+   SKILLNAD mot övningskapitlet: frågorna här har ett enda rätt svar, så
+   raderna är RADIOKNAPPAR – runda och med bara ett val i taget. Övningens
+   frågor är flervalsfrågor och har kvadratiska kryssrutor.
+
    Gäller bara v2. v1 behåller originalets bildquiz (v1WireImageQuiz).
    ========================================================================== */
-function v2CheckboxQuiz() {
+function v2RadioQuiz() {
   const main = document.querySelector('.coursepage .course-main');
   if (!main) return;
 
@@ -446,7 +485,8 @@ function v2CheckboxQuiz() {
   const quiz = el(`
     <div class="checkquiz v2-quiz">
       <div class="q" id="${qid}">
-        ${rows}
+        <div class="v2-radiogroup" role="radiogroup"
+             aria-label="Välj ett alternativ">${rows}</div>
         ${fbHtml}
         <button class="btn-ratta" onclick="rattaCheck(this,'${qid}')">Rätta
           <span style="color:var(--navy)">⌄</span></button>
@@ -636,10 +676,10 @@ const V1_NUMBERS = V.id === 'v2';
 
 /* Bild-quizet på avsnitt 2–3 skiljer sig också mellan versionerna:
      v1  originalets tre foton som svarsalternativ, valbara
-     v2  kryssrutor på rad som i övningskapitlet, och fotona flyttade ner
-         ovanför sin rubrik i trespalten
+     v2  radioknappar på rad, med övningskapitlets komponenter, och fotona
+         flyttade ner ovanför sin rubrik i trespalten
    (Samma version bär alltså både numreringen och kryssrutorna – se README.)
-   Se v1WireImageQuiz() respektive v2CheckboxQuiz(). */
+   Se v1WireImageQuiz() respektive v2RadioQuiz(). */
 const V1_IMAGE_QUIZ = V.id !== 'v2';
 
 function v1Label(ch) {
@@ -835,7 +875,7 @@ window.RK_V1 = {
       v1NumberHeading(ch);      // krav Y: avsnittsnummer i rubriken (bara v2)
       // krav RR/TT: quizets form skiljer mellan versionerna – före v1WireQuiz
       if (V1_IMAGE_QUIZ) v1WireImageQuiz();   // originalets bildquiz, valbart
-      else               v2CheckboxQuiz();    // kryssrutor + foton i trespalten
+      else               v2RadioQuiz();       // radioknappar + foton i trespalten
       v1WireQuiz();             // krav NN: gör frågorna svarbara
       v1GateNext();             // krav NN: spärra Nästa tills allt är besvarat
 

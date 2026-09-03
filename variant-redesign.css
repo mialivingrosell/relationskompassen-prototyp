@@ -460,12 +460,29 @@
 }
 
 /* ==========================================================================
-   KRAV TT – v2:s kryssrutefråga på avsnitt 2 och 3
-   Samma komponenter som övningskapitlet, så inga egna färger behövs: basens
-   .checkrow och .box, rättade av rattaCheck(). Här bara luft omkring.
+   KRAV TT – v2:s fråga på avsnitt 2 och 3: radioknappar
+   Samma komponenter och färger som övningskapitlet – basens .checkrow och
+   .box, rättade av rattaCheck() – men RUNDA, eftersom frågan har ett enda
+   rätt svar och bara ett val kan göras. Övningens frågor är flerval och har
+   kvadratiska rutor.
    ========================================================================== */
 .rk-v2 .v2-quiz { margin: 26px 0 34px; }
 .rk-v2 .v2-quiz .btn-ratta { margin: 22px 0 0; }
+
+.rk-v2 .v2-quiz .checkrow .box { border-radius: 50%; }
+
+/* Vald: prick i mitten. Sätts med CSS och inte som textinnehåll, så basens
+   rattaCheck() kan skriva sitt ✓ eller ✕ i rutan utan att de krockar. */
+.rk-v2 .v2-quiz .checkrow.v1-checked .box::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+}
+/* När facit visats står ✓ eller ✕ i rutan – då ska pricken inte ligga kvar */
+.rk-v2 .v2-quiz .checkrow.correct .box::after,
+.rk-v2 .v2-quiz .checkrow.wrong .box::after { content: none; }
 
 /* Facittexten hör till det rätta svaret och bekräftar – grön i stället för
    övningskapitlets röda ruta, som förklarar ett felaktigt svar. */
