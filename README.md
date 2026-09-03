@@ -66,13 +66,19 @@ flik, så det följer med när man klickar sig vidare i kursen.
 
 | Adress | Version |
 |---|---|
-| `index.html` | **v0 – basversionen.** Kopian av befintliga Relationskompassen, oförändrad. |
-| `index.html?nav=v1` | **v1 – ny navigation, med numrerade avsnitt.** |
+| `index.html` | **v1 – ny navigation, med numrerade avsnitt.** Default. |
 | `index.html?nav=v2` | **v2 – som v1 men utan numrering.** |
+| `index.html?nav=v0` | **v0 – originalet.** Kopian av befintliga Relationskompassen, oförändrad. |
 
-v1 och v2 är A/B-paret: **numreringen är den enda skillnaden.** Längst ner i
-sidfoten finns en länk till den andra versionen, vid sidan om
-"Nollställ session".
+v1 och v2 är A/B-paret: **numreringen är den enda skillnaden.** v0 är
+referensen.
+
+Längst ner i sidfoten, vid sidan om "Nollställ session", finns länkar till de
+två versioner man inte står i — även i v0, så man alltid kan komma vidare utan
+att redigera adressen.
+
+**Obs:** versionsvalet ligger i `sessionStorage` och är därmed **per flik**. En
+ny flik eller en omstartad webbläsare landar på default (v1).
 
 Nere till höger sitter en stämpel där man klickar mellan versionerna och
 nollställer sessionen. Dölj den inför skarpa användartest med `?stamp=off`.

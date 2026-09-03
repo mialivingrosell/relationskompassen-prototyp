@@ -747,7 +747,6 @@ window.RK_V1 = {
   initExtra({ ch, type }) {
     v1PatchReset();           // krav HH: nollställning tar även v1:s nycklar
     v1HomeCta();              // krav DD: primärknapp på startsidan
-    buildFooterVersionLink(); // versionslänk i footern – footern finns nu
     if (type === 'title') v1FixMinSida();
     if (type === 'course') {
       v1NormalizeWidths();      // krav Q: samma bredd överallt

@@ -21,10 +21,16 @@
    ========================================================================== */
 
 const VARIANTS = [
-  { id: 'v0', label: 'v0 · Bas', note: 'Kopia av befintliga Relationskompassen – oförändrad' },
+  { id: 'v0', label: 'v0 · Originalet', note: 'Kopia av befintliga Relationskompassen – oförändrad' },
   { id: 'v1', label: 'v1 · Numrering', note: 'Ny navigation, med numrerade avsnitt' },
-  { id: 'v2', label: 'v2 · Utan numrering', note: 'Som v1 men utan numrering, och med ursprunglig Min sida' },
+  { id: 'v2', label: 'v2 · Utan numrering', note: 'Som v1 men utan numrering' },
 ];
+
+/* Default när inget val finns i fliken. v1 är den version som testas, så den
+   nakna adressen ska ge den – originalet nås med ?nav=v0 eller via footern.
+   Tidigare var v0 default, vilket gjorde att en ny flik landade på
+   originalet och det såg ut som att arbetet försvunnit. */
+const DEFAULT_VARIANT = 'v1';
 
 /* v1 och v2 delar all grundstil (variant-redesign.css) och all logik i
    variant-v1.js. v2 lägger bara till sina avvikelser. Därför får båda även
@@ -42,7 +48,7 @@ function resolveVariant() {
   }
   let saved = null;
   try { saved = sessionStorage.getItem(VARIANT_KEY); } catch (e) {}
-  return VARIANTS.some(v => v.id === saved) ? saved : 'v0';
+  return VARIANTS.some(v => v.id === saved) ? saved : DEFAULT_VARIANT;
 }
 
 /* V = variantens API. Används av app.js och av variant-filerna. */
@@ -169,27 +175,38 @@ function buildVariantStamp() {
   document.body.appendChild(box);
 }
 
-/* ------------------------------------------------------ versionslänk i footern
-   Vid sidan om "Nollställ session" ligger en länk till den andra versionen:
-   står man i v1 heter den "Version 2" och omvänt. Bara mellan v1 och v2 –
-   v0 lämnas orörd så basversionen ser ut exakt som den riktiga sajten.       */
+/* ----------------------------------------------------- versionslänkar i footern
+   Vid sidan om "Nollställ session" ligger länkar till de två versioner man
+   INTE står i. De finns i alla tre versioner, inklusive v0 – annars går det
+   inte att komma vidare från originalet utan att redigera adressen, vilket
+   är precis fällan som gjorde att prototypen såg ut att ha nollställts.     */
 function buildFooterVersionLink() {
   const slot = document.querySelector('.footer__reset');
-  if (!slot || document.getElementById('rkVersionLink')) return;
-  if (REDESIGN.indexOf(V.id) === -1) return;
+  if (!slot || document.getElementById('rkVersionLinks')) return;
 
-  const other = V.id === 'v1' ? 'v2' : 'v1';
-  const a = document.createElement('a');
-  a.id = 'rkVersionLink';
-  a.href = '#';
-  a.textContent = 'Version ' + other.slice(1);
-  a.style.marginLeft = '22px';
-  a.addEventListener('click', (e) => { e.preventDefault(); V.set(other); });
+  const wrap = document.createElement('span');
+  wrap.id = 'rkVersionLinks';
 
-  slot.appendChild(a);
+  VARIANTS.filter(v => v.id !== V.id).forEach(v => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.textContent = 'Version ' + v.id.slice(1);
+    a.title = v.note;
+    a.style.marginLeft = '22px';
+    a.addEventListener('click', (e) => { e.preventDefault(); V.set(v.id); });
+    wrap.appendChild(a);
+  });
+
+  slot.appendChild(wrap);
 }
 
-/* Stämpeln är position:fixed och kan byggas direkt. Versionslänken måste
-   däremot vänta på att app.js hunnit bygga footern – den anropas därför från
-   variantens initExtra(), som körs sist i uppstarten. */
-document.addEventListener('DOMContentLoaded', buildVariantStamp);
+/* Stämpeln är position:fixed och kan byggas direkt.
+   Versionslänkarna måste vänta på att app.js hunnit bygga footern. Eftersom
+   variants.js laddas först körs dess DOMContentLoaded-lyssnare FÖRE app.js:s,
+   så footern finns inte än. setTimeout 0 skjuter anropet till efter att alla
+   DOMContentLoaded-lyssnare kört. Det gör att länkarna byggs likadant i alla
+   tre versioner – v0 har ingen initExtra att hänga dem på.                  */
+document.addEventListener('DOMContentLoaded', () => {
+  buildVariantStamp();
+  setTimeout(buildFooterVersionLink, 0);
+});
