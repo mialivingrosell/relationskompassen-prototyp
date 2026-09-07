@@ -21,9 +21,13 @@
    VAD SOM SKILJER FRÅN BASEN
 
    Startsidan
-     Primärknapp "Starta Relationskompassens grundkurs" i den mörka ytan.
+     Primärknapp "Starta Relationskompassens grundkurs" i den mörka ytan,
+     som byter till "Fortsätt ..." när man börjat.
+
      Inloggning krävs för båda ingångarna – basen har ingen
-     inloggningsstatus, så v1 håller en egen flagga per flik.
+     inloggningsstatus, så v1 håller en egen flagga per flik. "Logga ut"
+     nollar flaggan och Min sida spärras för utloggade, men framstegen
+     ligger kvar så man kan fortsätta en annan dag.
 
    Min sida
      Basversionens design i alla versioner – ombyggnaden är borttagen. Bara
@@ -314,6 +318,15 @@ function v1ClearSession() {
 /* Körs vid parse, alltså före app.js hanterar ?reset. */
 if (location.search.indexOf('reset') !== -1) v1ClearSession();
 
+/* Spärra Min sida direkt vid parse, innan app.js hunnit bygga sidan. */
+v1GuardMinSida();
+
+/* Backar man tillbaka till Min sida kan webbläsaren återställa sidan ur
+   sitt cacheminne utan att scripten körs om – då fångar pageshow den. */
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted) v1GuardMinSida();
+});
+
 /* Fångar inloggningsformuläret i capture-fasen, så flaggan hinner sparas
    innan basens inline-onsubmit navigerar vidare till Min sida. */
 document.addEventListener('submit', (e) => {
@@ -321,6 +334,33 @@ document.addEventListener('submit', (e) => {
   const go = form && form.getAttribute ? (form.getAttribute('onsubmit') || '') : '';
   if (go.indexOf('min-sida.html') !== -1) v1SetLogged(true);
 }, true);
+
+/* --------------------------------------------------------------------------
+   KRAV VV – utloggning kräver ny inloggning
+   Basens "Logga ut" är bara en länk till inloggningssidan; den nollar ingen
+   status. Därför kunde man logga ut och gå rakt tillbaka in i kursen.
+
+   Här nollas inloggningsflaggan när man klickar Logga ut. Framstegen
+   (rk_visited) lämnas kvar – scenariot är att man loggar ut för att
+   fortsätta en annan dag, så kursen ska stå kvar där man var.
+   -------------------------------------------------------------------------- */
+function v1WireLogout() {
+  document.querySelectorAll('.dash a[href="logga-in.html"]').forEach(a => {
+    if (a.textContent.indexOf('Logga ut') === -1) return;
+    a.addEventListener('click', () => v1SetLogged(false));
+  });
+}
+
+/* Min sida kräver inloggning. Utan den här spärren kunde man backa tillbaka
+   till Min sida efter utloggning och fortsätta därifrån, eftersom Fortsätt
+   pekar på ett avsnitt och inte på grundkurs.html som ingångsspärren
+   bevakar. Gäller inte v0, som inte har någon inloggningsstatus. */
+function v1GuardMinSida() {
+  if (V.id === 'v0') return;
+  if (v1IsLogged()) return;
+  if (!document.querySelector('.dash')) return;    // inte Min sida
+  location.replace('logga-in.html');
+}
 
 /* Riktar om ingångarna efter inloggningsstatus. Kursvyn lämnas orörd – är man
    inne i ett kapitel är man redan förbi ingången. */
@@ -896,7 +936,10 @@ window.RK_V1 = {
   initExtra({ ch, type }) {
     v1PatchReset();           // krav HH: nollställning tar även v1:s nycklar
     v1HomeCta();              // krav DD: primärknapp på startsidan
-    if (type === 'title') v1FixMinSida();
+    if (type === 'title') {
+      v1FixMinSida();
+      v1WireLogout();         // krav VV: nolla inloggningen vid utloggning
+    }
     if (type === 'course') {
       v1NumberHeading(ch);      // krav Y: avsnittsnummer i rubriken (bara v2)
       // krav RR/TT: quizets form skiljer mellan versionerna – före v1WireQuiz

@@ -123,9 +123,15 @@ Basversionen är låst i git som taggen `v0-bas`.
   bara texten; länken pekar kvar på inloggningen så spärren håller.
 - **Inloggning krävs för båda ingångarna.** Basen har ingen
   inloggningsstatus – varje sida har ett hårdkodat `data-logged`, så
-  kursknappen gick rakt in medan Min sida krävde inloggning. v1 håller en
+  kursknappen gick rakt in medan Min sida krävde inloggning. v1/v2 håller en
   riktig flagga per flik som sätts när inloggningsformuläret skickas och nollas
   vid alla tre nollställningsvägar (`?reset`, sidfotens länk, prototypstämpeln).
+- **"Logga ut" loggar faktiskt ut.** I basen är det bara en länk till
+  inloggningssidan, så man kunde logga ut och gå rakt tillbaka in i kursen.
+  Nu nollas inloggningsflaggan, och Min sida spärras för den som inte är
+  inloggad — även vid bakåtknappen, via `pageshow`. **Framstegen ligger kvar**,
+  eftersom scenariot är att man loggar ut för att fortsätta en annan dag: efter
+  ny inloggning står kursen kvar där man var.
 - **Avsnittsnumrering** (bara v2) i innehållsmenyn, i sidrubriken, i
   prev/next-knapparna och i progressraden: "1. Relationskompassens grundkurs".
   Alla 21 avsnitt numreras i följd, Elsa och Omar som 5–8. Innehållsmenyn är
