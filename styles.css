@@ -390,14 +390,59 @@ a { color: var(--text); }
 .transcribe__body.open { display: block; }
 
 /* ------------------------------------------------------------- COURSE layout */
-.coursepage { background: var(--skyblue); }
-/* kapitelinnehållet dras in åt höger, tydligt till höger om nav-kromet */
-.coursepage .course-main {
-  max-width: calc(var(--edge) + var(--content-indent) + 1040px);
-  margin: 0;
-  padding: 34px var(--edge) 10px calc(var(--edge) + var(--content-indent));
+/* Kapitelsidornas innehållsyta. Två mått gäller hela kursvyn:
+     --media-w  bredaste innehåll: film, bildrader, seriestrippar, prev/next
+     --text-w   rubriker och brödtext
+
+   Spalten är CENTRERAD, som i betan. Den första kopian hade ett
+   vänsterindrag (--content-indent) som sköt innehållet åt höger, och varje
+   block hade dessutom sin egen bredd – .videoblock 820px, .checkquiz 900px,
+   bildrader hela spalten – så innehållet låg olika brett från kapitel till
+   kapitel. Måtten nedan gäller i alla versioner, så v0 blir en trogen
+   referens och v1/v2 ärver dem.
+
+   Textbredden är satt så att betans första brödtextrad ryms:
+   "Relationskompassen är ett universellt våldsförebyggande program med en
+   genusförändrande ansats. Att" – ca 99 tecken.                            */
+.coursepage {
+  background: var(--skyblue);
+  --media-w: 1064px;
+  --text-w:  800px;
 }
-.coursepage h1 { font-size: clamp(2rem, 3.6vw, 3rem); margin-bottom: .5em; }
+.coursepage .course-main {
+  max-width: calc(var(--media-w) + 2 * var(--edge));
+  margin: 0 auto;
+  padding: 34px var(--edge) 10px;
+}
+
+/* rubriker och brödtext i den smalare spalten */
+.coursepage .course-main > h2,
+.coursepage .course-main > h3,
+.coursepage .course-main > p,
+.coursepage .course-main > ul,
+.coursepage .course-main > ol,
+.coursepage .transcribe__body,
+.coursepage .checkquiz { max-width: var(--text-w); }
+
+/* sidrubriken får hela innehållsbredden, inte textspalten */
+.coursepage .course-main > h1 {
+  max-width: var(--media-w);
+  text-wrap: balance;
+  margin-bottom: .5em;
+}
+
+/* Rubrikgrader. Den första kopian krympte h1 på kurssidor jämfört med resten
+   av sajten (max 3rem mot globala 3.4rem), vilket gjorde kapitelsidorna
+   småttigare än betan. */
+.coursepage h1 { font-size: clamp(2.7rem, 5vw,   4.2rem); }
+.coursepage h2 { font-size: clamp(2rem,   3.4vw, 3rem); }
+.coursepage h3 { font-size: 1.75rem; }
+
+/* filmen fyller mediabredden – .videoblock nedan kapade den till 820px */
+.coursepage .videoblock { max-width: var(--media-w); }
+
+/* seriestrippar (Elsa och Omar) hålls smalare än bildraderna */
+.coursepage .ph--comic { max-width: 880px; }
 
 /* prev/next + progress */
 .pagenav {

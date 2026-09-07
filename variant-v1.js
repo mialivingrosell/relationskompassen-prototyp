@@ -37,10 +37,10 @@
      progressraden, med utgångarna Hem och Min sida efter sista avsnittet.
 
    Kapitelsidor
-     Större rubriker, en enda innehållsbredd (--v1-media för film och
-     bildrader, --v1-text för text), rubriken krymps så den ryms på en rad.
-     Handritad pil i styleguidens manér. Prev/next transparent respektive
-     svart, med avsnittsnummer i v2.
+     Innehållsbredden och rubrikgraderna ligger nu i styles.css och delas av
+     alla tre versioner (--media-w / --text-w). Här: rubriken krymps så den
+     ryms på en rad, handritad pil i styleguidens manér, och prev/next
+     transparent respektive svart med avsnittsnummer i v2.
 
    Räkning
      21 avsnitt, räknat ur CHAPTERS. Elsa och Omar del 2–4 är egna avsnitt
@@ -280,19 +280,6 @@ function v1ClearQuizError(q) {
 }
 
 
-/* ---------------------------------------------------------------- krav Q
-   Kapitelsidorna i basen sätter inline-bredder på enstaka stycken
-   (style="max-width:900px" på 9 ställen, medan grundkurs.html saknar dem).
-   Det var därför innehållet låg olika brett från kapitel till kapitel.
-   Här nollas bara max-width – övriga inline-stilar (t.ex. margin-top) står
-   kvar – så att CSS-måtten --v1-text / --v1-media gäller överallt.       */
-function v1NormalizeWidths() {
-  const main = document.querySelector('.coursepage .course-main');
-  if (!main) return;
-  main.querySelectorAll('[style*="max-width"]').forEach(el => {
-    el.style.maxWidth = '';
-  });
-}
 
 
 /* ==========================================================================
@@ -871,7 +858,6 @@ window.RK_V1 = {
     v1HomeCta();              // krav DD: primärknapp på startsidan
     if (type === 'title') v1FixMinSida();
     if (type === 'course') {
-      v1NormalizeWidths();      // krav Q: samma bredd överallt
       v1NumberHeading(ch);      // krav Y: avsnittsnummer i rubriken (bara v2)
       // krav RR/TT: quizets form skiljer mellan versionerna – före v1WireQuiz
       if (V1_IMAGE_QUIZ) v1WireImageQuiz();   // originalets bildquiz, valbart

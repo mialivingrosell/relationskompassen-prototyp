@@ -11,6 +11,10 @@
    min-sida.html renderas som i v0 i alla versioner. Bara räkningen rättas,
    i v1FixMinSida() i variant-v1.js.
 
+   KAPITELSIDORNAS INNEHÅLLSBREDD och rubrikgrader finns inte heller här –
+   de ligger i styles.css (--media-w / --text-w) och delas av alla tre
+   versioner, så v0 är en trogen referens.
+
    Grafisk profil (Reko 2026):
      Barlow (brödtext) · Barlow Condensed (endast rubriker)
      ljusblå #D7F1F4 · rosa #F5D8CF · mint #DBF3E1
@@ -40,76 +44,16 @@
 .rk-redesign .v1-btn--primary:hover { background: var(--cream); }
 
 
-/* ==========================================================================
-   KRAV A – typografi på artikel- och kapitelsidor
-   Rubrikerna upplevdes för små. Brödtexten är rätt och lämnas orörd –
-   inga regler här rör p, li eller body.
-
-   Basens storlekar (styles.css) för jämförelse:
-     .coursepage h1  clamp(2rem,   3.6vw, 3rem)
-     h2              clamp(1.6rem, 2.6vw, 2.3rem)
-     h3              1.4rem
-   ========================================================================== */
-.rk-redesign .coursepage h1 { font-size: clamp(2.7rem, 5vw,   4.2rem); }
-.rk-redesign .coursepage h2 { font-size: clamp(2rem,   3.4vw, 3rem); }
-.rk-redesign .coursepage h3 { font-size: 1.75rem; }
 
 
 /* ==========================================================================
-   KRAV F + Q – en enda innehållsbredd på kapitelsidorna
-   Problemet i basen: varje block hade sin egen bredd (.videoblock 820px,
-   .checkquiz 900px, bildrader och prev/next hela spalten), så innehållet låg
-   olika brett på olika kapitel och knapparna hamnade på olika ställen.
-
-   Här finns i stället två mått för hela kursvyn:
-     --v1-media  bredaste innehåll: film, bildrader, seriestrippar, prev/next
-     --v1-text   rubriker och brödtext
-
-   Spalten är centrerad, som i betan, i stället för basens vänsterindrag
-   (--content-indent) som sköt innehållet åt höger.
-
-   Textbredden är satt så att originalets första brödtextrad ryms:
-   "Relationskompassen är ett universellt våldsförebyggande program med en
-   genusförändrande ansats. Att" – ca 99 tecken. Justera --v1-text om raden
-   bryter en bit fel; typsnittsrenderingen gör måttet ungefärligt.
+   Kapitelsidornas innehållsbredd ligger nu i styles.css, så alla tre
+   versioner delar den. Här bara ett undantag som hör till v1:s bildquiz.
    ========================================================================== */
-.rk-redesign .coursepage {
-  --v1-media: 1064px;
-  --v1-text:  800px;
-}
-.rk-redesign .coursepage .course-main {
-  max-width: calc(var(--v1-media) + 2 * var(--edge));
-  margin: 0 auto;                       /* centrerad, som betan */
-  padding: 34px var(--edge) 10px;       /* inget vänsterindrag */
-}
-
-/* rubriker och brödtext i den smalare spalten */
-.rk-redesign .coursepage .course-main > h2,
-.rk-redesign .coursepage .course-main > h3,
-.rk-redesign .coursepage .course-main > p,
-.rk-redesign .coursepage .course-main > ul,
-.rk-redesign .coursepage .course-main > ol,
-.rk-redesign .coursepage .transcribe__body,
-.rk-redesign .coursepage .checkquiz { max-width: var(--v1-text); }
-/* undantag: bild-quizets tre foton är mediainnehåll och ska ha full bredd.
-   Behållaren läggs till av v1WireImageQuiz() bara för att spärren behöver
-   en .q att leta i – den ska inte krympa bildraden. */
-.rk-redesign .coursepage .checkquiz.v1-imgquiz { max-width: var(--v1-media); }
-
-/* KRAV LL – sidrubriken får hela innehållsbredden, inte textspalten.
-   Radbrytningen berodde på att h1 satt i den 800px smala textspalten; med
-   mediabredden ryms de flesta kapitelrubriker på en rad. Resten sköts av
-   v1FitHeading() i variant-v1.js, som krymper graden tills raden räcker. */
-.rk-redesign .coursepage .course-main > h1 {
-  max-width: var(--v1-media);
-  text-wrap: balance;           /* jämnare brytning om den ändå måste brytas */
-}
-
-/* filmen fyller hela mediabredden – basen kapade den till 820px */
-.rk-redesign .coursepage .videoblock { max-width: var(--v1-media); }
-
-/* seriestrippar (Elsa och Omar) hålls smalare än bildraderna */
-.rk-redesign .coursepage .ph--comic { max-width: 880px; }
+/* Bild-quizets tre foton är mediainnehåll och ska ha full bredd. Behållaren
+   läggs till av v1WireImageQuiz() bara för att spärren behöver en .q att
+   leta i – den ska inte krympa bildraden till textspaltens mått. */
+.rk-redesign .coursepage .checkquiz.v1-imgquiz { max-width: var(--media-w); }
 
 
 
@@ -280,7 +224,7 @@
    med svart ram, som i originalet, i stället för basens vita platta.
    ========================================================================== */
 .rk-redesign .coursepage .pagenav {
-  max-width: var(--v1-media);
+  max-width: var(--media-w);
   padding-bottom: 48px;
 }
 /* föregående: transparent med svart ram, som originalet */
@@ -342,7 +286,7 @@
    ner i filen tillsammans med facitrutorna, så alla förklaringar ser lika ut. */
 .rk-redesign .v1-qerror,
 .rk-redesign .v1-naverror {
-  max-width: var(--v1-text);
+  max-width: var(--text-w);
   margin: 16px 0;
 }
 .rk-redesign .v1-naverror { margin: 26px 0 0; }

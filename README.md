@@ -103,9 +103,11 @@ Basversionen är låst i git som taggen `v0-bas`.
 
 ### Vad v1 ändrar
 
-- **Större rubriker** på artikel- och kapitelsidor. Brödtexten är oförändrad.
-- **Bredare videoruta** på kapitelsidor, medan rubriker och brödtext hålls i
-  en smalare spalt (ca 800px) för läsbar radlängd.
+- **Innehållsytan på kapitelsidor** ligger i `styles.css` och delas av **alla
+  tre versioner**: `--media-w` (1064px) för film, bildrader och prev/next,
+  `--text-w` (800px) för rubriker och brödtext. Spalten är centrerad som i
+  betan, och rubrikgraderna är större. Den första kopian hade ett
+  vänsterindrag och fyra olika bredder på samma sida.
 - **Min sida är basversionens design** i alla versioner. Kunden ville tillbaka
   till originalet, så ombyggnaden av panelerna, de vita kurskorten, den
   flyttade "Logga ut" och ögonikonerna i lösenordsfälten är borttagna. Bara
@@ -142,10 +144,6 @@ Basversionen är låst i git som taggen `v0-bas`.
 - **Handritad pil** i styleguidens ikonmanér ersätter teckenpilarna (← →) i
   knappar och svarta listen. Styleguidens ikonsida innehåller ingen pil, så
   den är ritad efter manéret: en enkel bågad linje med rundade ändar.
-- **En enda innehållsbredd** på kapitelsidorna: film och bildrader i
-  `--v1-media` (1064px), rubriker och brödtext i `--v1-text` (800px).
-  Spalten är centrerad som i betan i stället för basens vänsterindrag, och
-  prev/next linjerar med innehållet. Basens inline-bredder nollas.
 - **Prev/next** har transparent bakgrund och svart ram, som originalet.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
   Svarta listen är sticky: orange bakåtpil + HEM till vänster, kursnamnet
