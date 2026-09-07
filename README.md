@@ -114,8 +114,13 @@ Basversionen är låst i git som taggen `v0-bas`.
   två saker rättas, eftersom de är beteende och inte design: räkningen visar
   21 avsnitt i stället för basens 20, och Starta/Fortsätt går till senaste
   avsnittet man stod på.
-- **Startsidan** (v1 och v2) har en primärknapp "Starta Relationskompassens grundkurs"
-  centrerad i den mörka ytan högst upp: vit botten, marinblå text, orange pil.
+- **Startsidan** (v1 och v2) har en primärknapp centrerad i den mörka ytan
+  högst upp: vit botten, marinblå text, orange pil. Båda knapparna på
+  startsidan säger **"Starta Relationskompassens grundkurs"** innan man
+  börjat, och **"Fortsätt Relationskompassens grundkurs"** så snart man
+  klickat sig vidare från första avsnittet — då leder de till det avsnitt man
+  nått längst fram, samma mål som Fortsätt på Min sida. Är man utloggad byts
+  bara texten; länken pekar kvar på inloggningen så spärren håller.
 - **Inloggning krävs för båda ingångarna.** Basen har ingen
   inloggningsstatus – varje sida har ett hårdkodat `data-logged`, så
   kursknappen gick rakt in medan Min sida krävde inloggning. v1 håller en
@@ -146,16 +151,16 @@ Basversionen är låst i git som taggen `v0-bas`.
   den är ritad efter manéret: en enkel bågad linje med rundade ändar.
 - **Prev/next** har transparent bakgrund och svart ram, som originalet.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
-  Svarta listen är sticky: orange bakåtpil + HEM till vänster, kursnamnet
-  centrerat, KURSINNEHÅLL + hamburgare till höger. Innehållsmenyn fälls ut
+  Svarta listen är sticky: STARTSIDA till vänster, kursnamnet centrerat,
+  KURSINNEHÅLL + hamburgare till höger. Innehållsmenyn fälls ut
   högerställd, ovanpå progressraden, med utgångarna "Hem" och "Min sida"
   efter sista avsnittet.
 - **Stegräkning:** 21 avsnitt totalt, räknat ur `CHAPTERS`. Elsa och Omar
   del 2–4 är egna avsnitt 6, 7 och 8. Samma räkning i v1 och v2.
 - **Två olika progressmått, med avsikt:**
   - *Indikatorn under svarta listen på kapitelsidor* – vilket kapitel man
-    **står på**, med "X/21" inne i den orangea ytan (bara i v2 — v1 har bar
-    utan siffra). Marinblå siffra: 4,8:1 mot orange och 10,5:1 mot grått,
+    **står på**, med "X/21" inne i den orangea ytan i **både v1 och v2** —
+    siffran hör till framstegsmätningen, inte till avsnittsnumreringen. Marinblå siffra: 4,8:1 mot orange och 10,5:1 mot grått,
     alltså godkänt enligt WCAG AA. Fyllningen har mjuk rundad högerkant.
   - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
     distinkta kapitel bland de besökta, så den bara kan växa.

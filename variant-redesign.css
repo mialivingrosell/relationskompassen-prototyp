@@ -97,20 +97,18 @@
 
 
 /* ==========================================================================
-   KRAV M – svarta listen enligt skiss
-   Vit bakåtpil före kursnamnet, INNEHÅLL + hamburgare längst till höger.
-   Pilen är samma tecken som i prev/next-knapparna längst ner på sidan,
-   men vit i stället för orange.
+   KRAV M – svarta listen
+   STARTSIDA till vänster, kursnamnet centrerat, KURSINNEHÅLL + hamburgare
+   längst till höger.
    ========================================================================== */
-/* Bakåtpil + MIN SIDA som en märkt tillbakalänk. Versalt som INNEHÅLL mitt
-   emot, och som MIN SIDA i sajtens vanliga header. */
+/* STARTSIDA som textlänk till vänster. Versalt som KURSINNEHÅLL mitt emot.
+   Ingen pil – den lästes som "föregående avsnitt" snarare än "ut ur kursen". */
 .rk-redesign .v1-back {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
   flex: 0 0 auto;
   text-decoration: none;
-  color: #fff;                  /* currentColor -> pilen blir vit */
+  color: #fff;
   font-family: var(--font-head);
   font-weight: 700;
   font-size: 1.15rem;
@@ -118,15 +116,6 @@
   line-height: 1;
   padding: 0 2px;
 }
-/* Pilen orange, texten vit – pilen linjerar färgmässigt med hamburgaren
-   i INNEHÅLL mitt emot. */
-.rk-redesign .v1-back .arrow {
-  display: inline-flex;
-  align-items: center;
-  color: var(--orange);
-  line-height: 1;
-}
-.rk-redesign .v1-back .v1-arr { width: 32px; height: 20px; }
 .rk-redesign .v1-back:hover { text-decoration: underline; }
 
 /* INNEHÅLL till höger. Basens .coursebar__toggle är redan vit, versal och

@@ -32,7 +32,7 @@
 
    Kursvyn
      Egen sidkontext: topheader och brödsmulor borta. Svarta listen sticky
-     med bakåtpil + HEM, centrerad kursrubrik och KURSINNEHÅLL till höger.
+     med STARTSIDA, centrerad kursrubrik och KURSINNEHÅLL till höger.
      Tunn progressindikator under listen. Innehållsmenyn högerställd ovanpå
      progressraden, med utgångarna Hem och Min sida efter sista avsnittet.
 
@@ -43,7 +43,9 @@
      transparent respektive svart med avsnittsnummer i v2.
 
    Räkning
-     21 avsnitt, räknat ur CHAPTERS. Elsa och Omar del 2–4 är egna avsnitt
+     21 avsnitt, räknat ur CHAPTERS. Progressraden visar X/21 i alla
+     versioner – siffran hör till framstegsmätningen, inte till
+     avsnittsnumreringen som skiljer v1 och v2. Elsa och Omar del 2–4 är egna avsnitt
      6, 7 och 8. Progressraden i kurshuvudet visar avsnittet man STÅR PÅ;
      kurskortet på Min sida visar hur många man GÅTT IGENOM.
 
@@ -361,6 +363,46 @@ function v1HomeCta() {
     '<p class="v1-hero-cta">' +
     '<a class="btn v1-btn--primary" href="grundkurs.html">' +
     'Starta Relationskompassens grundkurs <span class="arrow">→</span></a></p>');
+}
+
+
+/* ==========================================================================
+   KRAV UU – Starta eller Fortsätt på startsidans knappar
+   Har man klickat sig vidare från första avsnittet byter båda knapparna på
+   startsidan text till "Fortsätt ..." och pekar på det avsnitt man nått
+   längst fram – samma mål som Fortsätt på Min sida, eftersom båda läser
+   v1Furthest().
+
+   Bara texten byts om man är utloggad. Då har inloggningsspärren redan
+   pekat om knappen till inloggningen, och den länken ska stå kvar – annars
+   kunde man hoppa rakt in i kursen förbi spärren. Efter inloggning tar Min
+   sidas Fortsätt över.
+
+   Körs därför EFTER v1ApplyLoginState().
+   ========================================================================== */
+function v1HomeCourseButtons() {
+  if (!document.querySelector('.hero')) return;   // bara startsidan
+
+  const furthest = v1Furthest();
+  // "påbörjat" = klickat sig vidare från första avsnittet
+  if (furthest === null || furthest <= 0) return;  // "Starta" står redan i markupen
+
+  const target = CHAPTERS[furthest];
+
+  document.querySelectorAll('a.btn').forEach(a => {
+    const label = a.textContent.trim();
+    if (label.indexOf('Starta') !== 0) return;
+    if (label.indexOf('Relationskompassens grundkurs') === -1) return;
+
+    // byt bara ordet i textnoden, så pilen i sitt span lämnas orörd
+    a.childNodes.forEach(n => {
+      if (n.nodeType === 3 && n.textContent.indexOf('Starta') !== -1) {
+        n.textContent = n.textContent.replace('Starta', 'Fortsätt');
+      }
+    });
+
+    if (v1IsLogged() && target && target.file) a.setAttribute('href', target.file);
+  });
 }
 
 
@@ -758,9 +800,7 @@ window.RK_V1 = {
       <div class="coursebar">
         <div class="coursebar__inner">
           <div class="v1-headleft">
-            <a class="v1-back" href="index.html" title="Tillbaka till startsidan">
-              <span class="arrow">←</span> HEM
-            </a>
+            <a class="v1-back" href="index.html" title="Tillbaka till startsidan">STARTSIDA</a>
           </div>
           <span class="coursebar__title">Relationskompassens grundkurs</span>
           <button class="coursebar__toggle v1-toc-toggle" onclick="toggleToc(this)">
@@ -774,8 +814,8 @@ window.RK_V1 = {
            aria-valuenow="${v1CurrentStep(ch)}" aria-valuemin="0"
            aria-valuemax="${v1Total()}">
         <div class="v1-progress__fill" style="width:${v1ProgressPct(ch)}%"></div>
-        ${V1_NUMBERS ? `<span class="v1-progress__label"
-              style="left:max(${v1ProgressPct(ch)}%, 96px)">${v1CurrentStep(ch)}/${v1Total()}</span>` : ''}
+        <span class="v1-progress__label"
+              style="left:max(${v1ProgressPct(ch)}%, 96px)">${v1CurrentStep(ch)}/${v1Total()}</span>
       </div>
 
     </div>`;
@@ -874,6 +914,7 @@ window.RK_V1 = {
       window.addEventListener('resize', v1FitHeading);
     }
     v1ApplyLoginState();        // krav HH: rikta om ingångarna – efter Min sida
+    v1HomeCourseButtons();      // krav UU: Starta -> Fortsätt – efter spärren
     v1SwapArrows();             // krav P: handritad pil överallt, alla sidtyper
   },
 
