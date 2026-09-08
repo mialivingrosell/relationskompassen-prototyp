@@ -928,7 +928,7 @@ window.RK_V1 = {
     // två vägar ut ur kursen, fast placerade efter sista avsnittet.
     // .btn ger samma storlek som övriga knappar på sajten.
     html += `<div class="v1-toc-exits">` +
-            `<a class="btn v1-toc-exit" href="index.html">Hem</a>` +
+            `<a class="btn v1-toc-exit" href="index.html">Startsidan</a>` +
             `<a class="btn v1-toc-exit" href="min-sida.html">Min sida</a>` +
             `</div>`;
     return `<div class="toc" id="toc">${html}</div>`;

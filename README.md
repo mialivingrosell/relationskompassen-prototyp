@@ -169,8 +169,8 @@ Basversionen är låst i git som taggen `v0-bas`.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
   Svarta listen är sticky: STARTSIDA till vänster, kursnamnet centrerat,
   KURSINNEHÅLL + hamburgare till höger. Innehållsmenyn fälls ut
-  högerställd, ovanpå progressraden, med utgångarna "Hem" och "Min sida"
-  efter sista avsnittet.
+  högerställd, ovanpå progressraden, med utgångarna "Startsidan" och
+  "Min sida" efter sista avsnittet.
 - **Stegräkning:** 21 avsnitt totalt, räknat ur `CHAPTERS`. Elsa och Omar
   del 2–4 är egna avsnitt 6, 7 och 8. Samma räkning i v1 och v2.
 - **Två olika progressmått, med avsikt:**
