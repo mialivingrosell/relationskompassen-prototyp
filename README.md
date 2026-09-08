@@ -126,6 +126,13 @@ Basversionen är låst i git som taggen `v0-bas`.
   kursknappen gick rakt in medan Min sida krävde inloggning. v1/v2 håller en
   riktig flagga per flik som sätts när inloggningsformuläret skickas och nollas
   vid alla tre nollställningsvägar (`?reset`, sidfotens länk, prototypstämpeln).
+- **Kontolänken följer inloggningsstatus** i **alla tre versioner**. Basen har
+  hårdkodat `data-logged` per sida och `index.html` säger `false`, så MIN SIDA
+  i headern pekade alltid på inloggningen på startsidan — backade man dit mitt
+  i kursen tvingades man logga in igen fast man aldrig loggat ut. Det är ett
+  artefakt i den statiska kopian, inte något betan gör, så det rättas överallt.
+  Själva **inloggningsspärren** på kursen gäller däremot bara v1/v2; i v0 står
+  basens beteende kvar.
 - **"Logga ut" loggar faktiskt ut.** I basen är det bara en länk till
   inloggningssidan, så man kunde logga ut och gå rakt tillbaka in i kursen.
   Nu nollas inloggningsflaggan, och Min sida spärras för den som inte är

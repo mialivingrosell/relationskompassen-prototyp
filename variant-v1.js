@@ -362,22 +362,44 @@ function v1GuardMinSida() {
   location.replace('logga-in.html');
 }
 
-/* Riktar om ingångarna efter inloggningsstatus. Kursvyn lämnas orörd – är man
-   inne i ett kapitel är man redan förbi ingången. */
-function v1ApplyLoginState() {
-  if (document.body.dataset.subbar === 'course') return;
+/* --------------------------------------------------------------------------
+   KRAV WW – kontolänken i headern följer inloggningsstatus
+   Gäller ALLA versioner, även v0.
 
-  if (v1IsLogged()) {
-    // inloggad: MIN SIDA i headern ska gå till Min sida, inte till inloggning
-    document.querySelectorAll('.site-header a[href="logga-in.html"]')
-      .forEach(a => a.setAttribute('href', 'min-sida.html'));
-  } else {
-    // ej inloggad: kursen nås bara via inloggning – gäller båda knapparna på
-    // startsidan och kurslänken i MENY-panelen
-    document.querySelectorAll('a[href="grundkurs.html"]')
-      .forEach(a => a.setAttribute('href', 'logga-in.html'));
-  }
+   Basen har hårdkodat data-logged per sida, och index.html säger "false".
+   MIN SIDA i headern pekade därför alltid på inloggningen på startsidan –
+   så backade man dit mitt i kursen tvingades man logga in igen fast man
+   aldrig loggat ut. Det är ett artefakt i den statiska kopian, inte något
+   den riktiga betan gör, och därför rättas det i alla versioner.
+   -------------------------------------------------------------------------- */
+function v1FixAccountLink() {
+  if (!v1IsLogged()) return;
+  if (document.body.dataset.subbar === 'course') return;   // ingen header där
+  document.querySelectorAll('.site-header a[href="logga-in.html"]')
+    .forEach(a => a.setAttribute('href', 'min-sida.html'));
 }
+
+/* Kursen nås bara via inloggning – gäller båda knapparna på startsidan och
+   kurslänken i MENY-panelen. Bara v1/v2: i v0 ska basens beteende stå kvar,
+   där man kan gå direkt in i kursen. */
+function v1GateCourseEntry() {
+  if (v1IsLogged()) return;
+  if (document.body.dataset.subbar === 'course') return;
+  document.querySelectorAll('a[href="grundkurs.html"]')
+    .forEach(a => a.setAttribute('href', 'logga-in.html'));
+}
+
+/* Kontolänken och utloggningen sköts i alla versioner, alltså även v0 som
+   saknar funktionspaket och därför aldrig kör initExtra. app.js bygger
+   headern i sin DOMContentLoaded-lyssnare, och variant-v1.js:s lyssnare
+   registreras före den – därför skjuts anropen till efter att alla
+   DOMContentLoaded-lyssnare kört. */
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    v1FixAccountLink();
+    v1WireLogout();
+  }, 0);
+});
 
 /* Låt basens "Nollställ session" i sidfoten även nolla v1:s nycklar. */
 function v1PatchReset() {
@@ -418,7 +440,7 @@ function v1HomeCta() {
    kunde man hoppa rakt in i kursen förbi spärren. Efter inloggning tar Min
    sidas Fortsätt över.
 
-   Körs därför EFTER v1ApplyLoginState().
+   Körs därför EFTER v1GateCourseEntry().
    ========================================================================== */
 function v1HomeCourseButtons() {
   if (!document.querySelector('.hero')) return;   // bara startsidan
@@ -936,10 +958,7 @@ window.RK_V1 = {
   initExtra({ ch, type }) {
     v1PatchReset();           // krav HH: nollställning tar även v1:s nycklar
     v1HomeCta();              // krav DD: primärknapp på startsidan
-    if (type === 'title') {
-      v1FixMinSida();
-      v1WireLogout();         // krav VV: nolla inloggningen vid utloggning
-    }
+    if (type === 'title') v1FixMinSida();
     if (type === 'course') {
       v1NumberHeading(ch);      // krav Y: avsnittsnummer i rubriken (bara v2)
       // krav RR/TT: quizets form skiljer mellan versionerna – före v1WireQuiz
@@ -956,7 +975,7 @@ window.RK_V1 = {
       }
       window.addEventListener('resize', v1FitHeading);
     }
-    v1ApplyLoginState();        // krav HH: rikta om ingångarna – efter Min sida
+    v1GateCourseEntry();        // krav HH: kursen bara via inloggning
     v1HomeCourseButtons();      // krav UU: Starta -> Fortsätt – efter spärren
     v1SwapArrows();             // krav P: handritad pil överallt, alla sidtyper
   },
