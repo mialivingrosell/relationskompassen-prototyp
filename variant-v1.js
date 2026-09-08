@@ -396,6 +396,7 @@ function v1GateCourseEntry() {
    DOMContentLoaded-lyssnare kört. */
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
+    v1PatchReset();       // sidfotens Nollställ session tar även v1:s nycklar
     v1FixAccountLink();
     v1WireLogout();
   }, 0);
@@ -956,7 +957,6 @@ window.RK_V1 = {
 
   /* Körs sist i uppstarten, när all bas-DOM finns */
   initExtra({ ch, type }) {
-    v1PatchReset();           // krav HH: nollställning tar även v1:s nycklar
     v1HomeCta();              // krav DD: primärknapp på startsidan
     if (type === 'title') v1FixMinSida();
     if (type === 'course') {

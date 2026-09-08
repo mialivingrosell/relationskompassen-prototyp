@@ -12,6 +12,9 @@
    sig vidare i kursen. Öppna v1 i en flik och v2 i en annan för A/B-test.
    Längst ner i footern finns länkar till de versioner man inte står i.
 
+   Variantväljaren nere till höger är AV som standard – slå på den med
+   ?stamp=on om du vill kunna hoppa snabbt mellan versioner.
+
    SÅ LÄGGER DU TILL EN NY VARIANT (t.ex. v3):
      1. Lägg till en rad i VARIANTS nedan, och i REDESIGN om den ska ärva
         v1:s stil och logik.
@@ -106,19 +109,27 @@ const V = {
 
 /* ------------------------------------------------------ variantväljaren
    Prototypverktyg, inte del av designen. Ligger fast nere till höger.
-   Dölj den under skarpa användartest med ?stamp=off i adressen.           */
-const STAMP_KEY = 'rk_stamp_off';
 
-function stampHidden() {
-  if (new URLSearchParams(location.search).get('stamp') === 'off') {
-    try { sessionStorage.setItem(STAMP_KEY, '1'); } catch (e) {}
-    return true;
+   AV SOM STANDARD. Testpersoner blev förvirrade av att den dök upp, och dess
+   versionsbeskrivningar avslöjade dessutom vad som skiljer versionerna – det
+   ska testet visa, inte prototypen. Footerns versionslänkar räcker för att
+   navigera, och "Nollställ session" finns även där.
+
+   Slå på den med ?stamp=on när du själv vill kunna hoppa mellan versioner
+   snabbt. Valet ligger kvar i fliken; ?stamp=off stänger av igen.          */
+const STAMP_KEY = 'rk_stamp';
+
+function stampVisible() {
+  const p = new URLSearchParams(location.search).get('stamp');
+  if (p === 'on' || p === 'off') {
+    try { sessionStorage.setItem(STAMP_KEY, p); } catch (e) {}
+    return p === 'on';
   }
-  try { return sessionStorage.getItem(STAMP_KEY) === '1'; } catch (e) { return false; }
+  try { return sessionStorage.getItem(STAMP_KEY) === 'on'; } catch (e) { return false; }
 }
 
 function buildVariantStamp() {
-  if (stampHidden() || document.getElementById('rkvs')) return;
+  if (!stampVisible() || document.getElementById('rkvs')) return;
 
   const style = document.createElement('style');
   style.textContent = `
@@ -159,7 +170,7 @@ function buildVariantStamp() {
     <div class="rkvs-reset"><a href="#">↺ Nollställ session</a></div>`;
 
   box.querySelector('.rkvs-x').addEventListener('click', () => {
-    try { sessionStorage.setItem(STAMP_KEY, '1'); } catch (e) {}
+    try { sessionStorage.setItem(STAMP_KEY, 'off'); } catch (e) {}
     box.remove();
   });
   box.querySelectorAll('.rkvs-v').forEach(b => {
@@ -193,7 +204,6 @@ function buildFooterVersionLink() {
     const a = document.createElement('a');
     a.href = '#';
     a.textContent = 'Version ' + v.id.slice(1);
-    a.title = v.note;
     a.style.marginLeft = '22px';
     a.addEventListener('click', (e) => { e.preventDefault(); V.set(v.id); });
     wrap.appendChild(a);

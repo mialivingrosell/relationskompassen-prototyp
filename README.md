@@ -53,7 +53,7 @@ Prototypen minns vilka kapitel testpersonen besökt (sparas i `sessionStorage`):
 - Besökta kapitel markeras som **avklarade** i INNEHÅLL-menyn och förblir det
   även när man klickar sig bakåt. Ej besökta kapitel är låsta/utgråade.
 - **Nollställ mellan testpersoner** på något av dessa sätt:
-  - Klicka **"↺ Nollställ session"** i prototypstämpeln nere till höger.
+  - Klicka **"Nollställ session"** längst ner i sidfoten.
   - Lägg till `?reset` i adressen (t.ex. `index.html?reset`).
   - Öppna prototypen i en **ny flik** (sessionsminnet är per flik).
 - En vanlig omladdning **behåller** progressen (så oavsiktliga omladdningar mitt
@@ -88,8 +88,11 @@ att redigera adressen.
 **Obs:** versionsvalet ligger i `sessionStorage` och är därmed **per flik**. En
 ny flik eller en omstartad webbläsare landar på default (v1).
 
-Nere till höger sitter en stämpel där man klickar mellan versionerna och
-nollställer sessionen. Dölj den inför skarpa användartest med `?stamp=off`.
+Variantväljaren nere till höger är **av som standard** — testpersoner blev
+förvirrade av att den dök upp, och dess versionsbeskrivningar avslöjade vad som
+skiljer versionerna. Slå på den med `?stamp=on` när du själv vill hoppa snabbt
+mellan versioner; `?stamp=off` stänger av igen. Valet ligger kvar i fliken.
+
 Öppna v1 i en flik och v2 i en annan för att jämföra sida vid sida.
 
 Basversionen är låst i git som taggen `v0-bas`.
@@ -125,7 +128,7 @@ Basversionen är låst i git som taggen `v0-bas`.
   inloggningsstatus – varje sida har ett hårdkodat `data-logged`, så
   kursknappen gick rakt in medan Min sida krävde inloggning. v1/v2 håller en
   riktig flagga per flik som sätts när inloggningsformuläret skickas och nollas
-  vid alla tre nollställningsvägar (`?reset`, sidfotens länk, prototypstämpeln).
+  vid alla nollställningsvägar (`?reset`, sidfotens länk, prototypstämpeln).
 - **Kontolänken följer inloggningsstatus** i **alla tre versioner**. Basen har
   hårdkodat `data-logged` per sida och `index.html` säger `false`, så MIN SIDA
   i headern pekade alltid på inloggningen på startsidan — backade man dit mitt
