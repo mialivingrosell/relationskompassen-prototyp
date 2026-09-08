@@ -271,6 +271,11 @@
    Prototypens versionslänkar ligger kvar i .footer__reset, alltså i högra
    hörnet, precis som i den vanliga footern.
    ========================================================================== */
+/* Lägre än sajtens vanliga footer – kursvyn behöver bara vägarna ut.
+   Basens .site-footer har 44px över och 60px under; här bär den vita
+   prototyplisten nederkanten i stället. */
+.rk-redesign .v1-coursefooter { padding: 20px 0 0; }
+
 .rk-redesign .v1-coursefooter__inner {
   max-width: 1800px;
   margin: 0 auto;
@@ -280,6 +285,10 @@
   gap: 40px;
   flex-wrap: wrap;
 }
+/* loggan är den som styr höjden – mindre här än i den vanliga footern */
+.rk-redesign .v1-coursefooter .logo__img { height: 56px; }
+.rk-redesign .v1-coursefooter .logo__blob { padding: 4px 10px 3px; }
+.rk-redesign .v1-coursefooter .logo__blob span { font-size: 20px; }
 .rk-redesign .v1-coursefooter__links {
   display: flex;
   align-items: center;
@@ -304,6 +313,17 @@
   color: var(--navy);
 }
 .rk-redesign .v1-logout-btn:hover { background: rgba(27,29,45,.06); }
+
+/* Prototyplänkarna i en egen vit list längst ner, så de läses som verktyg
+   och inte som en del av kursens footer. Basens .footer__reset är en
+   centrerad block; här spänner den hela bredden med innehållet högerställt
+   mot samma kant som resten av footern. */
+.rk-redesign .v1-coursefooter .footer__reset {
+  max-width: none;
+  margin: 20px 0 0;
+  padding: 9px var(--edge);
+  background: #fff;
+}
 
 @media (max-width: 700px) {
   .rk-redesign .v1-coursefooter__inner { gap: 22px; }
