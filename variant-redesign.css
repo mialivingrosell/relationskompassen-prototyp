@@ -297,22 +297,20 @@
 }
 .rk-redesign .v1-logout-btn:hover { background: rgba(27,29,45,.06); }
 
-/* Kort brödtext under vägarna ut: förklarar att framstegen sparas, alltså
+/* Kort brödtext intill loggan: förklarar att framstegen sparas, alltså
    varför det är tryggt att logga ut. Kursiv och nedtonad, men fortfarande
    6.4:1 mot creme-bottnen – alltså godkänd brödtextkontrast, inte bara
-   dekorativt nedtonad. */
+   dekorativt nedtonad.
+
+   Ligger som eget flexobjekt i footerraden. Breddtaket håller den på ett par
+   rader så den matchar loggans höjd i stället för att trycka isär raden. */
 .rk-redesign .v1-coursefooter__note {
-  max-width: 1800px;
-  margin: 10px auto 0;
-  padding: 0 var(--edge);
-  text-align: right;
+  margin: 0;
+  max-width: 34ch;
   font-style: italic;
   font-size: .92rem;
+  line-height: 1.45;
   color: rgba(27,29,45,.72);
-}
-
-@media (max-width: 700px) {
-  .rk-redesign .v1-coursefooter__note { text-align: left; }
 }
 
 /* Prototyplänkarna i en egen vit list längst ner, så de läses som verktyg

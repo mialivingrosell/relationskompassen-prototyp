@@ -881,14 +881,14 @@ window.RK_V1 = {
     <footer class="site-footer v1-coursefooter">
       <div class="v1-coursefooter__inner">
         <a class="logo" href="index.html" aria-label="Relationskompassen – hem">${logoBlob()}</a>
+        <p class="v1-coursefooter__note">De steg i kursen som du gått igenom
+          sparas. Du kan fortsätta senare.</p>
         <nav class="v1-coursefooter__links">
           <a href="index.html">Till startsidan</a>
           <a href="min-sida.html">Till Min sida</a>
         </nav>
         <a class="btn v1-logout-btn" href="logga-in.html">Logga ut</a>
       </div>
-      <p class="v1-coursefooter__note">De steg i kursen som du gått igenom
-        sparas. Du kan fortsätta senare.</p>
       <div class="footer__reset">
         <a href="#" onclick="resetVisited();location.href='index.html';return false">Nollställ session</a>
       </div>
