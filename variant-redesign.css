@@ -302,14 +302,18 @@
    6.4:1 mot creme-bottnen – alltså godkänd brödtextkontrast, inte bara
    dekorativt nedtonad.
 
-   Ligger som eget flexobjekt i footerraden. Breddtaket håller den på ett par
-   rader så den matchar loggans höjd i stället för att trycka isär raden. */
+   Ligger som eget flexobjekt i footerraden, på en enda rad. Radens
+   align-items: center gör att den linjerar med loggans mitt – loggan är det
+   högsta objektet, så centreringen sker mot den.
+
+   flex: 0 0 auto tillsammans med nowrap ser till att flexboxen inte klämmer
+   ihop texten; på smala skärmar radbryter hela footerraden i stället. */
 .rk-redesign .v1-coursefooter__note {
   margin: 0;
-  max-width: 34ch;
+  flex: 0 0 auto;
+  white-space: nowrap;
   font-style: italic;
   font-size: .92rem;
-  line-height: 1.45;
   color: rgba(27,29,45,.72);
 }
 
