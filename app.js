@@ -87,7 +87,11 @@ function buildHeader(loggedIn) {
 
 /* ------------------------------------------------------------------ footer */
 function buildFooter() {
-  const o = V.override('buildFooter'); if (o) return o();
+  /* Till skillnad från de andra hookarna får den här falla tillbaka: en
+     variant kan vilja byta footer på vissa sidtyper men behålla basens på
+     andra, och returnerar då inget. */
+  const o = V.override('buildFooter');
+  if (o) { const own = o(); if (own) return own; }
   return `
   <footer class="site-footer">
     <div class="footer__grid">

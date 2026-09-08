@@ -345,7 +345,8 @@ document.addEventListener('submit', (e) => {
    fortsätta en annan dag, så kursen ska stå kvar där man var.
    -------------------------------------------------------------------------- */
 function v1WireLogout() {
-  document.querySelectorAll('.dash a[href="logga-in.html"]').forEach(a => {
+  // Logga ut finns på Min sida och i kursens egen footer – fånga båda
+  document.querySelectorAll('a[href="logga-in.html"]').forEach(a => {
     if (a.textContent.indexOf('Logga ut') === -1) return;
     a.addEventListener('click', () => v1SetLogged(false));
   });
@@ -856,6 +857,34 @@ window.RK_V1 = {
      innehållsmenyn ligger i en gemensam sticky-behållare, så allt följer med
      vid scroll utan att vi behöver räkna ut någon pixelhöjd.
      Ingen breadcrumb byggs (krav 4); topheadern göms med CSS.               */
+  /* ------------------------------------------------------------- krav XX
+     Egen footer inne i kursen. Sajtens vanliga footer med kontaktuppgifter
+     och webbplatslänkar hör inte hemma i kursvyn, som är en egen
+     sidkontext – där behövs bara vägarna ut.
+
+     Loggan kvar nere till vänster, två länkar, och Logga ut som ofylld
+     knapp. .footer__reset behålls med samma klass som basen, så
+     prototypens versionslänkar hamnar där de alltid gör – i högra hörnet.
+
+     Utanför kursen returneras inget, och då kör app.js basens footer.     */
+  buildFooter() {
+    if (document.body.dataset.subbar !== 'course') return undefined;
+    return `
+    <footer class="site-footer v1-coursefooter">
+      <div class="v1-coursefooter__inner">
+        <a class="logo" href="index.html" aria-label="Relationskompassen – hem">${logoBlob()}</a>
+        <nav class="v1-coursefooter__links">
+          <a href="index.html">Till startsidan</a>
+          <a href="min-sida.html">Till Min sida</a>
+        </nav>
+        <a class="btn v1-logout-btn" href="logga-in.html">Logga ut</a>
+      </div>
+      <div class="footer__reset">
+        <a href="#" onclick="resetVisited();location.href='index.html';return false">Nollställ session</a>
+      </div>
+    </footer>`;
+  },
+
   buildCourseBar(ch) {
     return `
     <div class="v1-coursehead">

@@ -235,11 +235,80 @@
   border-color: var(--navy-2);
 }
 
-/* samma sak för de andra knappytorna på kapitelsidorna: originalet låter den
-   ljusblå bakgrunden lysa igenom i stället för att lägga en vit platta */
-.rk-redesign .coursepage .quiz-option__label,
-.rk-redesign .coursepage .btn-ratta { background: transparent; }
-.rk-redesign .coursepage .btn-ratta:hover { background: rgba(255,255,255,.45); }
+/* etikettknappen under fotot: originalet låter den ljusblå bakgrunden lysa
+   igenom i stället för att lägga en vit platta */
+.rk-redesign .coursepage .quiz-option__label { background: transparent; }
+
+
+/* ==========================================================================
+   KRAV YY – Rätta-knappen får mer tyngd
+   Svart botten med vit text och orange pil, och bredare, så den läses som
+   sidans handling och inte som en bisak.
+
+   Basen sätter pilens färg inline (style="color:var(--navy)"), och inline
+   slår vanlig CSS – därav !important här. Alternativet vore att nolla
+   inline-stilen i JS, men den finns i basens HTML på flera ställen och en
+   deklaration är mindre maskineri än en DOM-tvätt.
+   ========================================================================== */
+.rk-redesign .coursepage .btn-ratta {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+  padding: 12px 34px;
+  font-size: 1.05rem;
+}
+.rk-redesign .coursepage .btn-ratta span { color: var(--orange) !important; }
+.rk-redesign .coursepage .btn-ratta:hover {
+  background: var(--navy-2);
+  border-color: var(--navy-2);
+}
+
+
+/* ==========================================================================
+   KRAV XX – kursens egen footer
+   Sajtens vanliga footer med kontaktuppgifter och webbplatslänkar hör inte
+   hemma i kursvyn. Här bara vägarna ut: loggan, två länkar och Logga ut.
+   Prototypens versionslänkar ligger kvar i .footer__reset, alltså i högra
+   hörnet, precis som i den vanliga footern.
+   ========================================================================== */
+.rk-redesign .v1-coursefooter__inner {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 var(--edge);
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.rk-redesign .v1-coursefooter__links {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  margin-left: auto;            /* länkarna och knappen samlas till höger */
+}
+/* basens .site-footer a är display:block med undermarginal – nollas här */
+.rk-redesign .v1-coursefooter__links a {
+  display: inline;
+  margin: 0;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.rk-redesign .v1-coursefooter__links a:hover { text-decoration: none; }
+
+/* Logga ut: ofylld med svart text */
+.rk-redesign .v1-logout-btn {
+  display: inline-flex;
+  margin: 0;
+  background: transparent;
+  border: 1.5px solid var(--navy);
+  color: var(--navy);
+}
+.rk-redesign .v1-logout-btn:hover { background: rgba(27,29,45,.06); }
+
+@media (max-width: 700px) {
+  .rk-redesign .v1-coursefooter__inner { gap: 22px; }
+  .rk-redesign .v1-coursefooter__links { margin-left: 0; gap: 22px; }
+}
 
 
 

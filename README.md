@@ -66,8 +66,8 @@ flik, så det följer med när man klickar sig vidare i kursen.
 
 | Adress | Version |
 |---|---|
-| `index.html` | **v1 – ny navigation, avsnitten onumrerade.** Default. |
-| `index.html?nav=v2` | **v2 – som v1, men med numrerade avsnitt och radiofrågor på avsnitt 2–3.** |
+| `index.html` | **v2 – numrerade avsnitt, radiofrågor på avsnitt 2–3.** Default — den version testpersonerna möter först. |
+| `index.html?nav=v1` | **v1 – samma navigation men onumrerade avsnitt, och originalets bildquiz.** |
 | `index.html?nav=v0` | **v0 – originalet.** Kopian av befintliga Relationskompassen, oförändrad. |
 
 v1 och v2 är A/B-paret, v0 är referensen. **v1 och v2 skiljer sig nu på två
@@ -86,7 +86,7 @@ två versioner man inte står i — även i v0, så man alltid kan komma vidare 
 att redigera adressen.
 
 **Obs:** versionsvalet ligger i `sessionStorage` och är därmed **per flik**. En
-ny flik eller en omstartad webbläsare landar på default (v1).
+ny flik eller en omstartad webbläsare landar på default (v2).
 
 Variantväljaren nere till höger är **av som standard** — testpersoner blev
 förvirrade av att den dök upp, och dess versionsbeskrivningar avslöjade vad som

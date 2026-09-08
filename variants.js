@@ -4,8 +4,8 @@
    Gör att flera designversioner kan leva i samma prototyp utan att
    basversionen (v0) ändras.
 
-     index.html            -> v1 (default), ny navigation utan numrering
-     index.html?nav=v2     -> v2, samma men med numrerade avsnitt
+     index.html            -> v2 (default), numrerade avsnitt
+     index.html?nav=v1     -> v1, samma men onumrerade avsnitt
      index.html?nav=v0     -> v0, originalet – kopian av befintliga kursen
 
    Valet sparas per flik (sessionStorage), så det följer med när man klickar
@@ -31,11 +31,11 @@ const VARIANTS = [
   { id: 'v2', label: 'v2 · Numrering', note: 'Som v1 men med numrerade avsnitt' },
 ];
 
-/* Default när inget val finns i fliken. v1 är den version som testas, så den
-   nakna adressen ska ge den – originalet nås med ?nav=v0 eller via footern.
+/* Default när inget val finns i fliken. Den version testpersonerna ska möta
+   först ligger på den nakna adressen; övriga nås via footern eller ?nav=.
    Tidigare var v0 default, vilket gjorde att en ny flik landade på
    originalet och det såg ut som att arbetet försvunnit. */
-const DEFAULT_VARIANT = 'v1';
+const DEFAULT_VARIANT = 'v2';
 
 /* v1 och v2 delar grundstil (variant-redesign.css) och all logik
    (variant-v1.js). Därför får båda även klassen rk-redesign, som CSS:en
