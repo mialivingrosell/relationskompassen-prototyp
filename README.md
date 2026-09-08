@@ -180,8 +180,8 @@ Basversionen är låst i git som taggen `v0-bas`.
     alltså godkänt enligt WCAG AA. Fyllningen har mjuk rundad högerkant.
   - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
     distinkta kapitel bland de besökta, så den bara kan växa.
-- **Min sida** har en kort rad "Kursen tar ca 2 timmar att genomföra" under
-  kursnamnet, ovanför progressbaren.
+- **Min sida** har en kort rad "Kursen tar ca 2 timmar att genomföra" mellan
+  progressbaren och Starta/Fortsätt-knappen.
 - **"Fortsätt"** på Min sida går till det avsnitt man nått **längst fram**,
   inte till kursens början och inte till det man senast tittade på. Backar man
   för att läsa om ett tidigare avsnitt flyttas Fortsätt alltså inte bakåt.

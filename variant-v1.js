@@ -827,11 +827,11 @@ function v1FixMinSida() {
   const count = card.querySelector('.course-count');
   if (count) count.textContent = done + ' av ' + total;
 
-  /* Kort tidsangivelse under kursnamnet, ovanför progressbaren. Läggs till
-     här och inte i min-sida.html, så basversionen förblir orörd. */
-  const row = card.querySelector('.row');
-  if (row && !card.querySelector('.v1-course-time')) {
-    row.insertAdjacentHTML('afterend',
+  /* Kort tidsangivelse mellan progressbaren och Starta/Fortsätt-knappen.
+     Läggs till här och inte i min-sida.html, så basversionen förblir orörd. */
+  const track = card.querySelector('.mini-track');
+  if (track && !card.querySelector('.v1-course-time')) {
+    track.insertAdjacentHTML('afterend',
       '<p class="v1-course-time">Kursen tar ca 2 timmar att genomföra</p>');
   }
 

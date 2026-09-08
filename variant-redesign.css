@@ -519,11 +519,12 @@
 
 /* ==========================================================================
    KRAV ZZ – tidsangivelse på Min sida
-   Kort brödtext under kursnamnet, ovanför progressbaren. Rubrikradens
-   undermarginal dras in från 14 till 6px så baren inte skjuts ner.
+   Kort brödtext mellan progressbaren och Starta/Fortsätt-knappen. Baren får
+   mindre undermarginal (18 -> 10px) så de tre delarna hålls samman i stället
+   för att texten skjuter knappen nedåt.
    ========================================================================== */
-.rk-redesign .dash .course-item .row { margin-bottom: 6px; }
+.rk-redesign .dash .mini-track { margin-bottom: 10px; }
 .rk-redesign .dash .v1-course-time {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   font-size: 1rem;
 }
