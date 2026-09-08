@@ -169,8 +169,8 @@ Basversionen är låst i git som taggen `v0-bas`.
 - **Kursvyn** är en egen sidkontext: topheadern och brödsmulorna är borta.
   Svarta listen är sticky: STARTSIDA till vänster, kursnamnet centrerat,
   KURSINNEHÅLL + hamburgare till höger. Innehållsmenyn fälls ut
-  högerställd, ovanpå progressraden, med utgångarna "Startsidan" och
-  "Min sida" efter sista avsnittet.
+  högerställd, ovanpå progressraden, och innehåller bara kapitellistan —
+  vägarna ut ligger i kursfootern.
 - **Stegräkning:** 21 avsnitt totalt, räknat ur `CHAPTERS`. Elsa och Omar
   del 2–4 är egna avsnitt 6, 7 och 8. Samma räkning i v1 och v2.
 - **Två olika progressmått, med avsikt:**
@@ -180,6 +180,8 @@ Basversionen är låst i git som taggen `v0-bas`.
     alltså godkänt enligt WCAG AA. Fyllningen har mjuk rundad högerkant.
   - *Kurskortet på Min sida* – hur många kapitel man **gått igenom**. Räknar
     distinkta kapitel bland de besökta, så den bara kan växa.
+- **Min sida** har en kort rad "Kursen tar ca 2 timmar att genomföra" under
+  kursnamnet, ovanför progressbaren.
 - **"Fortsätt"** på Min sida går till det avsnitt man nått **längst fram**,
   inte till kursens början och inte till det man senast tittade på. Backar man
   för att läsa om ett tidigare avsnitt flyttas Fortsätt alltså inte bakåt.

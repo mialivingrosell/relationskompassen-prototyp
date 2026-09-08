@@ -827,6 +827,14 @@ function v1FixMinSida() {
   const count = card.querySelector('.course-count');
   if (count) count.textContent = done + ' av ' + total;
 
+  /* Kort tidsangivelse under kursnamnet, ovanför progressbaren. Läggs till
+     här och inte i min-sida.html, så basversionen förblir orörd. */
+  const row = card.querySelector('.row');
+  if (row && !card.querySelector('.v1-course-time')) {
+    row.insertAdjacentHTML('afterend',
+      '<p class="v1-course-time">Kursen tar ca 2 timmar att genomföra</p>');
+  }
+
   // baren är orange oavsett hur långt man kommit, så ingen 100 %-klass behövs
   const fill = card.querySelector('.mini-fill');
   if (fill) fill.style.width = pct + '%';
@@ -879,6 +887,8 @@ window.RK_V1 = {
         </nav>
         <a class="btn v1-logout-btn" href="logga-in.html">Logga ut</a>
       </div>
+      <p class="v1-coursefooter__note">De steg i kursen som du gått igenom
+        sparas. Du kan fortsätta senare.</p>
       <div class="footer__reset">
         <a href="#" onclick="resetVisited();location.href='index.html';return false">Nollställ session</a>
       </div>
@@ -925,12 +935,8 @@ window.RK_V1 = {
     CHAPTERS.forEach(ch => {
       html += tocRow(ch, currentIndex, visited, true);
     });
-    // två vägar ut ur kursen, fast placerade efter sista avsnittet.
-    // .btn ger samma storlek som övriga knappar på sajten.
-    html += `<div class="v1-toc-exits">` +
-            `<a class="btn v1-toc-exit" href="index.html">Startsidan</a>` +
-            `<a class="btn v1-toc-exit" href="min-sida.html">Min sida</a>` +
-            `</div>`;
+    /* Inga utgångsknappar här längre – kursens egen footer gör det jobbet
+       tydligare, och menyn kan hålla sig till kapitellistan. */
     return `<div class="toc" id="toc">${html}</div>`;
   },
 

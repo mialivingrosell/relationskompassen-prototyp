@@ -134,23 +134,6 @@
   z-index: 70;                  /* över progressraden */
 }
 
-/* krav O – två vägar ut ur kursen, sida vid sida efter sista kapitlet i
-   listan. .btn ger samma mått som övriga knappar på sajten; bredden följer
-   texten. flex-wrap gör att de staplas om menyn blir smal. */
-.rk-redesign .toc .v1-toc-exits {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 20px 20px 8px;
-}
-.rk-redesign .toc .v1-toc-exit {
-  display: inline-flex;
-  background: transparent;
-  border: 1.5px solid #fff;
-  color: #fff;
-  text-decoration: none;
-}
-.rk-redesign .toc .v1-toc-exit:hover { background: var(--orange); border-color: var(--orange); }
 
 
 /* ==========================================================================
@@ -313,6 +296,24 @@
   color: var(--navy);
 }
 .rk-redesign .v1-logout-btn:hover { background: rgba(27,29,45,.06); }
+
+/* Kort brödtext under vägarna ut: förklarar att framstegen sparas, alltså
+   varför det är tryggt att logga ut. Kursiv och nedtonad, men fortfarande
+   6.4:1 mot creme-bottnen – alltså godkänd brödtextkontrast, inte bara
+   dekorativt nedtonad. */
+.rk-redesign .v1-coursefooter__note {
+  max-width: 1800px;
+  margin: 10px auto 0;
+  padding: 0 var(--edge);
+  text-align: right;
+  font-style: italic;
+  font-size: .92rem;
+  color: rgba(27,29,45,.72);
+}
+
+@media (max-width: 700px) {
+  .rk-redesign .v1-coursefooter__note { text-align: left; }
+}
 
 /* Prototyplänkarna i en egen vit list längst ner, så de läses som verktyg
    och inte som en del av kursens footer. Basens .footer__reset är en
@@ -511,4 +512,16 @@
 .rk-v2 .feedback-box.v2-feedback--ok {
   color: var(--green);
   margin-left: 38px;
+}
+
+
+/* ==========================================================================
+   KRAV ZZ – tidsangivelse på Min sida
+   Kort brödtext under kursnamnet, ovanför progressbaren. Rubrikradens
+   undermarginal dras in från 14 till 6px så baren inte skjuts ner.
+   ========================================================================== */
+.rk-redesign .dash .course-item .row { margin-bottom: 6px; }
+.rk-redesign .dash .v1-course-time {
+  margin: 0 0 12px;
+  font-size: 1rem;
 }
