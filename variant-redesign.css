@@ -509,6 +509,11 @@
 .rk-v2 .v2-quiz .checkrow.correct .box::after,
 .rk-v2 .v2-quiz .checkrow.wrong .box::after { content: none; }
 
+/* Luft mellan fotot och rubriken under det i trespalten. Fotona flyttas dit
+   av v2RadioQuiz(); utan den här regeln satt rubriken direkt an mot bilden,
+   eftersom basens h3 saknar toppmarginal och .ph ingen undermarginal. */
+.rk-v2 .coursepage .three-col .ph { margin-bottom: 28px; }
+
 /* Facittexten hör till det rätta svaret och bekräftar – grön i stället för
    övningskapitlets röda ruta, som förklarar ett felaktigt svar. */
 .rk-v2 .feedback-box.v2-feedback--ok {
