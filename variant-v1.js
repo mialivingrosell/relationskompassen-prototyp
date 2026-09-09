@@ -475,11 +475,14 @@ function v1HomeCourseButtons() {
    "3. Fler exempel på viktiga relationer". Samma nummer som i menyn, så de
    inte kan glida ifrån varandra. Rubrikens placering rörs inte – bara texten.
    ========================================================================== */
+/* Sätter sidrubriken: eventuell omdöpt titel, och nummer bara i den
+   numrerade versionen. Körs alltså även när numreringen är av, eftersom
+   titeln kan skilja sig från den i HTML-filen. */
 function v1NumberHeading(ch) {
-  if (!ch || !V1_NUMBERS) return;
+  if (!ch) return;
   const h1 = document.querySelector('.coursepage .course-main > h1');
   if (!h1) return;
-  h1.textContent = v1Nums()[ch.i] + '. ' + h1.textContent.trim();
+  h1.textContent = v1Label(ch);
 }
 
 
@@ -775,8 +778,21 @@ const V1_NUMBERS = V.id === 'v2';
    Se v1WireImageQuiz() respektive v2RadioQuiz(). */
 const V1_IMAGE_QUIZ = V.id !== 'v2';
 
+/* Titlar som skiljer sig från basens. Basen kallar första Elsa och
+   Omar-avsnittet bara "Elsa och Omar", vilket blir ojämnt när del 2–4 heter
+   "del 2", "del 3", "del 4". Ändras här och inte i CHAPTERS, så v0 behåller
+   originalets titel. */
+const V1_TITLES = {
+  4: 'Elsa och Omar del 1',
+};
+
+function v1Title(ch) {
+  return V1_TITLES[ch.i] || ch.title;
+}
+
 function v1Label(ch) {
-  return V1_NUMBERS ? v1Nums()[ch.i] + '. ' + ch.title : ch.title;
+  const t = v1Title(ch);
+  return V1_NUMBERS ? v1Nums()[ch.i] + '. ' + t : t;
 }
 
 let _v1Nums = null;
