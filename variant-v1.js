@@ -848,7 +848,7 @@ function v1FixMinSida() {
   const track = card.querySelector('.mini-track');
   if (track && !card.querySelector('.v1-course-time')) {
     track.insertAdjacentHTML('afterend',
-      '<p class="v1-course-time">Kursen tar ca 2 timmar att genomföra</p>');
+      '<p class="v1-course-time">Kursen tar ca 2 timmar att genomföra.</p>');
   }
 
   // baren är orange oavsett hur långt man kommit, så ingen 100 %-klass behövs
