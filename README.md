@@ -68,18 +68,19 @@ flik, så det följer med när man klickar sig vidare i kursen.
 |---|---|
 | `index.html` | **v2 – numrerade avsnitt, radiofrågor på avsnitt 2–3.** Default — den version testpersonerna möter först. |
 | `index.html?nav=v1` | **v1 – samma navigation men onumrerade avsnitt, och originalets bildquiz.** |
+| `index.html?nav=v3` | **v3 – som v1, men quizalternativen på vita kort** med tunn ram och hover. |
 | `index.html?nav=v0` | **v0 – originalet.** Kopian av befintliga Relationskompassen, oförändrad. |
 
-v1 och v2 är A/B-paret, v0 är referensen. **v1 och v2 skiljer sig nu på två
-saker**, inte en:
+v0 är referensen; v1, v2 och v3 är testversionerna:
 
-| | v1 | v2 |
-|---|---|---|
-| Numrering av avsnitt | nej | ja — i menyn, sidrubriken, prev/next och progressraden |
-| Quiz på avsnitt 2–3 | originalets bildquiz, valbart | **radioknappar** (runda, enkelval) med övningskapitlets komponenter, fotona flyttade ner i trespalten |
+| | v1 | v2 | v3 |
+|---|---|---|---|
+| Numrering av avsnitt | nej | **ja** — meny, sidrubrik, prev/next, progressrad | nej |
+| Quiz på avsnitt 2–3 | originalets bildquiz | **radioknappar**, fotona i trespalten | bildquiz **på vita kort** med ram och hover |
 
 Styrs av två flaggor i `variant-v1.js` — `V1_NUMBERS` och `V1_IMAGE_QUIZ` —
-som läser aktiv variant. Ingen logik dupliceras.
+plus `.rk-v2`/`.rk-v3`-scopad CSS. Ingen logik dupliceras: `variant-v2.js`
+och `variant-v3.js` är en rad var som pekar på `RK_V1`.
 
 Längst ner i sidfoten, vid sidan om "Nollställ session", finns länkar till de
 två versioner man inte står i — även i v0, så man alltid kan komma vidare utan
@@ -195,10 +196,11 @@ Basversionen är låst i git som taggen `v0-bas`.
   versionslänken i sidfoten.
 - `variant-v1.js` – all logik för **både v1 och v2**. Allt som inte står här
   ärvs från `app.js` (basen).
-- `variant-v2.js` – en rad: `window.RK_V2 = window.RK_V1`. v2 har ingen egen
-  logik; skillnaderna styrs av flaggorna `V1_NUMBERS` och `V1_IMAGE_QUIZ` i
-  `variant-v1.js`. Samma kodväg i båda versionerna, så de kan inte glida
-  ifrån varandra på något annat än det flaggorna styr.
+- `variant-v2.js` och `variant-v3.js` – en rad var: `window.RK_VN =
+  window.RK_V1`. Ingen av dem har egen logik; skillnaderna styrs av flaggorna
+  `V1_NUMBERS` och `V1_IMAGE_QUIZ` i `variant-v1.js` och av `.rk-v2`/`.rk-v3`
+  i stilmallen. Samma kodväg i alla tre, så de kan inte glida ifrån varandra
+  på något annat än det flaggorna styr.
 - `variant-redesign.css` – gemensam stil för v1 och v2, scopad på
   `.rk-redesign`.
 

@@ -6,6 +6,7 @@
 
      index.html            -> v2 (default), numrerade avsnitt
      index.html?nav=v1     -> v1, samma men onumrerade avsnitt
+     index.html?nav=v3     -> v3, som v1 men quizalternativen på vita kort
      index.html?nav=v0     -> v0, originalet – kopian av befintliga kursen
 
    Valet sparas per flik (sessionStorage), så det följer med när man klickar
@@ -21,14 +22,15 @@
      2. Skapa variant-v3.js. Ska den vara en variation på v1 räcker
         window.RK_V3 = Object.assign({}, window.RK_V1, { ...avvikelser });
         Behöver den egen stil, lägg till en addCss-rad i applyVariant().
-     3. Lägg <script src="variant-v3.js"></script> i alla HTML-filer,
-        direkt efter variant-v2.js.
+     3. Lägg <script src="variant-vN.js"></script> i alla HTML-filer,
+        direkt efter den föregående varianten.
    ========================================================================== */
 
 const VARIANTS = [
   { id: 'v0', label: 'v0 · Originalet', note: 'Kopia av befintliga Relationskompassen – oförändrad' },
   { id: 'v1', label: 'v1 · Utan numrering', note: 'Ny navigation, avsnitten onumrerade' },
   { id: 'v2', label: 'v2 · Numrering', note: 'Som v1 men med numrerade avsnitt' },
+  { id: 'v3', label: 'v3 · Kort i quiz', note: 'Som v1 men quizalternativen på vita kort' },
 ];
 
 /* Default när inget val finns i fliken. Den version testpersonerna ska möta
@@ -37,10 +39,11 @@ const VARIANTS = [
    originalet och det såg ut som att arbetet försvunnit. */
 const DEFAULT_VARIANT = 'v2';
 
-/* v1 och v2 delar grundstil (variant-redesign.css) och all logik
-   (variant-v1.js). Därför får båda även klassen rk-redesign, som CSS:en
-   hänger på. v2:s avvikelser scopas med .rk-v2 i samma fil. */
-const REDESIGN = ['v1', 'v2'];
+/* v1, v2 och v3 delar grundstil (variant-redesign.css) och all logik
+   (variant-v1.js). Därför får alla även klassen rk-redesign, som CSS:en
+   hänger på. Det som skiljer scopas med .rk-v2 respektive .rk-v3 i samma
+   fil. */
+const REDESIGN = ['v1', 'v2', 'v3'];
 
 const VARIANT_KEY = 'rk_variant';
 
