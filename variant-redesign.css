@@ -381,8 +381,12 @@
 }
 .rk-redesign .v1-naverror { margin: 26px 0 0; }
 
-/* den handritade pilen sitter i linje med knapptexten */
+/* de handritade ikonerna sitter i linje med knapptexten */
 .rk-redesign .v1-arr { display: block; }
+.rk-redesign .btn-ratta span {
+  display: inline-flex;
+  align-items: center;
+}
 .rk-redesign .btn .arrow { display: inline-flex; align-items: center; }
 
 
@@ -573,10 +577,12 @@
   transform: translateY(-3px);
 }
 
-/* Etiketten behöver ingen egen ram inne på kortet – kortet är ramen. */
+/* Etiketten behöver ingen egen ram inne på kortet – kortet är ramen.
+   Lika mycket luft över som under, så texten sitter mitt i det vita bandet
+   under bilden i stället för att tryckas mot underkanten. */
 .rk-v3 .coursepage .quiz-option__label {
   border: 0;
-  padding: 14px 12px 4px;
+  padding: 16px 12px;
   font-weight: 700;
 }
 

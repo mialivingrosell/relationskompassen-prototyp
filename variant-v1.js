@@ -91,14 +91,29 @@ const V1_ARROW_RIGHT = V1_ARROW_SVG +
   '<path d="M3 12.2c10.4.6 21 .8 32.6.6"/>' +
   '<path d="M26.4 3.6C29.9 6.9 32.9 9.7 36.1 12.6c-3.3 2.4-6.4 5-9.3 7.8"/></svg>';
 
+/* Nedåtpilen i Rätta-knappen, i samma manér. Basens tecken (⌄) sitter lågt i
+   sin teckenruta och ser tunt ut bredvid knapptexten. */
+const V1_CHEVRON_DOWN = V1_ARROW_SVG.replace('viewBox="0 0 40 24" width="30" height="18"',
+  'viewBox="0 0 24 16" width="20" height="14"') +
+  '<path d="M2.6 3.4C6 7 9 10 12 12.8c3-2.9 6-5.9 9.4-9.4"/></svg>';
+
 /* Byter ut basens teckenpilar (← →) mot den handritade ikonen överallt där
    de förekommer: svarta listen, prev/next på kapitelsidor och knapparna på
    Min sida. Tecken som inte är pilar (t.ex. ✕) lämnas orörda. */
 function v1SwapArrows(root) {
-  (root || document).querySelectorAll('.arrow').forEach(span => {
+  const scope = root || document;
+
+  scope.querySelectorAll('.arrow').forEach(span => {
     const t = span.textContent.trim();
     if (t === '←')      span.innerHTML = V1_ARROW_LEFT;
     else if (t === '→') span.innerHTML = V1_ARROW_RIGHT;
+  });
+
+  /* Rätta-knappens chevron. Som SVG blir den tjockare och centreras av
+     knappens egen align-items, i stället för att hänga lågt som tecknet. */
+  scope.querySelectorAll('.btn-ratta span').forEach(span => {
+    if (span.querySelector('svg')) return;
+    span.innerHTML = V1_CHEVRON_DOWN;
   });
 }
 
