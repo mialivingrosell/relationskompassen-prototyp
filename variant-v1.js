@@ -395,13 +395,16 @@ function v1FixAccountLink() {
     .forEach(a => a.setAttribute('href', 'min-sida.html'));
 }
 
-/* Kursen nås bara via inloggning – gäller båda knapparna på startsidan och
-   kurslänken i MENY-panelen. Bara v1/v2: i v0 ska basens beteende stå kvar,
-   där man kan gå direkt in i kursen. */
+/* Kursen nås bara via inloggning – gäller knapparna på startsidan och
+   kurslänken i MENY-panelen. Även länkar till Min sida, dit hero-knappen
+   pekar: utan dem hade den gått förbi spärren och bara fångats av
+   v1GuardMinSida(), som skickar vidare först efter att sidan laddats.
+   Bara v1/v2/v3: i v0 ska basens beteende stå kvar, där man kan gå direkt
+   in i kursen. */
 function v1GateCourseEntry() {
   if (v1IsLogged()) return;
   if (document.body.dataset.subbar === 'course') return;
-  document.querySelectorAll('a[href="grundkurs.html"]')
+  document.querySelectorAll('a[href="grundkurs.html"], a[href="min-sida.html"]')
     .forEach(a => a.setAttribute('href', 'logga-in.html'));
 }
 
@@ -432,9 +435,11 @@ function v1PatchReset() {
    Läggs i den mörka ytan högst upp, under introtexten. Basen har bara en
    outline-knapp längre ner i kurskortet – den här är den tydliga vägen in.
 
-   Fast copy: "Till våra kurser". Den växlar alltså INTE till "Fortsätt ..."
-   som knappen i kurskortet gör – v1HomeCourseButtons() letar efter etiketter
-   som börjar på "Starta" och lämnar därför den här orörd.
+   Fast copy: "Till våra kurser", och den leder till Min sida där kurserna
+   listas – i skarp drift har man oftast fler än en att välja på. Den växlar
+   alltså INTE till "Fortsätt ..." som knappen i kurskortet gör;
+   v1HomeCourseButtons() letar efter etiketter som börjar på "Starta" och
+   lämnar därför den här orörd.
 
    Orange botten med marinblå text: contrast 4.8:1, alltså godkänt enligt
    WCAG AA. Vit text på orange hade bara gett 3.5:1 och underkänts.
@@ -444,7 +449,7 @@ function v1HomeCta() {
   if (!hero || hero.querySelector('.v1-hero-cta')) return;
   hero.insertAdjacentHTML('beforeend',
     '<p class="v1-hero-cta">' +
-    '<a class="btn v1-btn--primary" href="grundkurs.html">' +
+    '<a class="btn v1-btn--primary" href="min-sida.html">' +
     'Till våra kurser <span class="arrow">→</span></a></p>');
 }
 

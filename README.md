@@ -120,7 +120,8 @@ Basversionen är låst i git som taggen `v0-bas`.
   avsnittet man stod på.
 - **Startsidan** (v1/v2/v3) har en primärknapp centrerad i den mörka ytan
   högst upp: vit botten, marinblå text, orange pil. Den har **fast copy,
-  "Till våra kurser"**. Knappen längre ner i kurskortet säger däremot
+  "Till våra kurser"**, och leder till **Min sida** där kurserna listas — i
+  skarp drift har man oftast fler än en att välja på. Knappen längre ner i kurskortet säger däremot
   **"Starta Relationskompassens grundkurs"** innan man börjat och
   **"Fortsätt …"** så snart man klickat sig vidare från första avsnittet — då
   leder den till det avsnitt man nått längst fram, samma mål som Fortsätt på
@@ -134,6 +135,7 @@ Basversionen är låst i git som taggen `v0-bas`.
   kursknappen gick rakt in medan Min sida krävde inloggning. v1/v2 håller en
   riktig flagga per flik som sätts när inloggningsformuläret skickas och nollas
   vid alla nollställningsvägar (`?reset`, sidfotens länk, prototypstämpeln).
+  Spärren täcker länkar till både kursen och Min sida.
 - **Kontolänken följer inloggningsstatus** i **alla tre versioner**. Basen har
   hårdkodat `data-logged` per sida och `index.html` säger `false`, så MIN SIDA
   i headern pekade alltid på inloggningen på startsidan — backade man dit mitt
