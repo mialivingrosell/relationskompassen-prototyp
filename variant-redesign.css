@@ -287,11 +287,12 @@
   gap: 34px;
   margin-left: auto;            /* länkarna och knappen samlas till höger */
 }
-/* basens .site-footer a är display:block med undermarginal – nollas här */
+/* basens .site-footer a är display:block med undermarginal – nollas här.
+   Vikten lämnas åt brödtextens, som sajtens övriga footerlänkar. */
 .rk-redesign .v1-coursefooter__links a {
   display: inline;
   margin: 0;
-  font-weight: 600;
+  font-weight: 400;
   text-decoration: underline;
 }
 .rk-redesign .v1-coursefooter__links a:hover { text-decoration: none; }
@@ -307,9 +308,8 @@
 .rk-redesign .v1-logout-btn:hover { background: rgba(27,29,45,.06); }
 
 /* Kort brödtext intill loggan: förklarar att framstegen sparas, alltså
-   varför det är tryggt att logga ut. Kursiv och nedtonad, men fortfarande
-   6.4:1 mot creme-bottnen – alltså godkänd brödtextkontrast, inte bara
-   dekorativt nedtonad.
+   varför det är tryggt att logga ut. Satt som vanlig brödtext – rak och i
+   textfärgen, inte kursiv och nedtonad.
 
    Ligger som eget flexobjekt i footerraden, på en enda rad. Radens
    align-items: center gör att den linjerar med loggans mitt – loggan är det
@@ -321,9 +321,8 @@
   margin: 0;
   flex: 0 0 auto;
   white-space: nowrap;
-  font-style: italic;
   font-size: .92rem;
-  color: rgba(27,29,45,.72);
+  color: var(--text);
 }
 
 /* Prototyplänkarna i en egen vit list längst ner, så de läses som verktyg
@@ -590,3 +589,13 @@
   .rk-v3 .coursepage .v1-optbox { transition: none; }
   .rk-v3 .coursepage .quiz-option:hover .v1-optbox { transform: none; }
 }
+
+
+/* ==========================================================================
+   Länkvikt – alla länkar lika tunga
+   Basens .muted-link är fet (800), vilket gjorde att inbäddade länkar som
+   "Läs mer om Relationskompassen" vägde tyngre än footerns och menyns.
+   Här samma vikt som brödtexten; understrykningen bär länkligheten.
+   Scopad till omdesignen, så v0 behåller originalets utseende.
+   ========================================================================== */
+.rk-redesign .muted-link { font-weight: 400; }

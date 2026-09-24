@@ -118,13 +118,17 @@ Basversionen är låst i git som taggen `v0-bas`.
   två saker rättas, eftersom de är beteende och inte design: räkningen visar
   21 avsnitt i stället för basens 20, och Starta/Fortsätt går till senaste
   avsnittet man stod på.
-- **Startsidan** (v1 och v2) har en primärknapp centrerad i den mörka ytan
-  högst upp: vit botten, marinblå text, orange pil. Båda knapparna på
-  startsidan säger **"Starta Relationskompassens grundkurs"** innan man
-  börjat, och **"Fortsätt Relationskompassens grundkurs"** så snart man
-  klickat sig vidare från första avsnittet — då leder de till det avsnitt man
-  nått längst fram, samma mål som Fortsätt på Min sida. Är man utloggad byts
-  bara texten; länken pekar kvar på inloggningen så spärren håller.
+- **Startsidan** (v1/v2/v3) har en primärknapp centrerad i den mörka ytan
+  högst upp: vit botten, marinblå text, orange pil. Den har **fast copy,
+  "Till våra kurser"**. Knappen längre ner i kurskortet säger däremot
+  **"Starta Relationskompassens grundkurs"** innan man börjat och
+  **"Fortsätt …"** så snart man klickat sig vidare från första avsnittet — då
+  leder den till det avsnitt man nått längst fram, samma mål som Fortsätt på
+  Min sida. Är man utloggad byts bara texten; länken pekar kvar på
+  inloggningen så spärren håller.
+- **Alla länkar väger lika.** Basens `.muted-link` är fet (800), vilket gjorde
+  inbäddade länkar tyngre än footerns och menyns. I omdesignen har de samma
+  vikt som brödtexten; understrykningen bär länkligheten. v0 är orörd.
 - **Inloggning krävs för båda ingångarna.** Basen har ingen
   inloggningsstatus – varje sida har ett hårdkodat `data-logged`, så
   kursknappen gick rakt in medan Min sida krävde inloggning. v1/v2 håller en

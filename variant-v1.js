@@ -432,6 +432,10 @@ function v1PatchReset() {
    Läggs i den mörka ytan högst upp, under introtexten. Basen har bara en
    outline-knapp längre ner i kurskortet – den här är den tydliga vägen in.
 
+   Fast copy: "Till våra kurser". Den växlar alltså INTE till "Fortsätt ..."
+   som knappen i kurskortet gör – v1HomeCourseButtons() letar efter etiketter
+   som börjar på "Starta" och lämnar därför den här orörd.
+
    Orange botten med marinblå text: contrast 4.8:1, alltså godkänt enligt
    WCAG AA. Vit text på orange hade bara gett 3.5:1 och underkänts.
    ========================================================================== */
@@ -441,7 +445,7 @@ function v1HomeCta() {
   hero.insertAdjacentHTML('beforeend',
     '<p class="v1-hero-cta">' +
     '<a class="btn v1-btn--primary" href="grundkurs.html">' +
-    'Starta Relationskompassens grundkurs <span class="arrow">→</span></a></p>');
+    'Till våra kurser <span class="arrow">→</span></a></p>');
 }
 
 
